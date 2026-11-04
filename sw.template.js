@@ -94,6 +94,12 @@ self.addEventListener("fetch", (event) => {
 
   if (url.origin !== self.location.origin) return;
 
+  // Live API / health must never be cacheFirst — a cached "waiting" inbox
+  // response would hide a mail that already arrived.
+  if (url.pathname === "/health" || url.pathname.startsWith("/api/")) {
+    return;
+  }
+
   if (url.pathname === "/" || url.pathname === "/index.html") {
     if (!self.navigator.onLine) {
       event.respondWith(

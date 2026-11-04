@@ -3,6 +3,10 @@ package store
 import (
 	"crypto/rand"
 	"encoding/hex"
+	"encoding/json"
+	"log"
+	"os"
+	"path/filepath"
 	"sync"
 	"time"
 )
@@ -27,19 +31,33 @@ type Inbox struct {
 }
 
 type Store struct {
-	mu      sync.RWMutex
-	byID    map[string]*Inbox
-	byLocal map[string]*Inbox
-	ttl     time.Duration
-	domain  string
+	mu        sync.RWMutex
+	byID      map[string]*Inbox
+	byLocal   map[string]*Inbox
+	ttl       time.Duration
+	reportTTL time.Duration
+	domain    string
+	dataDir   string
 }
 
-func New(domain string, ttl time.Duration) *Store {
+func New(domain string, ttl, reportTTL time.Duration, dataDir string) *Store {
+	if reportTTL <= 0 {
+		reportTTL = 7 * 24 * time.Hour
+	}
 	s := &Store{
-		byID:    map[string]*Inbox{},
-		byLocal: map[string]*Inbox{},
-		ttl:     ttl,
-		domain:  domain,
+		byID:      map[string]*Inbox{},
+		byLocal:   map[string]*Inbox{},
+		ttl:       ttl,
+		reportTTL: reportTTL,
+		domain:    domain,
+		dataDir:   dataDir,
+	}
+	if dataDir != "" {
+		if err := os.MkdirAll(dataDir, 0o755); err != nil {
+			log.Printf("store: mkdir %s: %v", dataDir, err)
+		} else {
+			s.loadFromDisk()
+		}
 	}
 	go s.reaper()
 	return s
@@ -69,6 +87,7 @@ func (s *Store) Create() (*Inbox, error) {
 	defer s.mu.Unlock()
 	s.byID[id] = in
 	s.byLocal[local] = in
+	s.persistLocked(in)
 	return clone(in), nil
 }
 
@@ -79,10 +98,14 @@ func (s *Store) Get(id string) (*Inbox, bool) {
 	if !ok {
 		return nil, false
 	}
-	if time.Now().After(in.ExpiresAt) && in.Status == StatusWaiting {
-		in.Status = StatusExpired
+	cp := clone(in)
+	if time.Now().After(in.ExpiresAt) && (cp.Status == StatusWaiting || cp.Status == StatusReady) {
+		cp.Status = StatusExpired
+		if in.Status == StatusReady {
+			cp.Report = nil
+		}
 	}
-	return clone(in), true
+	return cp, true
 }
 
 func (s *Store) LookupLocal(local string) (*Inbox, bool) {
@@ -111,6 +134,8 @@ func (s *Store) Complete(local string, report any, rawSize int) bool {
 	in.Status = StatusReady
 	in.Report = report
 	in.RawSize = rawSize
+	in.ExpiresAt = time.Now().UTC().Add(s.reportTTL)
+	s.persistLocked(in)
 	return true
 }
 
@@ -123,12 +148,90 @@ func (s *Store) reaper() {
 			if now.After(in.ExpiresAt.Add(10 * time.Minute)) {
 				delete(s.byID, id)
 				delete(s.byLocal, in.LocalPart)
-			} else if now.After(in.ExpiresAt) && in.Status == StatusWaiting {
+				s.removeFileLocked(id)
+				continue
+			}
+			if now.After(in.ExpiresAt) && in.Status == StatusWaiting {
 				in.Status = StatusExpired
+				s.persistLocked(in)
+			} else if now.After(in.ExpiresAt) && in.Status == StatusReady {
+				in.Status = StatusExpired
+				in.Report = nil
+				s.persistLocked(in)
 			}
 		}
 		s.mu.Unlock()
 	}
+}
+
+func (s *Store) loadFromDisk() {
+	entries, err := os.ReadDir(s.dataDir)
+	if err != nil {
+		log.Printf("store: read dir %s: %v", s.dataDir, err)
+		return
+	}
+	now := time.Now()
+	loaded := 0
+	for _, e := range entries {
+		if e.IsDir() || filepath.Ext(e.Name()) != ".json" {
+			continue
+		}
+		path := filepath.Join(s.dataDir, e.Name())
+		b, err := os.ReadFile(path)
+		if err != nil {
+			log.Printf("store: read %s: %v", path, err)
+			continue
+		}
+		var in Inbox
+		if err := json.Unmarshal(b, &in); err != nil {
+			log.Printf("store: decode %s: %v", path, err)
+			continue
+		}
+		if in.ID == "" || in.LocalPart == "" {
+			continue
+		}
+		if now.After(in.ExpiresAt.Add(10 * time.Minute)) {
+			_ = os.Remove(path)
+			continue
+		}
+		if now.After(in.ExpiresAt) {
+			in.Status = StatusExpired
+			in.Report = nil
+		}
+		cp := in
+		s.byID[cp.ID] = &cp
+		s.byLocal[cp.LocalPart] = &cp
+		loaded++
+	}
+	log.Printf("store: loaded %d inbox(es) from %s", loaded, s.dataDir)
+}
+
+func (s *Store) persistLocked(in *Inbox) {
+	if s.dataDir == "" || in == nil {
+		return
+	}
+	b, err := json.Marshal(in)
+	if err != nil {
+		log.Printf("store: encode %s: %v", in.ID, err)
+		return
+	}
+	path := filepath.Join(s.dataDir, in.ID+".json")
+	tmp := path + ".tmp"
+	if err := os.WriteFile(tmp, b, 0o644); err != nil {
+		log.Printf("store: write %s: %v", tmp, err)
+		return
+	}
+	if err := os.Rename(tmp, path); err != nil {
+		log.Printf("store: rename %s: %v", path, err)
+		_ = os.Remove(tmp)
+	}
+}
+
+func (s *Store) removeFileLocked(id string) {
+	if s.dataDir == "" || id == "" {
+		return
+	}
+	_ = os.Remove(filepath.Join(s.dataDir, id+".json"))
 }
 
 func clone(in *Inbox) *Inbox {

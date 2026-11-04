@@ -1,5 +1,6 @@
 import { t } from "./i18n";
 import { NOT_FOUND_COPY } from "./notfound-messages";
+import { PRIVACY_COPY } from "./privacy-messages";
 import {
   buildAppJsonLd,
   buildFaqJsonLd,
@@ -150,10 +151,43 @@ export function localizeIndexHtml(html: string, locale: Locale): string {
   out = replaceTagContent(out, "p", "your-address-label", t(locale, "yourAddress"));
   out = replaceTagContent(out, "button", "copy-btn", t(locale, "copy"));
   out = replaceTagContent(out, "button", "new-btn", t(locale, "newAddress"));
-  out = replaceTagContent(out, "p", "grade-label", t(locale, "gradeLabel"));
+  out = replaceTagContent(out, "span", "grade-label", t(locale, "gradeLabel"));
+  out = replaceTagContent(out, "p", "report-share-label", t(locale, "reportShareLabel"));
+  out = replaceTagContent(out, "span", "report-rule-label", t(locale, "reportRuleLabel"));
+  out = replaceTagContent(out, "p", "report-pillars-title", t(locale, "reportPillarsTitle"));
+  out = replaceTagContent(out, "button", "report-share-copy", t(locale, "copy"));
+  out = replaceTagContent(out, "button", "retest-btn", t(locale, "retest"));
   out = replaceTagContent(out, "h2", "findings-title", t(locale, "findingsTitle"));
+  out = out.replace(
+    /<div class=["']filters["'] id=["']findings-filters["'][^>]*>/i,
+    `<div class="filters" id="findings-filters" role="tablist" aria-label="${t(locale, "filterAria")}">`,
+  );
+  out = out.replace(
+    /(<button[^>]*data-filter=["']all["'][^>]*>)([\s\S]*?)(<\/button>)/i,
+    `$1${t(locale, "filterAll")}$3`,
+  );
+  out = out.replace(
+    /(<button[^>]*data-filter=["']fail["'][^>]*>)([\s\S]*?)(<\/button>)/i,
+    `$1${t(locale, "filterFail")}$3`,
+  );
+  out = out.replace(
+    /(<button[^>]*data-filter=["']pass["'][^>]*>)([\s\S]*?)(<\/button>)/i,
+    `$1${t(locale, "filterPass")}$3`,
+  );
+  out = replaceTagContent(out, "span", "ai-brief-btn-text", t(locale, "downloadAiBrief"));
+  out = replaceTagContent(out, "span", "admin-brief-btn-text", t(locale, "downloadAdminBrief"));
   out = replaceTagContent(out, "h2", "mail-meta-title", t(locale, "mailMetaTitle"));
+  out = replaceTagContent(out, "h2", "headers-title", t(locale, "headersTitle"));
+  out = replaceTagContent(out, "button", "headers-copy", t(locale, "copy"));
+  out = replaceTagContent(out, "p", "headers-empty", t(locale, "headersEmpty"));
   out = replaceTagContent(out, "h2", "blacklist-title", t(locale, "blacklistTitle"));
+  out = replaceTagContent(out, "h2", "dns-hints-title", t(locale, "dnsHintsTitle"));
+  out = replaceTagContent(out, "button", "export-json-btn", t(locale, "exportJson"));
+  out = replaceTagContent(out, "button", "export-pdf-btn", t(locale, "exportPdf"));
+  out = out.replace(
+    /(<a[^>]*id=["']privacy-link["'][^>]*href=["'])[^"']*(["'][^>]*>)([\s\S]*?)(<\/a>)/i,
+    `$1${localePath(locale)}privacy/$2${t(locale, "privacyLink")}$4`,
+  );
 
   out = out.replace(
     /<(?:div|details)[^>]*class=["'][^"']*\blang\b[^"']*["'][^>]*>[\s\S]*?<\/(?:div|details)>/i,
@@ -208,20 +242,63 @@ export function renderNotFoundHtml(locale: Locale): string {
 `;
 }
 
+export function renderPrivacyHtml(locale: Locale): string {
+  const copy = PRIVACY_COPY[locale];
+  const dir = isRtlLocale(locale) ? "rtl" : "ltr";
+  const pageUrl = `${localeUrl(locale)}privacy/`;
+  return `<!doctype html>
+<html lang="${locale}" dir="${dir}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="${ROBOTS_META}" />
+    <title>${copy.title}</title>
+    <meta name="description" content="${copy.lead}" />
+    <link rel="canonical" href="${pageUrl}" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <style>
+      body{margin:0;font-family:system-ui,sans-serif;background:#17110c;color:#f3ebe3;line-height:1.55}
+      .wrap{max-width:42rem;margin:0 auto;padding:1.5rem 1rem 3rem}
+      a{color:#f0852a} h1{font-size:1.6rem} .lead{color:#cbb8a6}
+      ul{padding-left:1.2rem} li{margin:.4rem 0}
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <p class="brand"><a href="https://dmosk.net/">dmosk</a> / supermail</p>
+      <h1>${copy.heading}</h1>
+      <p class="lead">${copy.lead}</p>
+      ${copy.bodyHtml}
+      <p><a href="${localePath(locale)}">${copy.home}</a></p>
+    </main>
+  </body>
+</html>
+`;
+}
+
 export function renderSitemapXml(): string {
-  const alts = [
+  const pageAlts = (pathSuffix: string) =>
+    [
+      ...LOCALES.map(
+        (loc) =>
+          `    <xhtml:link rel="alternate" hreflang="${loc}" href="${localeUrl(loc)}${pathSuffix}"/>`,
+      ),
+      `    <xhtml:link rel="alternate" hreflang="x-default" href="${localeUrl(X_DEFAULT_LOCALE)}${pathSuffix}"/>`,
+    ].join("\n");
+  const urls = [
     ...LOCALES.map(
-      (loc) =>
-        `    <xhtml:link rel="alternate" hreflang="${loc}" href="${localeUrl(loc)}"/>`,
-    ),
-    `    <xhtml:link rel="alternate" hreflang="x-default" href="${localeUrl(X_DEFAULT_LOCALE)}"/>`,
-  ].join("\n");
-  const urls = LOCALES.map(
-    (loc) => `  <url>
+      (loc) => `  <url>
     <loc>${localeUrl(loc)}</loc>
-${alts}
+${pageAlts("")}
   </url>`,
-  ).join("\n");
+    ),
+    ...LOCALES.map(
+      (loc) => `  <url>
+    <loc>${localeUrl(loc)}privacy/</loc>
+${pageAlts("privacy/")}
+  </url>`,
+    ),
+  ].join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">

@@ -5,3 +5,7 @@ dist/
 .env
 .env.*
 !.env.example
+data/inboxes/*.json
+data/inboxes/*.tmp
+data/inboxes/*
+!data/inboxes/.gitkeep

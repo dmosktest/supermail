@@ -5,6 +5,7 @@ import { defineConfig, type Plugin } from "vite";
 import {
   localizeIndexHtml,
   renderNotFoundHtml,
+  renderPrivacyHtml,
   renderRobotsTxt,
   renderSitemapXml,
 } from "./src/localize-html";
@@ -64,6 +65,7 @@ function collectPrecacheUrls(dist: string): string[] {
 
   for (const locale of LOCALES) {
     urls.add(localePath(locale));
+    urls.add(`${localePath(locale)}privacy/`);
     urls.add(`${localePath(locale)}manifest.webmanifest`);
   }
 
@@ -240,6 +242,13 @@ function emitLangPages(): Plugin {
         fs.writeFileSync(
           path.join(dir, "404.html"),
           renderNotFoundHtml(locale),
+          "utf8",
+        );
+        const privacyDir = path.join(dir, "privacy");
+        fs.mkdirSync(privacyDir, { recursive: true });
+        fs.writeFileSync(
+          path.join(privacyDir, "index.html"),
+          renderPrivacyHtml(locale),
           "utf8",
         );
       }

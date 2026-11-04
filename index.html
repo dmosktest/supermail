@@ -14,10 +14,10 @@
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-    <title>supermail — спам-тест письма для почтового сервера</title>
+    <title>supermail — спам-тест письма: DKIM, SPF по IP, DMARC, DNS-мастер</title>
     <meta
       name="description"
-      content="Отправьте письмо на одноразовый адрес и получите разбор: SPF/DKIM/DMARC, DNSBL, PTR, стоп-слова и оценка A–F."
+      content="Одноразовый ящик и письмо с вашего SMTP. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, DNS-мастер, JSON/PDF, ТЗ для ИИ."
     />
     <link rel="canonical" href="https://supermail.dmosk.net/ru/" />
     <link rel="alternate" hreflang="ru" href="https://supermail.dmosk.net/ru/" />
@@ -25,10 +25,10 @@
     <link rel="alternate" hreflang="x-default" href="https://supermail.dmosk.net/en/" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://supermail.dmosk.net/ru/" />
-    <meta property="og:title" content="supermail — спам-тест письма для почтового сервера" />
+    <meta property="og:title" content="supermail — спам-тест письма: DKIM, SPF по IP, DMARC, DNS-мастер" />
     <meta
       property="og:description"
-      content="Отправьте письмо на одноразовый адрес и получите разбор: SPF/DKIM/DMARC, DNSBL, PTR, стоп-слова и оценка A–F."
+      content="Одноразовый ящик и письмо с вашего SMTP. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, DNS-мастер, JSON/PDF, ТЗ для ИИ."
     />
     <meta property="og:locale" content="ru_RU" />
     <meta property="og:locale:alternate" content="en_US" />
@@ -90,9 +90,9 @@
         </div>
       </div>
 
-      <h1 id="heading">Спам-тест вашего письма</h1>
+      <h1 id="heading">Спам-тест вашего исходящего письма</h1>
       <p class="lead" id="lead">
-        Мы выдаём уникальный ящик. Вы отправляете письмо со своего SMTP — и видите, почему оно может уйти в спам.
+        Выдаём уникальный адрес @supermail.dmosk.net. Вы шлёте письмо со своего SMTP — получаете оценку A–F, криптопроверку DKIM, SPF по IP, DMARC alignment, DNS-мастер, экспорт JSON/PDF и ТЗ для ИИ или админа почты.
       </p>
 
       <noscript>
@@ -101,9 +101,9 @@
 
       <section class="panel inbox-panel" id="inbox-panel">
         <p class="inbox-lead" id="inbox-lead">
-          Отправьте любое письмо на этот адрес. Разберём заголовки, аутентификацию, чёрные списки и контент.
+          Отправьте любое письмо сюда. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, заголовки и контент — плюс DNS-мастер, JSON/PDF, ТЗ для ИИ и админа почты.
         </p>
-        <p class="field-label" id="your-address-label">Ваш тестовый адрес</p>
+        <p class="field-label" id="your-address-label">Ваш тестовый адрес — отправьте на него письмо с сервера, который нужно проверить</p>
         <div class="address-row">
           <code class="address" id="address">…</code>
           <button type="button" class="btn" id="copy-btn">Копировать</button>
@@ -115,26 +115,101 @@
       </section>
 
       <section class="panel results" id="results" hidden>
-        <div class="grade-row">
-          <div class="grade-badge" id="grade-badge" aria-live="polite">—</div>
-          <div>
-            <p class="grade-label" id="grade-label">Оценка</p>
-            <p class="score-line" id="score-line"></p>
+        <header class="report-head">
+          <div class="report-head-main">
+            <h2 class="report-subject" id="report-subject">—</h2>
+            <p class="report-route" id="report-route"></p>
+          </div>
+          <div class="report-share">
+            <p class="field-label" id="report-share-label">Ссылка на отчёт</p>
+            <div class="share-row">
+              <input class="share-url" id="report-share-url" type="text" readonly value="" />
+              <button type="button" class="btn btn-ghost" id="report-share-copy">Копировать</button>
+            </div>
+            <button type="button" class="btn retest-btn" id="retest-btn">Протестировать снова</button>
+          </div>
+        </header>
+
+        <div class="report-rule" role="presentation">
+          <span id="report-rule-label">Итог</span>
+        </div>
+
+        <div class="report-board">
+          <div class="report-pillars-wrap">
+            <p class="report-pillars-title" id="report-pillars-title">Ключевые сигналы аутентификации</p>
+            <div class="auth-pillars" id="auth-pillars"></div>
+          </div>
+          <div class="score-meter" id="score-meter" aria-live="polite">
+            <svg class="score-meter-svg" viewBox="0 22 200 88" aria-hidden="true">
+              <path class="score-meter-track" d="M20 100 A80 80 0 0 1 180 100" fill="none" />
+              <path class="score-meter-fill" id="score-meter-fill" d="M20 100 A80 80 0 0 1 180 100" fill="none" pathLength="100" />
+            </svg>
+            <div class="score-meter-core">
+              <span class="score-meter-grade" id="grade-badge" data-grade="">—</span>
+              <span class="score-meter-verdict" id="score-verdict"></span>
+              <span class="score-meter-points" id="score-line"></span>
+              <span class="visually-hidden" id="grade-label">Оценка</span>
+            </div>
           </div>
         </div>
 
         <h2 class="panel-title" id="mail-meta-title">Письмо</h2>
         <div id="mail-meta" class="meta-block"></div>
 
-        <h2 class="panel-title" id="findings-title">Результаты</h2>
+        <div class="findings-toolbar">
+          <h2 class="panel-title" id="findings-title">Разбор</h2>
+        </div>
+        <div class="filters-row">
+          <div class="filters" id="findings-filters" role="tablist" aria-label="Findings filter">
+            <button type="button" data-filter="all">Все</button>
+            <button type="button" data-filter="fail" class="active">Ошибки</button>
+            <button type="button" data-filter="pass">Пройдено</button>
+          </div>
+          <div class="brief-actions findings-briefs">
+            <button type="button" class="btn btn-ghost brief-btn" id="ai-brief-btn">
+              <svg class="download-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+                <path fill="currentColor" d="M8 1a.75.75 0 0 1 .75.75v6.69l2.22-2.22a.75.75 0 1 1 1.06 1.06l-3.5 3.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 0 1 1.06-1.06l2.22 2.22V1.75A.75.75 0 0 1 8 1Zm-5 9.25a.75.75 0 0 1 .75.75v1.5c0 .69.56 1.25 1.25 1.25h6c.69 0 1.25-.56 1.25-1.25v-1.5a.75.75 0 0 1 1.5 0v1.5A2.75 2.75 0 0 1 11 15H5a2.75 2.75 0 0 1-2.75-2.75v-1.5a.75.75 0 0 1 .75-.75Z" />
+              </svg>
+              <span id="ai-brief-btn-text">Скачать ТЗ для ИИ</span>
+            </button>
+            <button type="button" class="btn btn-ghost brief-btn" id="admin-brief-btn">
+              <svg class="download-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">
+                <path fill="currentColor" d="M8 1a.75.75 0 0 1 .75.75v6.69l2.22-2.22a.75.75 0 1 1 1.06 1.06l-3.5 3.5a.75.75 0 0 1-1.06 0l-3.5-3.5a.75.75 0 0 1 1.06-1.06l2.22 2.22V1.75A.75.75 0 0 1 8 1Zm-5 9.25a.75.75 0 0 1 .75.75v1.5c0 .69.56 1.25 1.25 1.25h6c.69 0 1.25-.56 1.25-1.25v-1.5a.75.75 0 0 1 1.5 0v1.5A2.75 2.75 0 0 1 11 15H5a2.75 2.75 0 0 1-2.75-2.75v-1.5a.75.75 0 0 1 .75-.75Z" />
+              </svg>
+              <span id="admin-brief-btn-text">ТЗ для админа почты</span>
+            </button>
+          </div>
+        </div>
+        <p class="tests-summary" id="tests-summary" hidden></p>
+        <p class="score-explain" id="score-explain" hidden></p>
         <div id="findings" class="findings"></div>
 
         <h2 class="panel-title" id="blacklist-title">DNSBL</h2>
         <p id="blacklist" class="meta-block"></p>
+
+        <div class="dns-hints-section" id="dns-hints-section" hidden>
+          <h2 class="panel-title" id="dns-hints-title">DNS-мастер</h2>
+          <p class="muted" id="dns-hints-lead"></p>
+          <div id="dns-hints" class="dns-hints"></div>
+        </div>
+
+        <div class="export-row" id="export-row" hidden>
+          <button type="button" class="btn btn-ghost" id="export-json-btn">JSON</button>
+          <button type="button" class="btn btn-ghost" id="export-pdf-btn">Печать / PDF</button>
+        </div>
+
+        <div class="headers-section" id="headers-section" hidden>
+          <div class="headers-head">
+            <h2 class="panel-title" id="headers-title">Заголовки</h2>
+            <button type="button" class="btn btn-ghost" id="headers-copy">Копировать</button>
+          </div>
+          <pre id="headers-raw" class="meta-block headers-raw"></pre>
+          <p class="headers-empty" id="headers-empty" hidden></p>
+        </div>
       </section>
 
       <article class="seo" id="seo-root"></article>
-      <p class="version" id="version">supermail 0.2.0</p>
+      <p class="site-links"><a href="/ru/privacy/" id="privacy-link">Конфиденциальность</a></p>
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>

@@ -15,12 +15,19 @@ import (
 )
 
 func main() {
-	mailDomain := env("MAIL_DOMAIN", "inbox.supermail.dmosk.net")
+	mailDomain := env("MAIL_DOMAIN", "supermail.dmosk.net")
 	httpAddr := env("HTTP_ADDR", ":8080")
 	smtpAddr := env("SMTP_ADDR", ":2525")
 	ttl := 30 * time.Minute
+	reportTTL := 7 * 24 * time.Hour
+	if v := os.Getenv("REPORT_TTL_HOURS"); v != "" {
+		if n, err := time.ParseDuration(v + "h"); err == nil && n >= time.Hour {
+			reportTTL = n
+		}
+	}
 
-	st := store.New(mailDomain, ttl)
+	dataDir := env("DATA_DIR", "/app/data/inboxes")
+	st := store.New(mailDomain, ttl, reportTTL, dataDir)
 	go func() {
 		if err := smtpd.ListenAndServe(smtpAddr, st, mailDomain); err != nil {
 			log.Fatal(err)
@@ -36,7 +43,7 @@ func main() {
 		IdleTimeout:       60 * time.Second,
 	}
 	go func() {
-		log.Printf("supermail-api listening on %s mailDomain=%s", httpAddr, mailDomain)
+		log.Printf("supermail-api listening on %s mailDomain=%s dataDir=%s reportTTL=%s", httpAddr, mailDomain, dataDir, reportTTL)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatal(err)
 		}

@@ -18,6 +18,18 @@ var Lists = []string{
 	"dnsbl-1.uceprotect.net",
 	"cbl.abuseat.org",
 	"spam.dnsbl.anonmails.de",
+	"bl.mailspike.net",
+	"truncate.gbudb.net",
+	"dyna.spamrats.com",
+	"spam.spamrats.com",
+	"noptr.spamrats.com",
+	"dnsbl.dronebl.org",
+	"all.s5h.net",
+	"dnsbl.spfbl.net",
+	"ubl.unsubscore.com",
+	"db.wpbl.info",
+	"rbl.interserver.net",
+	"dnsbl.zapbl.net",
 }
 
 type Result struct {

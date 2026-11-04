@@ -8,23 +8,58 @@ const LOCALES = ["ru","en","zh","es","hi","ar","bn","pt","fr","de","ja","id","pa
 
 const ui = {
   langSwitch: { en:"Site language", ru:"Язык сайта", zh:"网站语言", es:"Idioma del sitio", hi:"साइट की भाषा", ar:"لغة الموقع", bn:"সাইটের ভাষা", pt:"Idioma do site", fr:"Langue du site", de:"Website-Sprache", ja:"サイトの言語", id:"Bahasa situs", pa:"ਸਾਈਟ ਦੀ ਭਾਸ਼ਾ", jv:"Basa situs", te:"సైట్ భాష", tr:"Site dili", ko:"사이트 언어", mr:"साइटची भाषा", vi:"Ngôn ngữ trang", ta:"தள மொழி", it:"Lingua del sito", fa:"زبان سایت", tlh:"jan Hol" },
-  noscript: { en:"Enable JavaScript to run the mail spam test.", ru:"Включите JavaScript, чтобы запустить спам-тест письма.", zh:"请启用 JavaScript 以运行邮件垃圾测试。", es:"Active JavaScript para la prueba antispam.", hi:"मेल स्पैम टेस्ट के लिए JavaScript सक्षम करें।", ar:"فعّل JavaScript لاختبار البريد.", bn:"মেইল স্প্যাম পরীক্ষার জন্য JavaScript চালু করুন।", pt:"Ative o JavaScript para o teste de spam.", fr:"Activez JavaScript pour le test anti-spam.", de:"Aktivieren Sie JavaScript für den Spam-Test.", ja:"メールのスパムテストには JavaScript を有効にしてください。", id:"Aktifkan JavaScript untuk tes spam mail.", pa:"ਮੇਲ ਸਪੈਮ ਟੈਸਟ ਲਈ JavaScript ਚਾਲੂ ਕਰੋ।", jv:"Aktifake JavaScript kanggo tes spam.", te:"మెయిల్ స్పామ్ టెస్ట్‌కి JavaScript ప్రారంభించండి.", tr:"Spam testi için JavaScript’i açın.", ko:"메일 스팸 테스트를 위해 JavaScript를 켜세요.", mr:"मेल स्पॅम चाचणीसाठी JavaScript सुरू करा.", vi:"Bật JavaScript để chạy kiểm tra spam thư.", ta:"அஞ்சல் ஸ்பேம் சோதனைக்கு JavaScript இயக்கவும்.", it:"Abilita JavaScript per il test antispam.", fa:"برای تست اسپم ایمیل JavaScript را فعال کنید.", tlh:"JavaScript yIchu'." },
-  inboxLead: { en:"Send any email to this address. We analyze headers, authentication, blacklists and content.", ru:"Отправьте любое письмо на этот адрес. Разберём заголовки, аутентификацию, чёрные списки и контент.", zh:"向此地址发送任意邮件。我们会分析标头、认证、黑名单与内容。", es:"Envíe cualquier correo a esta dirección. Analizamos cabeceras, autenticación, listas negras y contenido.", hi:"इस पते पर कोई भी ईमेल भेजें। हम हेडर, प्रमाणीकरण, ब्लैकलिस्ट और सामग्री जाँचेंगे।", ar:"أرسل أي رسالة إلى هذا العنوان. نحلل الترويسات والمصادقة والقوائم السوداء والمحتوى.", bn:"এই ঠিকানায় যেকোনো ইমেইল পাঠান। হেডার, প্রমাণীকরণ, ব্ল্যাকলিস্ট ও কন্টেন্ট বিশ্লেষণ করব।", pt:"Envie qualquer e-mail para este endereço. Analisamos cabeçalhos, autenticação, listas negras e conteúdo.", fr:"Envoyez un e-mail à cette adresse. Nous analysons en-têtes, authentification, listes noires et contenu.", de:"Senden Sie eine E-Mail an diese Adresse. Wir prüfen Header, Authentifizierung, Blacklists und Inhalt.", ja:"この宛先にメールを送ると、ヘッダー・認証・ブラックリスト・本文を解析します。", id:"Kirim email apa pun ke alamat ini. Kami menganalisis header, autentikasi, blacklist, dan konten.", pa:"ਇਸ ਪਤੇ 'ਤੇ ਕੋਈ ਵੀ ਈਮੇਲ ਭੇਜੋ। ਅਸੀਂ ਹੈਡਰ, ਪ੍ਰਮਾਣਿਕਤਾ, ਬਲੈਕਲਿਸਟ ਅਤੇ ਸਮੱਗਰੀ ਵਿਸ਼ਲੇਸ਼ਣ ਕਰਾਂਗੇ।", jv:"Kirim email menyang alamat iki. Kita analisis header, autentikasi, blacklist, lan konten.", te:"ఈ చిరునామాకు ఏదైనా ఇమెయిల్ పంపండి. హెడర్లు, ధృవీకరణ, బ్లాక్‌లిస్ట్, కంటెంట్ విశ్లేషిస్తాం.", tr:"Bu adrese herhangi bir e-posta gönderin. Başlıkları, kimlik doğrulamayı, kara listeleri ve içeriği analiz ederiz.", ko:"이 주소로 메일을 보내면 헤더·인증·블랙리스트·본문을 분석합니다.", mr:"या पत्त्यावर कोणतेही ईमेल पाठवा. आम्ही हेडर, प्रमाणीकरण, ब्लॅकलिस्ट आणि मजकूर तपासतो.", vi:"Gửi email bất kỳ tới địa chỉ này. Chúng tôi phân tích header, xác thực, blacklist và nội dung.", ta:"இந்த முகவரிக்கு எந்த மின்னஞ்சலையும் அனுப்புங்கள். தலைப்புகள், அங்கீகாரம், கருப்புப் பட்டியல், உள்ளடக்கத்தை ஆய்வு செய்வோம்.", it:"Invia qualsiasi email a questo indirizzo. Analizziamo intestazioni, autenticazione, blacklist e contenuto.", fa:"هر ایمیلی به این نشانی بفرستید. سرآیند، احراز هویت، سیاه‌لیست و محتوا را تحلیل می‌کنیم.", tlh:"QIn yIngeH. De' wIchov." },
-  yourAddress: { en:"Your test address", ru:"Ваш тестовый адрес", zh:"您的测试地址", es:"Su dirección de prueba", hi:"आपका परीक्षण पता", ar:"عنوان الاختبار", bn:"আপনার পরীক্ষার ঠিকানা", pt:"Seu endereço de teste", fr:"Votre adresse de test", de:"Ihre Testadresse", ja:"テスト用アドレス", id:"Alamat tes Anda", pa:"ਤੁਹਾਡਾ ਟੈਸਟ ਪਤਾ", jv:"Alamat tes sampeyan", te:"మీ పరీక్ష చిరునామా", tr:"Test adresiniz", ko:"테스트 주소", mr:"तुमचा चाचणी पत्ता", vi:"Địa chỉ kiểm tra", ta:"உங்கள் சோதனை முகவரி", it:"Il tuo indirizzo di test", fa:"نشانی آزمایشی شما", tlh:"chov ID" },
+  noscript: { en:"Enable JavaScript to create a test inbox and run the spam test. The guide and FAQ below work without JavaScript.", ru:"Включите JavaScript, чтобы создать тестовый ящик и запустить спам-тест. Гайд и FAQ ниже читаются и без JavaScript.", zh:"请启用 JavaScript 以创建测试收件箱并运行垃圾邮件测试。下方指南与 FAQ 无需 JS 即可阅读。", es:"Active JavaScript para crear el buzón de prueba. La guía y el FAQ de abajo funcionan sin JavaScript.", pt:"Ative o JavaScript para criar a caixa de teste. O guia e o FAQ abaixo funcionam sem JavaScript.", fr:"Activez JavaScript pour créer la boîte de test. Le guide et la FAQ ci-dessous fonctionnent sans JavaScript.", de:"Aktivieren Sie JavaScript für das Testpostfach. Leitfaden und FAQ darunter funktionieren ohne JavaScript.", ja:"テスト用受信箱とスパムテストには JavaScript が必要です。下のガイドと FAQ は JS なしで読めます。" },
+  inboxLead: { en:"Send any email here. You get an A–F grade: crypto DKIM, SPF-by-IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, headers and content — plus a DNS wizard, JSON/PDF export, AI and admin briefs.", ru:"Отправьте любое письмо сюда. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, заголовки и контент — плюс DNS-мастер, JSON/PDF, ТЗ для ИИ и админа почты.", zh:"向此地址发送任意邮件。A–F：加密 DKIM、按 IP 的 SPF、DMARC alignment、MTA-STS/TLS-RPT/BIMI、DNSBL、标头与内容，另有 DNS 向导、JSON/PDF 与 AI/管理员任务书。", es:"Envíe cualquier correo aquí. Nota A–F: DKIM crypto, SPF por IP, alineación DMARC, MTA-STS/TLS-RPT/BIMI, DNSBL, cabeceras y contenido — más asistente DNS, JSON/PDF y briefs IA/admin.", pt:"Envie qualquer e-mail aqui. Nota A–F: DKIM crypto, SPF por IP, alinhamento DMARC, MTA-STS/TLS-RPT/BIMI, DNSBL, cabeçalhos e conteúdo — mais assistente DNS, JSON/PDF e briefs IA/admin.", fr:"Envoyez un e-mail ici. Note A–F : DKIM crypto, SPF par IP, alignement DMARC, MTA-STS/TLS-RPT/BIMI, DNSBL, en-têtes et contenu — plus assistant DNS, JSON/PDF et briefs IA/admin.", de:"Senden Sie hier eine E-Mail. Note A–F: DKIM-Crypto, SPF nach IP, DMARC-Alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, Header und Inhalt — plus DNS-Assistent, JSON/PDF und KI-/Admin-Briefs.", ja:"ここにメールを送ると A–F：暗号 DKIM、IP ベース SPF、DMARC alignment、MTA-STS/TLS-RPT/BIMI、DNSBL、ヘッダーと本文。DNS ウィザード、JSON/PDF、AI／管理者ブリーフ付き。" },
+  yourAddress: { en:"Your test address — send a message to it from the mail server you want to check", ru:"Ваш тестовый адрес — отправьте на него письмо с сервера, который нужно проверить", zh:"您的测试地址 — 请从待测邮件服务器向此地址发信", es:"Su dirección de prueba — envíe un correo desde el servidor que quiera comprobar", hi:"आपका परीक्षण पता — जिस मेल सर्वर की जाँच करनी है, वहाँ से यहाँ पत्र भेजें", ar:"عنوان الاختبار — أرسل إليه رسالة من الخادم الذي تريد فحصه", bn:"আপনার পরীক্ষার ঠিকানা — যে মেইল সার্ভার পরীক্ষা করবেন, সেখান থেকে এখানে চিঠি পাঠান", pt:"Seu endereço de teste — envie um e-mail do servidor que deseja verificar", fr:"Votre adresse de test — envoyez-y un message depuis le serveur à contrôler", de:"Ihre Testadresse — senden Sie eine Mail vom zu prüfenden Server hierher", ja:"テスト用アドレス — 確認したいメールサーバーからここに送信してください", id:"Alamat tes Anda — kirim email dari server yang ingin diperiksa", pa:"ਤੁਹਾਡਾ ਟੈਸਟ ਪਤਾ — ਜਿਸ ਮੇਲ ਸਰਵਰ ਦੀ ਜਾਂਚ ਕਰਨੀ ਹੈ, ਉੱਥੋਂ ਇੱਥੇ ਪੱਤਰ ਭੇਜੋ", jv:"Alamat tes sampeyan — kirim email saka server sing arep dicek", te:"మీ పరీక్ష చిరునామా — పరిశీలించాల్సిన మెయిల్ సర్వర్ నుండి ఇక్కడకు పంపండి", tr:"Test adresiniz — kontrol etmek istediğiniz sunucudan buraya bir e-posta gönderin", ko:"테스트 주소 — 점검할 메일 서버에서 이곳으로 메일을 보내세요", mr:"तुमचा चाचणी पत्ता — तपासायच्या मेल सर्व्हरवरून येथे पत्र पाठवा", vi:"Địa chỉ kiểm tra — gửi thư từ máy chủ cần kiểm tra tới đây", ta:"உங்கள் சோதனை முகவரி — சோதிக்க வேண்டிய அஞ்சல் சேவையகத்திலிருந்து இங்கே அனுப்புங்கள்", it:"Il tuo indirizzo di test — invia un messaggio dal server di posta da verificare", fa:"نشانی آزمایشی شما — از سروری که می‌خواهید بررسی کنید به اینجا نامه بفرستید", tlh:"chov ID — QIn yIngeH" },
   copy: { en:"Copy", ru:"Копировать", zh:"复制", es:"Copiar", hi:"कॉपी", ar:"نسخ", bn:"কপি", pt:"Copiar", fr:"Copier", de:"Kopieren", ja:"コピー", id:"Salin", pa:"ਕਾਪੀ", jv:"Salin", te:"కాపీ", tr:"Kopyala", ko:"복사", mr:"कॉपी", vi:"Sao chép", ta:"நகல்", it:"Copia", fa:"کپی", tlh:"yIlan" },
   copied: { en:"Copied", ru:"Скопировано", zh:"已复制", es:"Copiado", hi:"कॉपी हो गया", ar:"تم النسخ", bn:"কপি হয়েছে", pt:"Copiado", fr:"Copié", de:"Kopiert", ja:"コピーしました", id:"Disalin", pa:"ਕਾਪੀ ਹੋ ਗਿਆ", jv:"Disalin", te:"కాపీ అయింది", tr:"Kopyalandı", ko:"복사됨", mr:"कॉपी झाले", vi:"Đã sao chép", ta:"நகலெடுக்கப்பட்டது", it:"Copiato", fa:"کپی شد", tlh:"lanlu'" },
   copyError: { en:"Could not copy", ru:"Не удалось скопировать", zh:"无法复制", es:"No se pudo copiar", hi:"कॉपी नहीं हो सका", ar:"تعذر النسخ", bn:"কপি করা যায়নি", pt:"Não foi possível copiar", fr:"Impossible de copier", de:"Kopieren fehlgeschlagen", ja:"コピーできませんでした", id:"Tidak bisa menyalin", pa:"ਕਾਪੀ ਨਹੀਂ ਹੋ ਸਕੀ", jv:"Ora bisa nyalin", te:"కాపీ కాలేదు", tr:"Kopyalanamadı", ko:"복사 실패", mr:"कॉपी झाले नाही", vi:"Không sao chép được", ta:"நகலெடுக்க முடியவில்லை", it:"Copia non riuscita", fa:"کپی نشد", tlh:"lanlaHbe'" },
   waiting: { en:"Waiting for your email…", ru:"Ждём ваше письмо…", zh:"正在等待您的邮件…", es:"Esperando su correo…", hi:"आपके ईमेल की प्रतीक्षा…", ar:"بانتظار رسالتك…", bn:"আপনার ইমেইলের অপেক্ষা…", pt:"Aguardando seu e-mail…", fr:"En attente de votre e-mail…", de:"Warten auf Ihre E-Mail…", ja:"メールを待っています…", id:"Menunggu email Anda…", pa:"ਤੁਹਾਡੀ ਈਮੇਲ ਦੀ ਉਡੀਕ…", jv:"Ngenteni email sampeyan…", te:"మీ ఇమెయిల్ కోసం వేచి…", tr:"E-postanız bekleniyor…", ko:"메일 대기 중…", mr:"तुमच्या ईमेलची वाट…", vi:"Đang chờ email của bạn…", ta:"உங்கள் மின்னஞ்சலுக்காக காத்திருக்கிறது…", it:"In attesa della tua email…", fa:"در انتظار ایمیل شما…", tlh:"QIn wIloS…" },
   waitingHint: { en:"Usually 10–60 seconds after you hit Send. Keep this tab open.", ru:"Обычно 10–60 секунд после отправки. Не закрывайте вкладку.", zh:"发送后通常需 10–60 秒。请保持此标签页打开。", es:"Suele tardar 10–60 s tras enviar. Mantenga esta pestaña abierta.", hi:"भेजने के बाद आमतौर पर 10–60 सेकंड। टैब खुला रखें।", ar:"عادةً 10–60 ثانية بعد الإرسال. أبقِ هذه العلامة مفتوحة.", bn:"পাঠানোর পর সাধারণত ১০–৬০ সেকেন্ড। ট্যাব খোলা রাখুন।", pt:"Costuma levar 10–60 s após enviar. Mantenha esta aba aberta.", fr:"En général 10–60 s après l’envoi. Gardez cet onglet ouvert.", de:"Meist 10–60 s nach dem Senden. Tab offen lassen.", ja:"送信後だいたい 10～60 秒。このタブを開いたままに。", id:"Biasanya 10–60 detik setelah kirim. Biarkan tab ini terbuka.", pa:"ਭੇਜਣ ਤੋਂ ਬਾਅਦ ਆਮ ਤੌਰ 'ਤੇ 10–60 ਸਕਿੰਟ। ਟੈਬ ਖੁੱਲੀ ਰੱਖੋ।", jv:"Biasane 10–60 detik sawise kirim. Tab iki tetep mbukak.", te:"పంపిన తర్వాత సాధారణంగా 10–60 సెకన్లు. ట్యాబ్ తెరిచి ఉంచండి.", tr:"Gönderdikten sonra genelde 10–60 sn. Sekmeyi açık tutun.", ko:"보낸 뒤 보통 10–60초. 이 탭을 열어 두세요.", mr:"पाठवल्यानंतर सहसा १०–६० सेकंद. टॅब उघडे ठेवा.", vi:"Thường 10–60 giây sau khi gửi. Giữ tab này mở.", ta:"அனுப்பிய பின் பொதுவாக 10–60 வினாடிகள். தாவலைத் திறந்து வைக்கவும்.", it:"Di solito 10–60 s dopo l’invio. Lascia aperta questa scheda.", fa:"معمولاً ۱۰–۶۰ ثانیه پس از ارسال. این زبانه را باز نگه دارید.", tlh:"poH loS. qawHaq yIchum." },
   newAddress: { en:"New address", ru:"Новый адрес", zh:"新地址", es:"Nueva dirección", hi:"नया पता", ar:"عنوان جديد", bn:"নতুন ঠিকানা", pt:"Novo endereço", fr:"Nouvelle adresse", de:"Neue Adresse", ja:"新しい宛先", id:"Alamat baru", pa:"ਨਵਾਂ ਪਤਾ", jv:"Alamat anyar", te:"కొత్త చిరునామా", tr:"Yeni adres", ko:"새 주소", mr:"नवीन पत्ता", vi:"Địa chỉ mới", ta:"புதிய முகவரி", it:"Nuovo indirizzo", fa:"نشانی تازه", tlh:"ID chu'" },
+  retest: { en:"Test again", ru:"Протестировать снова", zh:"再次测试", es:"Probar de nuevo", pt:"Testar de novo", fr:"Retester", de:"Erneut testen", ja:"もう一度テスト", hi:"फिर से जाँचें", ar:"أعد الاختبار", bn:"আবার পরীক্ষা", id:"Uji lagi", pa:"ਮੁੜ ਟੈਸਟ", jv:"Tes maneh", te:"మళ్లీ పరీక్షించు", tr:"Yeniden test et", ko:"다시 테스트", mr:"पुन्हा तपासा", vi:"Kiểm tra lại", ta:"மீண்டும் சோதி", it:"Ripeti il test", fa:"دوباره تست کن", tlh:"chovqa'" },
   expired: { en:"This inbox expired. Create a new address.", ru:"Срок ящика истёк. Создайте новый адрес.", zh:"收件箱已过期。请创建新地址。", es:"Esta bandeja caducó. Cree una nueva dirección.", hi:"यह इनबॉक्स समाप्त हो गया। नया पता बनाएँ।", ar:"انتهت صلاحية الصندوق. أنشئ عنواناً جديداً.", bn:"ইনবক্সের মেয়াদ শেষ। নতুন ঠিকানা তৈরি করুন।", pt:"Esta caixa expirou. Crie um novo endereço.", fr:"Cette boîte a expiré. Créez une nouvelle adresse.", de:"Dieses Postfach ist abgelaufen. Neue Adresse erstellen.", ja:"この受信箱は期限切れです。新しい宛先を作成してください。", id:"Kotak ini kedaluwarsa. Buat alamat baru.", pa:"ਇਹ ਇਨਬਾਕਸ ਖਤਮ ਹੋ ਗਿਆ। ਨਵਾਂ ਪਤਾ ਬਣਾਓ।", jv:"Kothak iki kadaluwarsa. Gawe alamat anyar.", te:"ఈ ఇన్‌బాక్స్ గడువు ముగిసింది. కొత్త చిరునామా సృష్టించండి.", tr:"Bu gelen kutusu süresi doldu. Yeni adres oluşturun.", ko:"이 받은편지함이 만료되었습니다. 새 주소를 만드세요.", mr:"ही इनबॉक्स कालबाह्य झाली. नवीन पत्ता तयार करा.", vi:"Hộp thư đã hết hạn. Tạo địa chỉ mới.", ta:"இந்த இன்பாக்ஸ் காலாவதியானது. புதிய முகவரி உருவாக்கவும்.", it:"Questa casella è scaduta. Crea un nuovo indirizzo.", fa:"مهلت این صندوق تمام شد. نشانی تازه بسازید.", tlh:"poH van. ID chu' yIchermon." },
   errorNetwork: { en:"Network error", ru:"Ошибка сети", zh:"网络错误", es:"Error de red", hi:"नेटवर्क त्रुटि", ar:"خطأ في الشبكة", bn:"নেটওয়ার্ক ত্রুটি", pt:"Erro de rede", fr:"Erreur réseau", de:"Netzwerkfehler", ja:"ネットワークエラー", id:"Kesalahan jaringan", pa:"ਨੈੱਟਵਰਕ ਗਲਤੀ", jv:"Kasalahan jaringan", te:"నెట్‌వర్క్ లోపం", tr:"Ağ hatası", ko:"네트워크 오류", mr:"नेटवर्क त्रुटी", vi:"Lỗi mạng", ta:"பிணைய பிழை", it:"Errore di rete", fa:"خطای شبکه", tlh:"HurDaq Qagh" },
   errorServer: { en:"Server error", ru:"Ошибка сервера", zh:"服务器错误", es:"Error del servidor", hi:"सर्वर त्रुटि", ar:"خطأ في الخادم", bn:"সার্ভার ত্রুটি", pt:"Erro do servidor", fr:"Erreur serveur", de:"Serverfehler", ja:"サーバーエラー", id:"Kesalahan server", pa:"ਸਰਵਰ ਗਲਤੀ", jv:"Kasalahan server", te:"సర్వర్ లోపం", tr:"Sunucu hatası", ko:"서버 오류", mr:"सर्व्हर त्रुटी", vi:"Lỗi máy chủ", ta:"சேவையக பிழை", it:"Errore del server", fa:"خطای سرور", tlh:"De'wI' Qagh" },
   gradeLabel: { en:"Grade", ru:"Оценка", zh:"评级", es:"Nota", hi:"ग्रेड", ar:"الدرجة", bn:"গ্রেড", pt:"Nota", fr:"Note", de:"Note", ja:"評価", id:"Nilai", pa:"ਗ੍ਰੇਡ", jv:"Nilai", te:"గ్రేడ్", tr:"Not", ko:"등급", mr:"ग्रेड", vi:"Điểm", ta:"தரம்", it:"Voto", fa:"نمره", tlh:"Doch" },
-  findingsTitle: { en:"Findings", ru:"Результаты", zh:"发现项", es:"Hallazgos", hi:"निष्कर्ष", ar:"النتائج", bn:"ফলাফল", pt:"Achados", fr:"Résultats", de:"Befunde", ja:"結果", id:"Temuan", pa:"ਨਤੀਜੇ", jv:"Temuan", te:"ఫలితాలు", tr:"Bulgular", ko:"결과", mr:"निष्कर्ष", vi:"Phát hiện", ta:"முடிவுகள்", it:"Risultati", fa:"یافته‌ها", tlh:"chovwI'" },
+  reportShareLabel: { en:"Share this report", ru:"Ссылка на отчёт", zh:"分享报告", es:"Enlace al informe", fr:"Lien du rapport", de:"Link zum Bericht", ja:"レポートのリンク", pt:"Link do relatório" },
+  reportRuleLabel: { en:"Summary", ru:"Итог", zh:"摘要", es:"Resumen", fr:"Synthèse", de:"Überblick", ja:"概要", pt:"Resumo" },
+  reportPillarsTitle: { en:"Core auth signals", ru:"Ключевые сигналы аутентификации", zh:"核心认证信号", es:"Señales de autenticación", fr:"Signaux d’authentification", de:"Kernsignale der Authentifizierung", ja:"認証の主要シグナル", pt:"Sinais de autenticação" },
+  pillarPass: { en:"Pass", ru:"Пройдено", zh:"通过", es:"Correcto", fr:"OK", de:"Bestanden", ja:"成功", pt:"OK" },
+  pillarFail: { en:"Fail", ru:"Провал", zh:"失败", es:"Fallo", fr:"Échec", de:"Fehlgeschlagen", ja:"失敗", pt:"Falha" },
+  pillarWarn: { en:"Weak", ru:"Слабо", zh:"较弱", es:"Débil", fr:"Faible", de:"Schwach", ja:"弱い", pt:"Fraco" },
+  pillarUnknown: { en:"n/a", ru:"нет данных", zh:"无数据", es:"n/d", fr:"n/d", de:"k. A.", ja:"なし", pt:"n/d" },
+  verdictExcellent: { en:"Excellent", ru:"Отлично", zh:"优秀", es:"Excelente", fr:"Excellent", de:"Ausgezeichnet", ja:"優秀", pt:"Excelente" },
+  verdictGood: { en:"Solid", ru:"Хорошо", zh:"良好", es:"Sólido", fr:"Solide", de:"Solid", ja:"良好", pt:"Sólido" },
+  verdictFair: { en:"Mixed", ru:"Средне", zh:"一般", es:"Regular", fr:"Mitigé", de:"Gemischt", ja:"普通", pt:"Misto" },
+  verdictPoor: { en:"Risky", ru:"Рискованно", zh:"有风险", es:"Arriesgado", fr:"Risqué", de:"Riskant", ja:"リスクあり", pt:"Arriscado" },
+  verdictBad: { en:"Broken", ru:"Сломано", zh:"严重", es:"Roto", fr:"Cassé", de:"Kaputt", ja:"破綻", pt:"Quebrado" },
+  scorePoints: { en:"{score} / 100", ru:"{score} / 100", zh:"{score} / 100", es:"{score} / 100", fr:"{score} / 100", de:"{score} / 100", ja:"{score} / 100", pt:"{score} / 100" },
+  findingsTitle: { en:"Findings", ru:"Разбор", zh:"发现项", es:"Hallazgos", hi:"निष्कर्ष", ar:"النتائج", bn:"ফলাফল", pt:"Achados", fr:"Résultats", de:"Befunde", ja:"結果", id:"Temuan", pa:"ਨਤੀਜੇ", jv:"Temuan", te:"ఫలితాలు", tr:"Bulgular", ko:"결과", mr:"निष्कर्ष", vi:"Phát hiện", ta:"முடிவுகள்", it:"Risultati", fa:"یافته‌ها", tlh:"chovwI'" },
+  filterAll: { en:"All", ru:"Все", zh:"全部", es:"Todas", hi:"सभी", ar:"الكل", bn:"সব", pt:"Todas", fr:"Toutes", de:"Alle", ja:"すべて", id:"Semua", pa:"ਸਾਰੇ", jv:"Kabeh", te:"అన్నీ", tr:"Tümü", ko:"전체", mr:"सर्व", vi:"Tất cả", ta:"அனைத்தும்", it:"Tutte", fa:"همه", tlh:"Hoch" },
+  filterFail: { en:"Errors", ru:"Ошибки", zh:"错误", es:"Errores", hi:"त्रुटियाँ", ar:"أخطاء", bn:"ত্রুটি", pt:"Erros", fr:"Erreurs", de:"Fehler", ja:"エラー", id:"Kesalahan", pa:"ਗਲਤੀਆਂ", jv:"Kasalahan", te:"లోపాలు", tr:"Hatalar", ko:"오류", mr:"त्रुटी", vi:"Lỗi", ta:"பிழைகள்", it:"Errori", fa:"خطاها", tlh:"Qagh" },
+  filterPass: { en:"Passed", ru:"Пройдено", zh:"通过", es:"Correctas", hi:"पास", ar:"ناجح", bn:"পাস", pt:"OK", fr:"Réussies", de:"Bestanden", ja:"合格", id:"Lulus", pa:"ਪਾਸ", jv:"Lulus", te:"పాస్", tr:"Geçti", ko:"통과", mr:"पास", vi:"Đạt", ta:"தேர்ச்சி", it:"OK", fa:"قبول", tlh:"Qap" },
+  filterAria: { en:"Filter findings", ru:"Фильтр результатов", zh:"筛选结果", es:"Filtrar hallazgos", hi:"निष्कर्ष फ़िल्टर करें", ar:"تصفية النتائج", bn:"ফলাফল ফিল্টার", pt:"Filtrar achados", fr:"Filtrer les résultats", de:"Befunde filtern", ja:"結果を絞り込み", id:"Filter temuan", pa:"ਨਤੀਜੇ ਫਿਲਟਰ", jv:"Filter temuan", te:"ఫలితాలను ఫిల్టర్ చేయండి", tr:"Bulguları filtrele", ko:"결과 필터", mr:"निष्कर्ष फिल्टर", vi:"Lọc phát hiện", ta:"முடிவுகளை வடிகட்டு", it:"Filtra risultati", fa:"فیلتر یافته‌ها", tlh:"chovwI' wIwiv" },
+  emptyFilter: { en:"Nothing in this filter.", ru:"В этом фильтре пусто.", zh:"此筛选下无结果。", es:"Nada en este filtro.", hi:"इस फ़िल्टर में कुछ नहीं।", ar:"لا شيء في هذا التصفية.", bn:"এই ফিল্টারে কিছু নেই।", pt:"Nada neste filtro.", fr:"Rien dans ce filtre.", de:"Nichts in diesem Filter.", ja:"この絞り込みでは何もありません。", id:"Tidak ada di filter ini.", pa:"ਇਸ ਫਿਲਟਰ ਵਿੱਚ ਕੁਝ ਨਹੀਂ।", jv:"Ora ana ing filter iki.", te:"ఈ ఫిల్టర్‌లో ఏమీ లేదు.", tr:"Bu filtrede bir şey yok.", ko:"이 필터에 항목이 없습니다.", mr:"या फिल्टरमध्ये काही नाही.", vi:"Không có mục trong bộ lọc này.", ta:"இந்த வடிகட்டியில் எதுவும் இல்லை.", it:"Niente in questo filtro.", fa:"در این فیلتر چیزی نیست.", tlh:"pagh." },
+  downloadAiBrief: { en:"Download AI brief", ru:"Скачать ТЗ для ИИ", zh:"下载 AI 任务书", es:"Descargar brief para IA", hi:"AI ब्रीफ डाउनलोड करें", ar:"تنزيل موجز للذكاء الاصطناعي", bn:"AI ব্রিফ ডাউনলোড", pt:"Baixar brief para IA", fr:"Télécharger le brief IA", de:"KI-Brief herunterladen", ja:"AI向けブリーフをダウンロード", id:"Unduh brief AI", pa:"AI ਬ੍ਰੀਫ ਡਾਊਨਲੋਡ", jv:"Undhuh brief AI", te:"AI బ్రీఫ్ డౌన్‌లోడ్", tr:"YZ brief indir", ko:"AI 브리프 다운로드", mr:"AI ब्रीफ डाउनलोड", vi:"Tải brief AI", ta:"AI சுருக்கத்தைப் பதிவிறக்கு", it:"Scarica brief per IA", fa:"دانلود بریف هوش مصنوعی", tlh:"AI De' yIje'" },
+  downloadAdminBrief: { en:"Mail admin checklist", ru:"ТЗ для админа почты", zh:"邮件管理员清单", es:"Lista para admin de correo", hi:"मेल एडमिन चेकलिस्ट", ar:"قائمة لمسؤول البريد", bn:"মেইল অ্যাডমিন চেকলিস্ট", pt:"Lista para admin de e-mail", fr:"Checklist admin mail", de:"Checkliste für Mail-Admin", ja:"メール管理者チェックリスト", id:"Checklist admin mail", pa:"ਮੇਲ ਐਡਮਿਨ ਚੈਕਲਿਸਟ", jv:"Checklist admin mail", te:"మెయిల్ అడ్మిన్ చెక్‌లిస్ట్", tr:"Posta admin kontrol listesi", ko:"메일 관리자 체크리스트", mr:"मेल अॅडмин चेकलिस्ट", vi:"Checklist quản trị thư", ta:"அஞ்சல் நிர்வாகி சரிபார்ப்புப்பட்டியல்", it:"Checklist admin posta", fa:"چک‌لیست مدیر پست", tlh:"QIn admin tetlh" },
+  dnsHintsTitle: { en:"DNS wizard", ru:"DNS-мастер", zh:"DNS 向导", es:"Asistente DNS", pt:"Assistente DNS", fr:"Assistant DNS", de:"DNS-Assistent", ja:"DNSウィザード" },
+  dnsHintsLead: { en:"Ready-made TXT drafts for the From domain. Replace placeholders (selector, keys, includes) before publishing.", ru:"Готовые черновики TXT для домена From. Перед публикацией подставьте selector, ключи и include.", zh:"发件域的 TXT 草稿。发布前请替换选择器、密钥与 include。", es:"Borradores TXT para el dominio From. Sustituya selector, claves e includes antes de publicar.", pt:"Rascunhos TXT para o domínio From. Substitua seletor, chaves e includes antes de publicar.", fr:"Brouillons TXT pour le domaine From. Remplacez sélecteur, clés et includes avant publication.", de:"TXT-Entwürfe für die From-Domain. Selector, Schlüssel und Includes vor dem Publish ersetzen.", ja:"From ドメイン用の TXT 下書き。公開前に selector・鍵・include を置き換えてください。" },
+  exportJson: { en:"Download JSON", ru:"Скачать JSON", zh:"下载 JSON", es:"Descargar JSON", pt:"Baixar JSON", fr:"Télécharger JSON", de:"JSON herunterladen", ja:"JSONをダウンロード" },
+  exportPdf: { en:"Print / PDF", ru:"Печать / PDF", zh:"打印 / PDF", es:"Imprimir / PDF", pt:"Imprimir / PDF", fr:"Imprimer / PDF", de:"Drucken / PDF", ja:"印刷 / PDF" },
+  privacyLink: { en:"Privacy", ru:"Конфиденциальность", zh:"隐私", es:"Privacidad", pt:"Privacidade", fr:"Confidentialité", de:"Datenschutz", ja:"プライバシー" },
+  reportRetentionHint: { en:"Report link stays available about 7 days after the message arrives.", ru:"Ссылка на отчёт живёт около 7 дней после прихода письма.", zh:"报告链接在邮件到达后约保留 7 天。", es:"El enlace al informe dura unos 7 días tras llegar el correo.", pt:"O link do relatório fica ~7 dias após a chegada.", fr:"Le lien du rapport reste ~7 jours après réception.", de:"Der Berichtslink bleibt ca. 7 Tage nach dem Empfang.", ja:"レポートリンクは受信後およそ7日間有効です。" },
+  testsSummary: { en:"{total} checks · {pass} passed · {fail} with issues", ru:"{total} проверок · {pass} пройдено · {fail} с замечаниями", zh:"{total} 项 · {pass} 通过 · {fail} 有问题", es:"{total} pruebas · {pass} OK · {fail} con problemas", fr:"{total} contrôles · {pass} OK · {fail} avec remarques", de:"{total} Checks · {pass} bestanden · {fail} mit Hinweisen", ja:"{total} 件 · 合格 {pass} · 指摘 {fail}", pt:"{total} testes · {pass} OK · {fail} com problemas" },
+  scoreExplain: { en:"Grade {score}/100: start at 100, minus {lost} by severity (critical −35, high −20, medium −10, low −5). Heuristic spam score {spam} = issues {spamFail} + bonuses {spamPass} — not the same as the grade.", ru:"Оценка {score}/100: старт 100, снято {lost} по серьёзности (critical −35, high −20, medium −10, low −5). Спам-балл эвристик {spam} = замечания {spamFail} + бонусы за пройденные {spamPass} — это не оценка из 100.", zh:"评分 {score}/100：从 100 起按严重度扣 {lost}（critical −35…）。启发式垃圾分 {spam} = 问题 {spamFail} + 加分 {spamPass}，与百分制评分不是一回事。", es:"Nota {score}/100: parte de 100, −{lost} por gravedad. Score spam {spam} = problemas {spamFail} + bonus {spamPass} — no es la nota /100.", fr:"Note {score}/100 : départ 100, −{lost} selon la sévérité. Score spam {spam} = écarts {spamFail} + bonus {spamPass} — ce n’est pas la note /100.", de:"Note {score}/100: Start 100, −{lost} nach Schwere. Spam-Score {spam} = Probleme {spamFail} + Boni {spamPass} — nicht die Note /100.", ja:"評価 {score}/100：100 から重大度で {lost} 減点。スパム点 {spam} = 指摘 {spamFail} + ボーナス {spamPass}（百分とは別）。", pt:"Nota {score}/100: parte de 100, −{lost} por gravidade. Score spam {spam} = problemas {spamFail} + bônus {spamPass} — não é a nota /100." },
+  spamScoreLabel: { en:"Spam weight: {score}", ru:"Вклад в спам-балл: {score}", zh:"垃圾分贡献：{score}", es:"Peso spam: {score}", fr:"Poids spam : {score}", de:"Spam-Gewicht: {score}", ja:"スパム寄与: {score}", pt:"Peso spam: {score}" },
+  gradeDeltaLabel: { en:"Grade impact: {delta}", ru:"Влияние на оценку: {delta}", zh:"对评分影响：{delta}", es:"Impacto en la nota: {delta}", fr:"Impact sur la note : {delta}", de:"Einfluss auf die Note: {delta}", ja:"評価への影響: {delta}", pt:"Impacto na nota: {delta}" },
   emptyFindings: { en:"No findings.", ru:"Нет замечаний.", zh:"无发现。", es:"Sin hallazgos.", hi:"कोई निष्कर्ष नहीं।", ar:"لا نتائج.", bn:"কোনো ফলাফল নেই।", pt:"Sem achados.", fr:"Aucun résultat.", de:"Keine Befunde.", ja:"指摘なし。", id:"Tidak ada temuan.", pa:"ਕੋਈ ਨਤੀਜਾ ਨਹੀਂ।", jv:"Ora ana temuan.", te:"ఫలితాలు లేవు.", tr:"Bulgu yok.", ko:"결과 없음.", mr:"निष्कर्ष नाहीत.", vi:"Không có phát hiện.", ta:"முடிவுகள் இல்லை.", it:"Nessun risultato.", fa:"یافته‌ای نیست.", tlh:"pagh." },
   fixLabel: { en:"Fix", ru:"Исправление", zh:"修复", es:"Corrección", hi:"सुधार", ar:"الإصلاح", bn:"সংশোধন", pt:"Correção", fr:"Correctif", de:"Fix", ja:"修正", id:"Perbaikan", pa:"ਫਿਕਸ", jv:"Perbaikan", te:"ఫిక్స్", tr:"Düzeltme", ko:"수정", mr:"सुधारणा", vi:"Sửa", ta:"திருத்தம்", it:"Fix", fa:"اصلاح", tlh:"lIng" },
+  whyLabel: { en:"Why it matters for spam", ru:"Почему это важно для спама", zh:"为何与垃圾邮件有关", es:"Por qué importa para el spam", hi:"स्पैम के लिए यह क्यों मायने रखता है", ar:"لماذا يهم للبريد العشوائي", bn:"স্প্যামের জন্য কেন গুরুত্বপূর্ণ", pt:"Por que importa para spam", fr:"Pourquoi c’est lié au spam", de:"Warum das für Spam zählt", ja:"スパムとの関係", id:"Mengapa penting untuk spam", pa:"ਸਪੈਮ ਲਈ ਇਹ ਕਿਉਂ ਮਾਇਨੇ ਰੱਖਦਾ ਹੈ", jv:"Kok penting kanggo spam", te:"స్పామ్‌కు ఇది ఎందుకు ముఖ్యం", tr:"Spam için neden önemli", ko:"스팸과 왜 관련되는지", mr:"स्पॅमसाठी हे का महत्त्वाचे", vi:"Vì sao liên quan đến spam", ta:"ஸ்பேமுக்கு இது ஏன் முக்கியம்", it:"Perché conta per lo spam", fa:"چرا برای اسپم مهم است", tlh:"spam Hol" },
+  evidenceLabel: { en:"Evidence", ru:"Что увидели", zh:"证据", es:"Evidencia", hi:"साक्ष्य", ar:"الدليل", bn:"প্রমাণ", pt:"Evidência", fr:"Preuve", de:"Hinweis", ja:"根拠", id:"Bukti", pa:"ਸਬੂਤ", jv:"Bukti", te:"ఆధారం", tr:"Kanıt", ko:"근거", mr:"पुरावा", vi:"Bằng chứng", ta:"ஆதாரம்", it:"Evidenza", fa:"مدرک", tlh:"nagh" },
   mailMetaTitle: { en:"Message", ru:"Письмо", zh:"邮件", es:"Mensaje", hi:"संदेश", ar:"الرسالة", bn:"বার্তা", pt:"Mensagem", fr:"Message", de:"Nachricht", ja:"メッセージ", id:"Pesan", pa:"ਸੁਨੇਹਾ", jv:"Pesen", te:"సందేశం", tr:"Mesaj", ko:"메시지", mr:"संदेश", vi:"Thư", ta:"செய்தி", it:"Messaggio", fa:"پیام", tlh:"QIn" },
+  headersTitle: { en:"Headers", ru:"Заголовки", zh:"邮件头", es:"Cabeceras", hi:"हेडर", ar:"الترويسات", bn:"হেডার", pt:"Cabeçalhos", fr:"En-têtes", de:"Header", ja:"ヘッダー", id:"Header", pa:"ਹੈਡਰ", jv:"Header", te:"హెడర్లు", tr:"Başlıklar", ko:"헤더", mr:"हेडर", vi:"Header", ta:"தலைப்புகள்", it:"Intestazioni", fa:"سرآیندها", tlh:"De' qach" },
+  headersEmpty: { en:"No headers in this message.", ru:"В письме нет заголовков.", zh:"此邮件没有标头。", es:"Este mensaje no tiene cabeceras.", hi:"इस संदेश में हेडर नहीं हैं।", ar:"لا ترويسات في هذه الرسالة.", bn:"এই বার্তায় হেডার নেই।", pt:"Não há cabeçalhos nesta mensagem.", fr:"Pas d’en-têtes dans ce message.", de:"Keine Header in dieser Nachricht.", ja:"このメッセージにヘッダーがありません。", id:"Tidak ada header di pesan ini.", pa:"ਇਸ ਸੁਨੇਹੇ ਵਿੱਚ ਹੈਡਰ ਨਹੀਂ ਹਨ।", jv:"Ora ana header ing pesen iki.", te:"ఈ సందేశంలో హెడర్లు లేవు.", tr:"Bu iletide başlık yok.", ko:"이 메시지에 헤더가 없습니다.", mr:"या संदेशात हेडर नाहीत.", vi:"Thư này không có header.", ta:"இந்த செய்தியில் தலைப்புகள் இல்லை.", it:"Nessuna intestazione in questo messaggio.", fa:"در این پیام سرآیندی نیست.", tlh:"De' qach Hut." },
   fromLabel: { en:"From", ru:"От", zh:"发件人", es:"De", hi:"प्रेषक", ar:"من", bn:"প্রেরক", pt:"De", fr:"De", de:"Von", ja:"差出人", id:"Dari", pa:"ਵੱਲੋਂ", jv:"Saka", te:"నుండి", tr:"Kimden", ko:"보낸 사람", mr:"कडून", vi:"Từ", ta:"அனுப்புநர்", it:"Da", fa:"از", tlh:"vo'" },
   subjectLabel: { en:"Subject", ru:"Тема", zh:"主题", es:"Asunto", hi:"विषय", ar:"الموضوع", bn:"বিষয়", pt:"Assunto", fr:"Objet", de:"Betreff", ja:"件名", id:"Subjek", pa:"ਵਿਸ਼ਾ", jv:"Subyek", te:"విషయం", tr:"Konu", ko:"제목", mr:"विषय", vi:"Tiêu đề", ta:"பொருள்", it:"Oggetto", fa:"موضوع", tlh:"Subject" },
   ipLabel: { en:"Sending IP", ru:"IP отправителя", zh:"发送 IP", es:"IP de envío", hi:"भेजने वाला IP", ar:"IP المرسل", bn:"প্রেরকের IP", pt:"IP de envio", fr:"IP d’envoi", de:"Absender-IP", ja:"送信元 IP", id:"IP pengirim", pa:"ਭੇਜਣ ਵਾਲਾ IP", jv:"IP pangirim", te:"పంపే IP", tr:"Gönderen IP", ko:"발신 IP", mr:"पाठवणारा IP", vi:"IP gửi", ta:"அனுப்பும் IP", it:"IP mittente", fa:"IP فرستنده", tlh:"IP" },
@@ -59,51 +94,187 @@ function genUi() {
 
 function seoFor(isRu) {
   return {
-    title: isRu ? "supermail — спам-тест письма для почтового сервера" : "supermail — email spam test for your mail server",
+    title: isRu
+      ? "supermail — спам-тест письма: DKIM, SPF по IP, DMARC, DNS-мастер"
+      : "supermail — email spam test: DKIM crypto, SPF-by-IP, DMARC, DNS wizard",
     description: isRu
-      ? "Отправьте письмо на одноразовый адрес и получите разбор: SPF/DKIM/DMARC, DNSBL, PTR, стоп-слова и оценка A–F."
-      : "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
-    heading: isRu ? "Спам-тест вашего письма" : "Spam-test your email",
+      ? "Одноразовый ящик и реальное письмо с вашего SMTP. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, DNS-мастер, JSON/PDF, ТЗ для ИИ. Бесплатно."
+      : "One-time inbox and a real message from your SMTP. A–F grade: crypto DKIM, SPF-by-IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, DNS wizard, JSON/PDF, AI briefs. Free.",
+    heading: isRu ? "Спам-тест вашего исходящего письма" : "Spam-test your outbound email",
     leadHtml: isRu
-      ? "Мы выдаём уникальный ящик. Вы отправляете письмо со своего SMTP — и видите, почему оно может уйти в спам."
-      : "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
-    benefitsTitle: isRu ? "Что проверяем" : "What we check",
+      ? "Выдаём уникальный адрес @supermail.dmosk.net. Вы шлёте письмо со своего SMTP — получаете оценку A–F, криптопроверку DKIM, SPF по IP соединения, DMARC alignment, DNS-мастер с черновиками TXT, экспорт JSON и Печать/PDF, исходные заголовки и два Markdown-ТЗ: для ИИ и для админа почты. Ссылка на отчёт живёт около 7 дней."
+      : "We give a unique @supermail.dmosk.net address. Send from your SMTP — get an A–F grade, crypto DKIM verify, SPF against the connecting IP, DMARC alignment, a DNS wizard with TXT drafts, JSON and Print/PDF export, raw headers, and two Markdown briefs for AI and your mail admin. The report link lasts about 7 days.",
+    benefitsTitle: isRu ? "Что умеет supermail" : "What supermail covers",
     benefits: isRu
-      ? ["Реальное письмо, не только DNS-форма", "SPF / DKIM / DMARC по домену From", "DNSBL и PTR IP отправителя", "Тема и тело: стоп-слова, CAPS, сокращённые URL", "Оценка A–F и копируемые фиксы"]
-      : ["A real message, not just a DNS form", "SPF / DKIM / DMARC for the From domain", "DNSBL and PTR of the sending IP", "Subject/body: spam words, CAPS, short URLs", "A–F grade with copy-paste fixes"],
+      ? [
+          "Реальное письмо по SMTP, не «форма только DNS»",
+          "Криптопроверка DKIM и публикация ключа в DNS",
+          "SPF-запись и оценка SPF по IP отправителя",
+          "DMARC: политика, rua/ruf, alignment со From",
+          "MTA-STS, TLS-RPT и BIMI в DNS (по желанию домена)",
+          "DNSBL, PTR↔HELO, A у HELO, контент и MIME",
+          "DNS-мастер: готовые черновики TXT для домена From",
+          "Экспорт отчёта: JSON и Печать/PDF; ТЗ для ИИ и админа",
+          "Фильтр разбора (Все / Ошибки / Пройдено), 23 языка UI",
+        ]
+      : [
+          "A real SMTP message, not a DNS-only form",
+          "Cryptographic DKIM verify plus DNS key publication",
+          "SPF record and SPF evaluation against the sending IP",
+          "DMARC policy, rua/ruf, and alignment with From",
+          "MTA-STS, TLS-RPT and BIMI DNS checks (optional)",
+          "DNSBL, PTR↔HELO, HELO A, content and MIME",
+          "DNS wizard: ready TXT drafts for the From domain",
+          "Export: JSON and Print/PDF; AI and mail-admin briefs",
+          "Findings filter (All / Errors / Passed), 23 UI languages",
+        ],
     howTitle: isRu ? "Как пользоваться" : "How to use",
     howSteps: isRu
-      ? ["Скопируйте тестовый адрес на странице", "Отправьте на него письмо со своего сервера или ящика", "Подождите 10–60 секунд — вкладку не закрывайте", "Разберите findings и поправьте DNS/контент"]
-      : ["Copy the test address on the page", "Send a message to it from your server or mailbox", "Wait 10–60 seconds — keep the tab open", "Read findings and fix DNS/content"],
+      ? [
+          "Скопируйте тестовый адрес (ссылку с ?i=… можно сохранить или переслать)",
+          "Отправьте письмо со своего сервера, ESP или обычного ящика",
+          "Подождите 10–60 секунд — вкладку не закрывайте",
+          "Смотрите оценку, фильтр разбора, DNS-мастер и заголовки",
+          "Скачайте JSON, распечатайте в PDF, возьмите ТЗ для ИИ или админа",
+        ]
+      : [
+          "Copy the test address (you can keep or share the ?i=… link)",
+          "Send a message from your server, ESP or normal mailbox",
+          "Wait 10–60 seconds — keep the tab open",
+          "Read the grade, findings filter, DNS wizard and headers",
+          "Download JSON, print to PDF, or take the AI / admin brief",
+        ],
     strongTitle: isRu ? "Советы по доставке" : "Deliverability tips",
     strongLead: isRu
-      ? "Фильтры смотрят и на инфраструктуру, и на текст. Исправляйте auth и контент вместе."
-      : "Filters look at both infrastructure and wording. Fix auth and content together.",
+      ? "Фильтры смотрят на DNS, имя сервера и текст. Закройте auth (SPF/DKIM/DMARC alignment) и контент вместе — одной TXT-записи мало."
+      : "Filters look at DNS, the server name and the wording. Fix auth (SPF/DKIM/DMARC alignment) and content together — one TXT record is not enough.",
     tipsLabel: isRu ? "Практика" : "Practice",
     strongTips: isRu
-      ? ["Подписывайте DKIM тем же доменом, что в From", "Не используйте +all в SPF", "PTR SMTP должен совпадать с EHLO", "Избегайте публичных коротких ссылок", "Добавьте текстовую часть, не только картинку"]
-      : ["Sign DKIM with the same domain as From", "Never use +all in SPF", "SMTP PTR should match EHLO", "Avoid public URL shorteners", "Include a text part, not only an image"],
+      ? [
+          "DKIM тем же доменом, что в From; подпись должна проходить криптопроверку",
+          "В SPF не ставьте +all; IP отправки должен попадать в pass",
+          "DMARC: p=none + rua, затем quarantine → reject; следите за alignment",
+          "PTR IP должен совпадать с HELO/EHLO, у HELO — рабочий A",
+          "По желанию: MTA-STS и TLS-RPT; BIMI — после жёсткого DMARC",
+          "Черновики TXT берите из DNS-мастера и подставляйте свои selector/ключи",
+        ]
+      : [
+          "Sign DKIM with the same domain as From; the signature must crypto-verify",
+          "Never use +all in SPF; the sending IP should evaluate to pass",
+          "DMARC: p=none + rua, then quarantine → reject; watch alignment",
+          "IP PTR should match HELO/EHLO; HELO needs a working A record",
+          "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
+          "Copy TXT drafts from the DNS wizard and fill in your selector/keys",
+        ],
     usesTitle: isRu ? "Когда это нужно" : "When you need it",
     uses: isRu
-      ? ["Перед массовой рассылкой", "После смены ESP или своего Postfix/Exim", "Когда Gmail/Mail.ru кладут письма в спам", "Проверка репутации IP отправителя"]
-      : ["Before a bulk campaign", "After changing ESP or your Postfix/Exim", "When Gmail/Mail.ru file mail as spam", "Checking sending-IP reputation"],
+      ? [
+          "Перед массовой рассылкой или запуском транзакционных писем",
+          "После смены ESP, Postfix/Exim или IP отправки",
+          "Когда Gmail, Mail.ru или Outlook кладут письма в спам",
+          "Проверка SPF/DKIM/DMARC alignment и репутации IP (DNSBL)",
+          "Собрать DNS-записи и отдать админу или ИИ готовое ТЗ",
+        ]
+      : [
+          "Before a bulk campaign or transactional mail launch",
+          "After changing ESP, Postfix/Exim or the sending IP",
+          "When Gmail, Mail.ru or Outlook file mail as spam",
+          "Checking SPF/DKIM/DMARC alignment and IP reputation (DNSBL)",
+          "Gather DNS records and hand an admin or AI a ready brief",
+        ],
     faqTitle: isRu ? "Вопросы и ответы" : "FAQ",
     faq: isRu
       ? [
-          { q: "Куда слать письмо?", a: "На уникальный адрес вида …@inbox.supermail.dmosk.net, который показывает страница." },
-          { q: "Сколько живёт ящик?", a: "Около 30 минут. После истечения создайте новый адрес." },
-          { q: "Читаете ли вы чужие письма?", a: "Только то, что вы сами отправили на тестовый адрес. Тела дольше сессии не храним." },
-          { q: "Это замена mail-tester?", a: "По сценарию — да: ящик → письмо → отчёт. Набор тестов и формулировки — наши." },
-          { q: "Платно?", a: "Нет, сервис бесплатный." },
-          { q: "Как считается оценка?", a: "Со 100 баллов снимаем critical/high/medium/low findings." },
+          {
+            q: "Куда слать письмо?",
+            a: "На уникальный адрес …@supermail.dmosk.net на странице. Можно отправить с вашего SMTP, ESP или обычного ящика.",
+          },
+          {
+            q: "Что именно проверяете?",
+            a: "Криптопроверку DKIM, SPF-запись и SPF по IP соединения, DMARC (политика, rua/ruf, alignment с From), DNS-ключ DKIM, MX, MTA-STS / TLS-RPT / BIMI, DNSBL, PTR↔HELO и A у HELO, контент и MIME, Authentication-Results, Received/TLS, List-Unsubscribe, ARC и др. В отчёте — оценка A–F, спам-балл, DNS-мастер, заголовки, JSON и Печать/PDF.",
+          },
+          {
+            q: "Как считается оценка?",
+            a: "Оценка из 100 и спам-балл — разные шкалы. Оценка: старт 100, за замечание снимаем по серьёзности (critical −35, high −20, medium −10, low −5). Спам-балл эвристик — сумма мелких вкладов по проверкам; он не обязан совпадать с «сколько сняли из 100».",
+          },
+          {
+            q: "Проверяете ли криптографию DKIM и SPF по IP?",
+            a: "Да. Подпись DKIM проверяем криптографически; SPF оцениваем по IP соединения и домену MAIL FROM / From. Плюс смотрим публикацию ключа DKIM и alignment DMARC.",
+          },
+          {
+            q: "Что такое DNS-мастер?",
+            a: "В отчёте — черновики TXT (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) для домена From. Скопируйте запись и подставьте свои selector, ключи и include перед публикацией в DNS.",
+          },
+          {
+            q: "Как скачать отчёт?",
+            a: "Кнопки «Скачать JSON» и «Печать / PDF» в отчёте. Также два Markdown-ТЗ: для ИИ-агента (без повторных сетевых сканов) и понятный чеклист для админа почты.",
+          },
+          {
+            q: "Сколько живёт ящик и ссылка на отчёт?",
+            a: "Ожидание письма — около 30 минут. Готовый отчёт по ссылке с ?i=… доступен около 7 дней, затем удаляется. Подробности — на странице «Конфиденциальность».",
+          },
+          {
+            q: "Есть публичный API?",
+            a: "Да: POST /api/v1/inbox и GET /api/v1/inbox/{id}. Контракт описан в README на GitHub и в документации сервиса.",
+          },
+          {
+            q: "На каких языках интерфейс?",
+            a: "23 локали. Тексты проверок переводятся по коду; Markdown-ТЗ — на русском или английском в зависимости от языка страницы.",
+          },
+          {
+            q: "Это клон mail-tester?",
+            a: "Сценарий тот же: ящик → письмо → отчёт. Набор проверок, формулировки, DNS-мастер, экспорт и два ТЗ — наши; полного SpamAssassin внутри нет.",
+          },
+          {
+            q: "Платно?",
+            a: "Нет, сервис бесплатный.",
+          },
         ]
       : [
-          { q: "Where do I send mail?", a: "To the unique …@inbox.supermail.dmosk.net address shown on the page." },
-          { q: "How long does the inbox live?", a: "About 30 minutes. Create a new address when it expires." },
-          { q: "Do you read other people’s mail?", a: "Only what you send to the test address. Bodies are not kept past the session." },
-          { q: "Is this a mail-tester clone?", a: "Same flow: inbox → message → report. The checks and wording are ours." },
-          { q: "Is it free?", a: "Yes." },
-          { q: "How is the grade calculated?", a: "We start at 100 and subtract for critical/high/medium/low findings." },
+          {
+            q: "Where do I send mail?",
+            a: "To the unique …@supermail.dmosk.net address on the page — from your SMTP, ESP or a normal mailbox.",
+          },
+          {
+            q: "What exactly do you check?",
+            a: "Crypto DKIM verify, SPF record and SPF against the connecting IP, DMARC (policy, rua/ruf, alignment with From), DKIM DNS key, MX, MTA-STS / TLS-RPT / BIMI, DNSBL, PTR↔HELO and HELO A, content and MIME, Authentication-Results, Received/TLS, List-Unsubscribe, ARC and more. The report includes an A–F grade, spam score, DNS wizard, headers, JSON and Print/PDF.",
+          },
+          {
+            q: "How is the grade calculated?",
+            a: "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100.",
+          },
+          {
+            q: "Do you verify DKIM crypto and SPF against the IP?",
+            a: "Yes. We cryptographically verify DKIM and evaluate SPF for the connecting IP and MAIL FROM / From domain, plus DKIM key publication and DMARC alignment.",
+          },
+          {
+            q: "What is the DNS wizard?",
+            a: "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS.",
+          },
+          {
+            q: "How do I export the report?",
+            a: "Use Download JSON and Print / PDF on the report. There are also two Markdown briefs: an AI agent task (no live rescans) and a plain mail-admin checklist.",
+          },
+          {
+            q: "How long do the inbox and report link live?",
+            a: "Waiting for mail lasts about 30 minutes. A ready report via ?i=… stays available about 7 days, then is removed. See the Privacy page for details.",
+          },
+          {
+            q: "Is there a public API?",
+            a: "Yes: POST /api/v1/inbox and GET /api/v1/inbox/{id}. The contract is in the GitHub README and service docs.",
+          },
+          {
+            q: "Which languages are supported?",
+            a: "23 UI locales. Finding copy is localized by check code; Markdown briefs are Russian or English depending on the page language.",
+          },
+          {
+            q: "Is this a mail-tester clone?",
+            a: "Same flow: inbox → message → report. The checks, wording, DNS wizard, export and two briefs are ours; we do not ship full SpamAssassin.",
+          },
+          {
+            q: "Is it free?",
+            a: "Yes.",
+          },
         ],
     appName: "supermail",
   };
