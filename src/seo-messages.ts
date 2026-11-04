@@ -22,129 +22,129 @@ export type SeoCopy = {
 
 export const SEO_COPY: Record<Locale, SeoCopy> = {
   ru: {
-    "title": "supermail — проверка MX, SPF, DKIM, DMARC и DNSBL",
-    "description": "Проверьте почтовый домен: MX, SPF/DKIM/DMARC/BIMI, чёрные списки DNSBL, PTR и SMTP STARTTLS. Оценка A–F и копируемые фиксы.",
-    "heading": "Проверка почтового сервера",
-    "leadHtml": "Введите домен — получите разбор DNS-авторизации, репутации IP и лёгкий SMTP-probe. Без регистрации.",
-    "benefitsTitle": "Зачем это нужно",
+    "title": "supermail — спам-тест письма для почтового сервера",
+    "description": "Отправьте письмо на одноразовый адрес и получите разбор: SPF/DKIM/DMARC, DNSBL, PTR, стоп-слова и оценка A–F.",
+    "heading": "Спам-тест вашего письма",
+    "leadHtml": "Мы выдаём уникальный ящик. Вы отправляете письмо со своего SMTP — и видите, почему оно может уйти в спам.",
+    "benefitsTitle": "Что проверяем",
     "benefits": [
-      "Оценка A–F и числовой балл",
-      "MX, SPF, DKIM, DMARC и BIMI в одном отчёте",
-      "DNSBL и PTR по IP SMTP",
-      "Стартовые TXT для SPF и DMARC",
-      "Понятные findings с фиксами"
+      "Реальное письмо, не только DNS-форма",
+      "SPF / DKIM / DMARC по домену From",
+      "DNSBL и PTR IP отправителя",
+      "Тема и тело: стоп-слова, CAPS, сокращённые URL",
+      "Оценка A–F и копируемые фиксы"
     ],
-    "howTitle": "Как проверить",
+    "howTitle": "Как пользоваться",
     "howSteps": [
-      "Укажите домен отправителя",
-      "При необходимости — селектор DKIM и IP SMTP",
-      "Нажмите «Проверить»",
-      "Скопируйте фиксы или стартовые записи"
+      "Скопируйте тестовый адрес на странице",
+      "Отправьте на него письмо со своего сервера или ящика",
+      "Подождите 10–60 секунд — вкладку не закрывайте",
+      "Разберите findings и поправьте DNS/контент"
     ],
     "strongTitle": "Советы по доставке",
-    "strongLead": "SPF, DKIM и DMARC работают вместе: выравнивание From и корректный PTR сильно влияют на inbox.",
+    "strongLead": "Фильтры смотрят и на инфраструктуру, и на текст. Исправляйте auth и контент вместе.",
     "tipsLabel": "Практика",
     "strongTips": [
-      "Один SPF на домен и не больше 10 DNS-lookup",
-      "Начните DMARC с p=none, затем quarantine/reject",
-      "Селектор DKIM должен совпадать с тем, что ставит MTA",
-      "PTR SMTP-хоста должен совпадать с EHLO",
-      "Не используйте +all в SPF"
+      "Подписывайте DKIM тем же доменом, что в From",
+      "Не используйте +all в SPF",
+      "PTR SMTP должен совпадать с EHLO",
+      "Избегайте публичных коротких ссылок",
+      "Добавьте текстовую часть, не только картинку"
     ],
-    "usesTitle": "Типичные задачи",
+    "usesTitle": "Когда это нужно",
     "uses": [
-      "Перед запуском корпоративной почты",
-      "После смены провайдера рассылок",
-      "Когда письма уходят в спам",
-      "Аудит DNSBL для IP SMTP"
+      "Перед массовой рассылкой",
+      "После смены ESP или своего Postfix/Exim",
+      "Когда Gmail/Mail.ru кладут письма в спам",
+      "Проверка репутации IP отправителя"
     ],
     "faqTitle": "Вопросы и ответы",
     "faq": [
       {
-        "q": "Это mail-tester?",
-        "a": "Режим A проверяет DNS/SMTP без письма. Тест исходящего письма (одноразовый ящик) планируется отдельно."
+        "q": "Куда слать письмо?",
+        "a": "На уникальный адрес вида …@inbox.supermail.dmosk.net, который показывает страница."
       },
       {
-        "q": "Нужен ли селектор DKIM?",
-        "a": "Да, если ключ не на default._domainkey. Укажите тот же селектор, что в подписи."
+        "q": "Сколько живёт ящик?",
+        "a": "Около 30 минут. После истечения создайте новый адрес."
       },
       {
-        "q": "Зачем IP?",
-        "a": "Если MX указывает не на ваш исходящий SMTP, задайте IP отправителя для DNSBL и PTR."
+        "q": "Читаете ли вы чужие письма?",
+        "a": "Только то, что вы сами отправили на тестовый адрес. Тела дольше сессии не храним."
       },
       {
-        "q": "Храните ли вы домены?",
-        "a": "Проверка выполняется на лету; отдельной истории аккаунтов нет."
+        "q": "Это замена mail-tester?",
+        "a": "По сценарию — да: ящик → письмо → отчёт. Набор тестов и формулировки — наши."
       },
       {
-        "q": "Платно ли это?",
+        "q": "Платно?",
         "a": "Нет, сервис бесплатный."
       },
       {
         "q": "Как считается оценка?",
-        "a": "Стартуем со 100 и снимаем баллы за critical/high/medium/low findings."
+        "a": "Со 100 баллов снимаем critical/high/medium/low findings."
       }
     ],
     "appName": "supermail"
   },
   en: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -154,63 +154,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   zh: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -220,63 +220,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   es: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -286,63 +286,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   hi: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -352,63 +352,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   ar: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -418,63 +418,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   bn: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -484,63 +484,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   pt: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -550,63 +550,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   fr: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -616,63 +616,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   de: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -682,63 +682,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   ja: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -748,63 +748,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   id: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -814,63 +814,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   pa: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -880,63 +880,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   jv: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -946,63 +946,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   te: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -1012,63 +1012,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   tr: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -1078,63 +1078,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   ko: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -1144,63 +1144,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   mr: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -1210,63 +1210,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   vi: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -1276,63 +1276,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   ta: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -1342,63 +1342,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   it: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -1408,63 +1408,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   fa: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",
@@ -1474,63 +1474,63 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
     "appName": "supermail"
   },
   tlh: {
-    "title": "supermail — check MX, SPF, DKIM, DMARC and DNSBL",
-    "description": "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.",
-    "heading": "Mail server check",
-    "leadHtml": "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.",
-    "benefitsTitle": "Why use it",
+    "title": "supermail — email spam test for your mail server",
+    "description": "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    "heading": "Spam-test your email",
+    "leadHtml": "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    "benefitsTitle": "What we check",
     "benefits": [
-      "A–F grade and numeric score",
-      "MX, SPF, DKIM, DMARC and BIMI in one report",
-      "DNSBL and PTR for the SMTP IP",
-      "Starter SPF and DMARC TXT",
-      "Plain-language findings with fixes"
+      "A real message, not just a DNS form",
+      "SPF / DKIM / DMARC for the From domain",
+      "DNSBL and PTR of the sending IP",
+      "Subject/body: spam words, CAPS, short URLs",
+      "A–F grade with copy-paste fixes"
     ],
-    "howTitle": "How to check",
+    "howTitle": "How to use",
     "howSteps": [
-      "Enter the sending domain",
-      "Optionally add a DKIM selector and SMTP IP",
-      "Press Check",
-      "Copy fixes or starter records"
+      "Copy the test address on the page",
+      "Send a message to it from your server or mailbox",
+      "Wait 10–60 seconds — keep the tab open",
+      "Read findings and fix DNS/content"
     ],
     "strongTitle": "Deliverability tips",
-    "strongLead": "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+    "strongLead": "Filters look at both infrastructure and wording. Fix auth and content together.",
     "tipsLabel": "Practice",
     "strongTips": [
-      "One SPF per domain and at most 10 DNS lookups",
-      "Start DMARC at p=none, then quarantine/reject",
-      "DKIM selector must match what your MTA signs",
+      "Sign DKIM with the same domain as From",
+      "Never use +all in SPF",
       "SMTP PTR should match EHLO",
-      "Never use +all in SPF"
+      "Avoid public URL shorteners",
+      "Include a text part, not only an image"
     ],
-    "usesTitle": "Typical uses",
+    "usesTitle": "When you need it",
     "uses": [
-      "Before launching corporate mail",
-      "After changing an ESP",
-      "When mail lands in spam",
-      "DNSBL audit for an SMTP IP"
+      "Before a bulk campaign",
+      "After changing ESP or your Postfix/Exim",
+      "When Gmail/Mail.ru file mail as spam",
+      "Checking sending-IP reputation"
     ],
     "faqTitle": "FAQ",
     "faq": [
       {
-        "q": "Is this mail-tester?",
-        "a": "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately."
+        "q": "Where do I send mail?",
+        "a": "To the unique …@inbox.supermail.dmosk.net address shown on the page."
       },
       {
-        "q": "Do I need a DKIM selector?",
-        "a": "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with."
+        "q": "How long does the inbox live?",
+        "a": "About 30 minutes. Create a new address when it expires."
       },
       {
-        "q": "Why an IP?",
-        "a": "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks."
+        "q": "Do you read other people’s mail?",
+        "a": "Only what you send to the test address. Bodies are not kept past the session."
       },
       {
-        "q": "Do you store domains?",
-        "a": "Checks run on the fly; there is no account history."
+        "q": "Is this a mail-tester clone?",
+        "a": "Same flow: inbox → message → report. The checks and wording are ours."
       },
       {
         "q": "Is it free?",
-        "a": "Yes, the service is free."
+        "a": "Yes."
       },
       {
         "q": "How is the grade calculated?",

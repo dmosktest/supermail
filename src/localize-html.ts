@@ -145,18 +145,15 @@ export function localizeIndexHtml(html: string, locale: Locale): string {
     /(<p class=["']noscript["'][^>]*>)([\s\S]*?)(<\/p>)/i,
     `$1${t(locale, "noscript")}$3`,
   );
-
   out = replaceTagContent(out, "article", "seo-root", renderSeoHtml(locale));
-  out = replaceTagContent(out, "span", "domain-label", t(locale, "domainLabel"));
-  out = replaceTagContent(out, "span", "selector-label", t(locale, "selectorLabel"));
-  out = replaceTagContent(out, "span", "ip-label", t(locale, "ipLabel"));
-  out = replaceTagContent(out, "button", "check-btn", t(locale, "checkBtn"));
+  out = replaceTagContent(out, "p", "inbox-lead", t(locale, "inboxLead"));
+  out = replaceTagContent(out, "p", "your-address-label", t(locale, "yourAddress"));
+  out = replaceTagContent(out, "button", "copy-btn", t(locale, "copy"));
+  out = replaceTagContent(out, "button", "new-btn", t(locale, "newAddress"));
   out = replaceTagContent(out, "p", "grade-label", t(locale, "gradeLabel"));
   out = replaceTagContent(out, "h2", "findings-title", t(locale, "findingsTitle"));
-  out = replaceTagContent(out, "h2", "records-title", t(locale, "recordsTitle"));
-  out = replaceTagContent(out, "h2", "generators-title", t(locale, "generatorsTitle"));
+  out = replaceTagContent(out, "h2", "mail-meta-title", t(locale, "mailMetaTitle"));
   out = replaceTagContent(out, "h2", "blacklist-title", t(locale, "blacklistTitle"));
-  out = replaceTagContent(out, "h2", "smtp-title", t(locale, "smtpTitle"));
 
   out = out.replace(
     /<(?:div|details)[^>]*class=["'][^"']*\blang\b[^"']*["'][^>]*>[\s\S]*?<\/(?:div|details)>/i,
@@ -196,13 +193,8 @@ export function renderNotFoundHtml(locale: Locale): string {
         background: #17110c;
         color: #f6eee6;
       }
-      main {
-        text-align: center;
-        padding: 2rem;
-      }
-      a {
-        color: #f0852a;
-      }
+      main { text-align: center; padding: 2rem; }
+      a { color: #f0852a; }
     </style>
   </head>
   <body>
@@ -224,14 +216,12 @@ export function renderSitemapXml(): string {
     ),
     `    <xhtml:link rel="alternate" hreflang="x-default" href="${localeUrl(X_DEFAULT_LOCALE)}"/>`,
   ].join("\n");
-
   const urls = LOCALES.map(
     (loc) => `  <url>
     <loc>${localeUrl(loc)}</loc>
 ${alts}
   </url>`,
   ).join("\n");
-
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">

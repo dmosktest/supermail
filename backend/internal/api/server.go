@@ -1,78 +1,75 @@
 package api
 
 import (
-	"context"
 	"encoding/json"
 	"net"
 	"net/http"
 	"strings"
 	"time"
 
-	"supermail/internal/check"
 	"supermail/internal/rate"
+	"supermail/internal/store"
 )
 
 type Server struct {
+	store   *store.Store
 	limiter *rate.Limiter
 	mux     *http.ServeMux
 }
 
-func New() *Server {
+func New(st *store.Store) *Server {
 	s := &Server{
-		limiter: rate.New(15 * time.Second),
+		store:   st,
+		limiter: rate.New(10 * time.Second),
 		mux:     http.NewServeMux(),
 	}
 	s.mux.HandleFunc("GET /health", s.health)
 	s.mux.HandleFunc("GET /api/v1/health", s.health)
-	s.mux.HandleFunc("POST /api/v1/check", s.check)
-	s.mux.HandleFunc("GET /api/v1/check", s.checkGET)
+	s.mux.HandleFunc("POST /api/v1/inbox", s.createInbox)
+	s.mux.HandleFunc("GET /api/v1/inbox/{id}", s.getInbox)
 	return s
 }
 
 func (s *Server) Handler() http.Handler {
-	return s.withCORS(s.mux)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		s.mux.ServeHTTP(w, r)
+	})
 }
 
 func (s *Server) health(w http.ResponseWriter, _ *http.Request) {
 	writeJSON(w, http.StatusOK, map[string]string{"status": "ok"})
 }
 
-func (s *Server) checkGET(w http.ResponseWriter, r *http.Request) {
-	req := check.Request{
-		Domain:   r.URL.Query().Get("domain"),
-		Selector: r.URL.Query().Get("selector"),
-		IP:       r.URL.Query().Get("ip"),
-	}
-	s.runCheck(w, r, req)
-}
-
-func (s *Server) check(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
-	var req check.Request
-	dec := json.NewDecoder(r.Body)
-	dec.DisallowUnknownFields()
-	if err := dec.Decode(&req); err != nil {
-		writeErr(w, http.StatusBadRequest, "invalid_json", "Invalid JSON body")
-		return
-	}
-	s.runCheck(w, r, req)
-}
-
-func (s *Server) runCheck(w http.ResponseWriter, r *http.Request, req check.Request) {
+func (s *Server) createInbox(w http.ResponseWriter, r *http.Request) {
 	ip := clientIP(r)
-	if ok, wait := s.limiter.Allow(ip); !ok {
+	if ok, wait := s.limiter.Allow("create:" + ip); !ok {
 		w.Header().Set("Retry-After", strings.TrimSuffix(wait.Round(time.Second).String(), "s"))
-		writeErr(w, http.StatusTooManyRequests, "rate_limited", "Too many checks; wait and retry")
+		writeErr(w, http.StatusTooManyRequests, "rate_limited", "Too many inboxes; wait and retry")
 		return
 	}
-	ctx, cancel := context.WithTimeout(r.Context(), 25*time.Second)
-	defer cancel()
-	rep, err := check.Run(ctx, req)
+	in, err := s.store.Create()
 	if err != nil {
-		writeErr(w, http.StatusBadRequest, "invalid_domain", err.Error())
+		writeErr(w, http.StatusInternalServerError, "server_error", "Could not create inbox")
 		return
 	}
-	writeJSON(w, http.StatusOK, rep)
+	writeJSON(w, http.StatusOK, map[string]any{
+		"id":        in.ID,
+		"address":   in.Address,
+		"status":    in.Status,
+		"expiresAt": in.ExpiresAt.Format(time.RFC3339),
+		"pollUrl":   "/api/v1/inbox/" + in.ID,
+	})
+}
+
+func (s *Server) getInbox(w http.ResponseWriter, r *http.Request) {
+	id := r.PathValue("id")
+	in, ok := s.store.Get(id)
+	if !ok {
+		writeErr(w, http.StatusNotFound, "not_found", "Inbox not found")
+		return
+	}
+	writeJSON(w, http.StatusOK, in)
 }
 
 func clientIP(r *http.Request) string {
@@ -99,15 +96,4 @@ func writeJSON(w http.ResponseWriter, status int, v any) {
 
 func writeErr(w http.ResponseWriter, status int, code, message string) {
 	writeJSON(w, status, map[string]string{"error": code, "message": message})
-}
-
-func (s *Server) withCORS(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("X-Content-Type-Options", "nosniff")
-		if r.Method == http.MethodOptions {
-			w.WriteHeader(http.StatusNoContent)
-			return
-		}
-		next.ServeHTTP(w, r)
-	})
 }

@@ -4,200 +4,105 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const srcDir = path.join(__dirname, "..", "src");
-
-const LOCALES = [
-  "ru","en","zh","es","hi","ar","bn","pt","fr","de","ja","id","pa","jv","te","tr","ko","mr","vi","ta","it","fa","tlh",
-];
+const LOCALES = ["ru","en","zh","es","hi","ar","bn","pt","fr","de","ja","id","pa","jv","te","tr","ko","mr","vi","ta","it","fa","tlh"];
 
 const ui = {
-  langSwitch: {
-    en: "Site language", ru: "Язык сайта", zh: "网站语言", es: "Idioma del sitio", hi: "साइट की भाषा",
-    ar: "لغة الموقع", bn: "সাইটের ভাষা", pt: "Idioma do site", fr: "Langue du site", de: "Website-Sprache",
-    ja: "サイトの言語", id: "Bahasa situs", pa: "ਸਾਈਟ ਦੀ ਭਾਸ਼ਾ", jv: "Basa situs", te: "సైట్ భాష",
-    tr: "Site dili", ko: "사이트 언어", mr: "साइटची भाषा", vi: "Ngôn ngữ trang", ta: "தள மொழி",
-    it: "Lingua del sito", fa: "زبان سایت", tlh: "jan Hol",
-  },
-  noscript: {
-    en: "Enable JavaScript to check mail DNS and SMTP.",
-    ru: "Включите JavaScript, чтобы проверить DNS и SMTP почты.",
-    zh: "请启用 JavaScript 以检查邮件 DNS 与 SMTP。",
-    es: "Active JavaScript para comprobar DNS y SMTP de correo.",
-    hi: "मेल DNS और SMTP जाँचने के लिए JavaScript सक्षम करें।",
-    ar: "فعّل JavaScript للتحقق من DNS وSMTP للبريد.",
-    bn: "মেইল DNS ও SMTP পরীক্ষা করতে JavaScript চালু করুন।",
-    pt: "Ative o JavaScript para verificar DNS e SMTP de e-mail.",
-    fr: "Activez JavaScript pour vérifier le DNS et SMTP mail.",
-    de: "Aktivieren Sie JavaScript, um Mail-DNS und SMTP zu prüfen.",
-    ja: "メールの DNS と SMTP を確認するには JavaScript を有効にしてください。",
-    id: "Aktifkan JavaScript untuk memeriksa DNS dan SMTP mail.",
-    pa: "ਮੇਲ DNS ਅਤੇ SMTP ਜਾਂਚ ਲਈ JavaScript ਚਾਲੂ ਕਰੋ।",
-    jv: "Aktifake JavaScript kanggo mriksa DNS lan SMTP mail.",
-    te: "మెయిల్ DNS మరియు SMTP తనిఖీకి JavaScript ప్రారంభించండి.",
-    tr: "Posta DNS ve SMTP kontrolü için JavaScript’i açın.",
-    ko: "메일 DNS 및 SMTP를 확인하려면 JavaScript를 켜세요.",
-    mr: "मेल DNS आणि SMTP तपासण्यासाठी JavaScript सुरू करा.",
-    vi: "Bật JavaScript để kiểm tra DNS và SMTP thư.",
-    ta: "அஞ்சல் DNS மற்றும் SMTP சரிபார்க்க JavaScript இயக்கவும்.",
-    it: "Abilita JavaScript per controllare DNS e SMTP della posta.",
-    fa: "برای بررسی DNS و SMTP ایمیل، JavaScript را فعال کنید.",
-    tlh: "JavaScript yIchu' QIn DNS SMTP chovmeH.",
-  },
-  domainLabel: {
-    en: "Domain", ru: "Домен", zh: "域名", es: "Dominio", hi: "डोमेन", ar: "النطاق", bn: "ডোমেইন",
-    pt: "Domínio", fr: "Domaine", de: "Domain", ja: "ドメイン", id: "Domain", pa: "ਡੋਮੇਨ", jv: "Domain",
-    te: "డొమైన్", tr: "Alan adı", ko: "도메인", mr: "डोमेन", vi: "Tên miền", ta: "டொமைன்",
-    it: "Dominio", fa: "دامنه", tlh: "Domain",
-  },
-  selectorLabel: {
-    en: "DKIM selector", ru: "Селектор DKIM", zh: "DKIM 选择器", es: "Selector DKIM", hi: "DKIM सिलेक्टर",
-    ar: "محدد DKIM", bn: "DKIM সিলেক্টর", pt: "Seletor DKIM", fr: "Sélecteur DKIM", de: "DKIM-Selektor",
-    ja: "DKIM セレクタ", id: "Selektor DKIM", pa: "DKIM ਸਿਲੈਕਟਰ", jv: "Selektor DKIM", te: "DKIM సెలెక్టర్",
-    tr: "DKIM seçici", ko: "DKIM 셀렉터", mr: "DKIM सिलेक्टर", vi: "Bộ chọn DKIM", ta: "DKIM தேர்வி",
-    it: "Selettore DKIM", fa: "سلکتور DKIM", tlh: "DKIM selector",
-  },
-  ipLabel: {
-    en: "SMTP IP (optional)", ru: "IP SMTP (необязательно)", zh: "SMTP IP（可选）", es: "IP SMTP (opcional)",
-    hi: "SMTP IP (वैकल्पिक)", ar: "IP SMTP (اختياري)", bn: "SMTP IP (ঐচ্ছিক)", pt: "IP SMTP (opcional)",
-    fr: "IP SMTP (optionnel)", de: "SMTP-IP (optional)", ja: "SMTP IP（任意）", id: "IP SMTP (opsional)",
-    pa: "SMTP IP (ਵਿਕਲਪਿਕ)", jv: "IP SMTP (opsional)", te: "SMTP IP (ఐచ్ఛికం)", tr: "SMTP IP (isteğe bağlı)",
-    ko: "SMTP IP (선택)", mr: "SMTP IP (पर्यायी)", vi: "IP SMTP (tuỳ chọn)", ta: "SMTP IP (விரும்பினால்)",
-    it: "IP SMTP (opzionale)", fa: "IP SMTP (اختیاری)", tlh: "SMTP IP (optional)",
-  },
-  checkBtn: {
-    en: "Check", ru: "Проверить", zh: "检查", es: "Comprobar", hi: "जाँचें", ar: "تحقق", bn: "পরীক্ষা",
-    pt: "Verificar", fr: "Vérifier", de: "Prüfen", ja: "チェック", id: "Periksa", pa: "ਜਾਂਚੋ", jv: "Priksa",
-    te: "తనిఖీ", tr: "Kontrol et", ko: "검사", mr: "तपासा", vi: "Kiểm tra", ta: "சரிபார்",
-    it: "Controlla", fa: "بررسی", tlh: "yIchov",
-  },
-  checking: {
-    en: "Checking…", ru: "Проверяем…", zh: "检查中…", es: "Comprobando…", hi: "जाँच हो रही है…", ar: "جاري التحقق…",
-    bn: "পরীক্ষা চলছে…", pt: "Verificando…", fr: "Vérification…", de: "Prüfung läuft…", ja: "チェック中…",
-    id: "Memeriksa…", pa: "ਜਾਂਚ ਹੋ ਰਹੀ ਹੈ…", jv: "Mriksa…", te: "తనిఖీ అవుతోంది…", tr: "Kontrol ediliyor…",
-    ko: "검사 중…", mr: "तपासत आहे…", vi: "Đang kiểm tra…", ta: "சரிபார்க்கிறது…", it: "Controllo…",
-    fa: "در حال بررسی…", tlh: "chovtaH…",
-  },
-  gradeLabel: {
-    en: "Grade", ru: "Оценка", zh: "评级", es: "Nota", hi: "ग्रेड", ar: "الدرجة", bn: "গ্রেড", pt: "Nota",
-    fr: "Note", de: "Note", ja: "評価", id: "Nilai", pa: "ਗ੍ਰੇਡ", jv: "Nilai", te: "గ్రేడ్", tr: "Not",
-    ko: "등급", mr: "ग्रेड", vi: "Điểm", ta: "தரம்", it: "Voto", fa: "نمره", tlh: "Doch",
-  },
-  findingsTitle: {
-    en: "Findings", ru: "Результаты", zh: "发现项", es: "Hallazgos", hi: "निष्कर्ष", ar: "النتائج", bn: "ফলাফল",
-    pt: "Achados", fr: "Résultats", de: "Befunde", ja: "結果", id: "Temuan", pa: "ਨਤੀਜੇ", jv: "Temuan",
-    te: "ఫలితాలు", tr: "Bulgular", ko: "결과", mr: "निष्कर्ष", vi: "Phát hiện", ta: "முடிவுகள்",
-    it: "Risultati", fa: "یافته‌ها", tlh: "chovwI'",
-  },
-  emptyFindings: {
-    en: "No findings yet. Run a check.", ru: "Пока пусто. Запустите проверку.", zh: "暂无结果。请先检查。",
-    es: "Aún no hay hallazgos. Ejecute una comprobación.", hi: "अभी कोई निष्कर्ष नहीं। जाँच चलाएँ।",
-    ar: "لا نتائج بعد. شغّل التحقق.", bn: "এখনও কোনো ফলাফল নেই। পরীক্ষা চালান।",
-    pt: "Ainda sem achados. Execute uma verificação.", fr: "Pas encore de résultats. Lancez une vérification.",
-    de: "Noch keine Befunde. Prüfung starten.", ja: "結果はまだありません。チェックを実行してください。",
-    id: "Belum ada temuan. Jalankan pemeriksaan.", pa: "ਹਾਲੇ ਕੋਈ ਨਤੀਜਾ ਨਹੀਂ। ਜਾਂਚ ਚਲਾਓ।",
-    jv: "Durung ana temuan. Jalanke pemeriksaan.", te: "ఇంకా ఫలితాలు లేవు. తనిఖీ నడపండి.",
-    tr: "Henüz bulgu yok. Kontrol çalıştırın.", ko: "아직 결과가 없습니다. 검사를 실행하세요.",
-    mr: "अद्याप निष्कर्ष नाहीत. तपासणी चालवा.", vi: "Chưa có phát hiện. Hãy chạy kiểm tra.",
-    ta: "இன்னும் முடிவுகள் இல்லை. சரிபார்ப்பை இயக்கவும்.", it: "Ancora nessun risultato. Avvia un controllo.",
-    fa: "هنوز یافته‌ای نیست. بررسی را اجرا کنید.", tlh: "chovwI' tu'lu'be'. yIchov.",
-  },
-  whyLabel: { en: "Why it matters", ru: "Почему важно", zh: "为何重要", es: "Por qué importa", hi: "यह क्यों ज़रूरी है", ar: "لماذا يهم", bn: "কেন গুরুত্বপূর্ণ", pt: "Por que importa", fr: "Pourquoi c’est important", de: "Warum es zählt", ja: "なぜ重要か", id: "Mengapa penting", pa: "ਇਹ ਕਿਉਂ ਮਹੱਤਵਪੂਰਨ ਹੈ", jv: "Kenapa penting", te: "ఎందుకు ముఖ్యం", tr: "Neden önemli", ko: "왜 중요한가", mr: "हे का महत्त्वाचे आहे", vi: "Vì sao quan trọng", ta: "ஏன் முக்கியம்", it: "Perché conta", fa: "چرا مهم است", tlh: "qatlh potlh" },
-  fixLabel: { en: "Fix", ru: "Исправление", zh: "修复", es: "Corrección", hi: "सुधार", ar: "الإصلاح", bn: "সংশোধন", pt: "Correção", fr: "Correctif", de: "Fix", ja: "修正", id: "Perbaikan", pa: "ਫਿਕਸ", jv: "Perbaikan", te: "ఫిక్స్", tr: "Düzeltme", ko: "수정", mr: "सुधारणा", vi: "Sửa", ta: "திருத்தம்", it: "Fix", fa: "اصلاح", tlh: "lIng" },
-  copy: { en: "Copy", ru: "Копировать", zh: "复制", es: "Copiar", hi: "कॉपी", ar: "نسخ", bn: "কপি", pt: "Copiar", fr: "Copier", de: "Kopieren", ja: "コピー", id: "Salin", pa: "ਕਾਪੀ", jv: "Salin", te: "కాపీ", tr: "Kopyala", ko: "복사", mr: "कॉपी", vi: "Sao chép", ta: "நகல்", it: "Copia", fa: "کپی", tlh: "yIlan" },
-  copied: { en: "Copied", ru: "Скопировано", zh: "已复制", es: "Copiado", hi: "कॉपी हो गया", ar: "تم النسخ", bn: "কপি হয়েছে", pt: "Copiado", fr: "Copié", de: "Kopiert", ja: "コピーしました", id: "Disalin", pa: "ਕਾਪੀ ਹੋ ਗਿਆ", jv: "Disalin", te: "కాపీ అయింది", tr: "Kopyalandı", ko: "복사됨", mr: "कॉपी झाले", vi: "Đã sao chép", ta: "நகலெடுக்கப்பட்டது", it: "Copiato", fa: "کپی شد", tlh: "lanlu'" },
-  copyError: { en: "Could not copy", ru: "Не удалось скопировать", zh: "无法复制", es: "No se pudo copiar", hi: "कॉपी नहीं हो सका", ar: "تعذر النسخ", bn: "কপি করা যায়নি", pt: "Não foi possível copiar", fr: "Impossible de copier", de: "Kopieren fehlgeschlagen", ja: "コピーできませんでした", id: "Tidak bisa menyalin", pa: "ਕਾਪੀ ਨਹੀਂ ਹੋ ਸਕੀ", jv: "Ora bisa nyalin", te: "కాపీ కాలేదు", tr: "Kopyalanamadı", ko: "복사 실패", mr: "कॉपी झाले नाही", vi: "Không sao chép được", ta: "நகலெடுக்க முடியவில்லை", it: "Copia non riuscita", fa: "کپی نشد", tlh: "lanlaHbe'" },
-  errorDomain: { en: "Enter a valid domain", ru: "Укажите корректный домен", zh: "请输入有效域名", es: "Introduzca un dominio válido", hi: "मान्य डोमेन दर्ज करें", ar: "أدخل نطاقاً صالحاً", bn: "সঠিক ডোমেইন দিন", pt: "Informe um domínio válido", fr: "Saisissez un domaine valide", de: "Gültige Domain eingeben", ja: "有効なドメインを入力してください", id: "Masukkan domain yang valid", pa: "ਠੀਕ ਡੋਮੇਨ ਦਰਜ ਕਰੋ", jv: "Lebokna domain sing bener", te: "సరైన డొమైన్ ఇవ్వండి", tr: "Geçerli bir alan adı girin", ko: "유효한 도메인을 입력하세요", mr: "वैध डोमेन टाका", vi: "Nhập tên miền hợp lệ", ta: "சரியான டொமைனை உள்ளிடவும்", it: "Inserisci un dominio valido", fa: "دامنه معتبر وارد کنید", tlh: "Domain QaQ yIchel" },
-  errorIp: { en: "Invalid IP address", ru: "Некорректный IP", zh: "无效 IP", es: "IP no válida", hi: "अमान्य IP", ar: "IP غير صالح", bn: "অবৈধ IP", pt: "IP inválido", fr: "IP invalide", de: "Ungültige IP", ja: "無効な IP", id: "IP tidak valid", pa: "ਗਲਤ IP", jv: "IP ora valid", te: "చెల్లని IP", tr: "Geçersiz IP", ko: "잘못된 IP", mr: "अवैध IP", vi: "IP không hợp lệ", ta: "தவறான IP", it: "IP non valido", fa: "IP نامعتبر", tlh: "IP qaqbe'" },
-  errorNetwork: { en: "Network error", ru: "Ошибка сети", zh: "网络错误", es: "Error de red", hi: "नेटवर्क त्रुटि", ar: "خطأ في الشبكة", bn: "নেটওয়ার্ক ত্রুটি", pt: "Erro de rede", fr: "Erreur réseau", de: "Netzwerkfehler", ja: "ネットワークエラー", id: "Kesalahan jaringan", pa: "ਨੈੱਟਵਰਕ ਗਲਤੀ", jv: "Kasalahan jaringan", te: "నెట్‌వర్క్ లోపం", tr: "Ağ hatası", ko: "네트워크 오류", mr: "नेटवर्क त्रुटी", vi: "Lỗi mạng", ta: "பிணைய பிழை", it: "Errore di rete", fa: "خطای شبکه", tlh: "HurDaq Qagh" },
-  errorServer: { en: "Server error", ru: "Ошибка сервера", zh: "服务器错误", es: "Error del servidor", hi: "सर्वर त्रुटि", ar: "خطأ في الخادم", bn: "সার্ভার ত্রুটি", pt: "Erro do servidor", fr: "Erreur serveur", de: "Serverfehler", ja: "サーバーエラー", id: "Kesalahan server", pa: "ਸਰਵਰ ਗਲਤੀ", jv: "Kasalahan server", te: "సర్వర్ లోపం", tr: "Sunucu hatası", ko: "서버 오류", mr: "सर्व्हर त्रुटी", vi: "Lỗi máy chủ", ta: "சேவையக பிழை", it: "Errore del server", fa: "خطای سرور", tlh: "De'wI' Qagh" },
-  sevOk: { en: "OK", ru: "OK", zh: "正常", es: "OK", hi: "ठीक", ar: "حسن", bn: "ঠিক", pt: "OK", fr: "OK", de: "OK", ja: "OK", id: "OK", pa: "ਠੀਕ", jv: "OK", te: "సరే", tr: "Tamam", ko: "정상", mr: "ठीक", vi: "OK", ta: "சரி", it: "OK", fa: "خوب", tlh: "maj" },
-  sevInfo: { en: "Info", ru: "Инфо", zh: "信息", es: "Info", hi: "जानकारी", ar: "معلومة", bn: "তথ্য", pt: "Info", fr: "Info", de: "Info", ja: "情報", id: "Info", pa: "ਜਾਣਕਾਰੀ", jv: "Info", te: "సమాచారం", tr: "Bilgi", ko: "정보", mr: "माहिती", vi: "Thông tin", ta: "தகவல்", it: "Info", fa: "اطلاع", tlh: "De'" },
-  sevLow: { en: "Low", ru: "Низкий", zh: "低", es: "Bajo", hi: "कम", ar: "منخفض", bn: "কম", pt: "Baixo", fr: "Faible", de: "Niedrig", ja: "低", id: "Rendah", pa: "ਘੱਟ", jv: "Endhek", te: "తక్కువ", tr: "Düşük", ko: "낮음", mr: "कमी", vi: "Thấp", ta: "குறைவு", it: "Basso", fa: "کم", tlh: "mach" },
-  sevMedium: { en: "Medium", ru: "Средний", zh: "中", es: "Medio", hi: "मध्यम", ar: "متوسط", bn: "মাঝারি", pt: "Médio", fr: "Moyen", de: "Mittel", ja: "中", id: "Sedang", pa: "ਮੱਧਮ", jv: "Sedheng", te: "మధ్యస్థం", tr: "Orta", ko: "중간", mr: "मध्यम", vi: "Trung bình", ta: "நடுத்தரம்", it: "Medio", fa: "متوسط", tlh: "motlh" },
-  sevHigh: { en: "High", ru: "Высокий", zh: "高", es: "Alto", hi: "उच्च", ar: "مرتفع", bn: "উচ্চ", pt: "Alto", fr: "Élevé", de: "Hoch", ja: "高", id: "Tinggi", pa: "ਉੱਚ", jv: "Dhuwur", te: "ఎక్కువ", tr: "Yüksek", ko: "높음", mr: "उच्च", vi: "Cao", ta: "உயர்", it: "Alto", fa: "زیاد", tlh: "tIn" },
-  sevCritical: { en: "Critical", ru: "Критичный", zh: "严重", es: "Crítico", hi: "गंभीर", ar: "حرج", bn: "সংকটজনক", pt: "Crítico", fr: "Critique", de: "Kritisch", ja: "重大", id: "Kritis", pa: "ਗੰਭੀਰ", jv: "Kritis", te: "క్లిష్టమైన", tr: "Kritik", ko: "치명적", mr: "गंभीर", vi: "Nghiêm trọng", ta: "முக்கியமான", it: "Critico", fa: "بحرانی", tlh: "motlhbe'" },
-  recordsTitle: { en: "DNS records", ru: "DNS-записи", zh: "DNS 记录", es: "Registros DNS", hi: "DNS रिकॉर्ड", ar: "سجلات DNS", bn: "DNS রেকর্ড", pt: "Registros DNS", fr: "Enregistrements DNS", de: "DNS-Einträge", ja: "DNS レコード", id: "Rekaman DNS", pa: "DNS ਰਿਕਾਰਡ", jv: "Rekaman DNS", te: "DNS రికార్డులు", tr: "DNS kayıtları", ko: "DNS 레코드", mr: "DNS रेकॉर्ड", vi: "Bản ghi DNS", ta: "DNS பதிவுகள்", it: "Record DNS", fa: "رکوردهای DNS", tlh: "DNS De'" },
-  recNone: { en: "Not found", ru: "Не найдено", zh: "未找到", es: "No encontrado", hi: "नहीं मिला", ar: "غير موجود", bn: "পাওয়া যায়নি", pt: "Não encontrado", fr: "Introuvable", de: "Nicht gefunden", ja: "未検出", id: "Tidak ditemukan", pa: "ਨਹੀਂ ਮਿਲਿਆ", jv: "Ora ketemu", te: "కనుగొనబడలేదు", tr: "Bulunamadı", ko: "없음", mr: "सापडले नाही", vi: "Không thấy", ta: "கிடைக்கவில்லை", it: "Non trovato", fa: "یافت نشد", tlh: "tu'lu'be'" },
-  generatorsTitle: { en: "Starter records", ru: "Стартовые записи", zh: "起始记录", es: "Registros iniciales", hi: "स्टार्टर रिकॉर्ड", ar: "سجلات البداية", bn: "স্টার্টার রেকর্ড", pt: "Registros iniciais", fr: "Enregistrements de départ", de: "Starter-Records", ja: "スターターレコード", id: "Rekaman awal", pa: "ਸਟਾਰਟਰ ਰਿਕਾਰਡ", jv: "Rekaman wiwitan", te: "స్టార్టర్ రికార్డులు", tr: "Başlangıç kayıtları", ko: "스타터 레코드", mr: "स्टार्टर रेकॉर्ड", vi: "Bản ghi khởi đầu", ta: "தொடக்க பதிவுகள்", it: "Record di partenza", fa: "رکوردهای شروع", tlh: "tagh De'" },
-  blacklistTitle: { en: "DNSBL", ru: "DNSBL", zh: "DNSBL", es: "DNSBL", hi: "DNSBL", ar: "DNSBL", bn: "DNSBL", pt: "DNSBL", fr: "DNSBL", de: "DNSBL", ja: "DNSBL", id: "DNSBL", pa: "DNSBL", jv: "DNSBL", te: "DNSBL", tr: "DNSBL", ko: "DNSBL", mr: "DNSBL", vi: "DNSBL", ta: "DNSBL", it: "DNSBL", fa: "DNSBL", tlh: "DNSBL" },
-  blacklistClean: { en: "Not listed on checked lists", ru: "В проверенных списках не найден", zh: "未出现在已查名单", es: "No figura en las listas comprobadas", hi: "जाँची गई सूचियों में नहीं", ar: "غير مدرج في القوائم المفحوصة", bn: "পরীক্ষিত তালিকায় নেই", pt: "Não listado nas listas verificadas", fr: "Absent des listes vérifiées", de: "Nicht auf geprüften Listen", ja: "確認したリストに未掲載", id: "Tidak ada di daftar yang dicek", pa: "ਜਾਂਚੀਆਂ ਸੂਚੀਆਂ ਵਿੱਚ ਨਹੀਂ", jv: "Ora ana ing dhaftar sing dicek", te: "తనిఖీ చేసిన జాబితాల్లో లేదు", tr: "Kontrol edilen listelerde yok", ko: "확인한 목록에 없음", mr: "तपासलेल्या याद्यांमध्ये नाही", vi: "Không có trong các danh sách đã kiểm", ta: "சரிபார்த்த பட்டியல்களில் இல்லை", it: "Non presente nelle liste controllate", fa: "در فهرست‌های بررسی‌شده نیست", tlh: "tetlhDaq tu'lu'be'" },
-  blacklistListed: { en: "Listed on: {lists}", ru: "В списках: {lists}", zh: "出现在：{lists}", es: "En listas: {lists}", hi: "सूचियों में: {lists}", ar: "مدرج في: {lists}", bn: "তালিকায়: {lists}", pt: "Listado em: {lists}", fr: "Listé sur : {lists}", de: "Gelistet auf: {lists}", ja: "掲載: {lists}", id: "Ada di: {lists}", pa: "ਸੂਚੀਆਂ ਵਿੱਚ: {lists}", jv: "Ana ing: {lists}", te: "జాబితాల్లో: {lists}", tr: "Listelerde: {lists}", ko: "목록: {lists}", mr: "याद्यांमध्ये: {lists}", vi: "Trong danh sách: {lists}", ta: "பட்டியல்கள்: {lists}", it: "Presente in: {lists}", fa: "در فهرست‌ها: {lists}", tlh: "tetlhDaq: {lists}" },
-  smtpTitle: { en: "SMTP", ru: "SMTP", zh: "SMTP", es: "SMTP", hi: "SMTP", ar: "SMTP", bn: "SMTP", pt: "SMTP", fr: "SMTP", de: "SMTP", ja: "SMTP", id: "SMTP", pa: "SMTP", jv: "SMTP", te: "SMTP", tr: "SMTP", ko: "SMTP", mr: "SMTP", vi: "SMTP", ta: "SMTP", it: "SMTP", fa: "SMTP", tlh: "SMTP" },
-  smtpBanner: { en: "Banner", ru: "Баннер", zh: "横幅", es: "Banner", hi: "बैनर", ar: "الشعار", bn: "ব্যানার", pt: "Banner", fr: "Bannière", de: "Banner", ja: "バナー", id: "Banner", pa: "ਬੈਨਰ", jv: "Banner", te: "బ్యానర్", tr: "Banner", ko: "배너", mr: "बॅनर", vi: "Banner", ta: "பேனர்", it: "Banner", fa: "بنر", tlh: "Banner" },
-  yes: { en: "Yes", ru: "Да", zh: "是", es: "Sí", hi: "हाँ", ar: "نعم", bn: "হ্যাঁ", pt: "Sim", fr: "Oui", de: "Ja", ja: "はい", id: "Ya", pa: "ਹਾਂ", jv: "Ya", te: "అవును", tr: "Evet", ko: "예", mr: "होय", vi: "Có", ta: "ஆம்", it: "Sì", fa: "بله", tlh: "HIja'" },
-  no: { en: "No", ru: "Нет", zh: "否", es: "No", hi: "नहीं", ar: "لا", bn: "না", pt: "Não", fr: "Non", de: "Nein", ja: "いいえ", id: "Tidak", pa: "ਨਹੀਂ", jv: "Ora", te: "కాదు", tr: "Hayır", ko: "아니요", mr: "नाही", vi: "Không", ta: "இல்லை", it: "No", fa: "خیر", tlh: "ghobe'" },
+  langSwitch: { en:"Site language", ru:"Язык сайта", zh:"网站语言", es:"Idioma del sitio", hi:"साइट की भाषा", ar:"لغة الموقع", bn:"সাইটের ভাষা", pt:"Idioma do site", fr:"Langue du site", de:"Website-Sprache", ja:"サイトの言語", id:"Bahasa situs", pa:"ਸਾਈਟ ਦੀ ਭਾਸ਼ਾ", jv:"Basa situs", te:"సైట్ భాష", tr:"Site dili", ko:"사이트 언어", mr:"साइटची भाषा", vi:"Ngôn ngữ trang", ta:"தள மொழி", it:"Lingua del sito", fa:"زبان سایت", tlh:"jan Hol" },
+  noscript: { en:"Enable JavaScript to run the mail spam test.", ru:"Включите JavaScript, чтобы запустить спам-тест письма.", zh:"请启用 JavaScript 以运行邮件垃圾测试。", es:"Active JavaScript para la prueba antispam.", hi:"मेल स्पैम टेस्ट के लिए JavaScript सक्षम करें।", ar:"فعّل JavaScript لاختبار البريد.", bn:"মেইল স্প্যাম পরীক্ষার জন্য JavaScript চালু করুন।", pt:"Ative o JavaScript para o teste de spam.", fr:"Activez JavaScript pour le test anti-spam.", de:"Aktivieren Sie JavaScript für den Spam-Test.", ja:"メールのスパムテストには JavaScript を有効にしてください。", id:"Aktifkan JavaScript untuk tes spam mail.", pa:"ਮੇਲ ਸਪੈਮ ਟੈਸਟ ਲਈ JavaScript ਚਾਲੂ ਕਰੋ।", jv:"Aktifake JavaScript kanggo tes spam.", te:"మెయిల్ స్పామ్ టెస్ట్‌కి JavaScript ప్రారంభించండి.", tr:"Spam testi için JavaScript’i açın.", ko:"메일 스팸 테스트를 위해 JavaScript를 켜세요.", mr:"मेल स्पॅम चाचणीसाठी JavaScript सुरू करा.", vi:"Bật JavaScript để chạy kiểm tra spam thư.", ta:"அஞ்சல் ஸ்பேம் சோதனைக்கு JavaScript இயக்கவும்.", it:"Abilita JavaScript per il test antispam.", fa:"برای تست اسپم ایمیل JavaScript را فعال کنید.", tlh:"JavaScript yIchu'." },
+  inboxLead: { en:"Send any email to this address. We analyze headers, authentication, blacklists and content.", ru:"Отправьте любое письмо на этот адрес. Разберём заголовки, аутентификацию, чёрные списки и контент.", zh:"向此地址发送任意邮件。我们会分析标头、认证、黑名单与内容。", es:"Envíe cualquier correo a esta dirección. Analizamos cabeceras, autenticación, listas negras y contenido.", hi:"इस पते पर कोई भी ईमेल भेजें। हम हेडर, प्रमाणीकरण, ब्लैकलिस्ट और सामग्री जाँचेंगे।", ar:"أرسل أي رسالة إلى هذا العنوان. نحلل الترويسات والمصادقة والقوائم السوداء والمحتوى.", bn:"এই ঠিকানায় যেকোনো ইমেইল পাঠান। হেডার, প্রমাণীকরণ, ব্ল্যাকলিস্ট ও কন্টেন্ট বিশ্লেষণ করব।", pt:"Envie qualquer e-mail para este endereço. Analisamos cabeçalhos, autenticação, listas negras e conteúdo.", fr:"Envoyez un e-mail à cette adresse. Nous analysons en-têtes, authentification, listes noires et contenu.", de:"Senden Sie eine E-Mail an diese Adresse. Wir prüfen Header, Authentifizierung, Blacklists und Inhalt.", ja:"この宛先にメールを送ると、ヘッダー・認証・ブラックリスト・本文を解析します。", id:"Kirim email apa pun ke alamat ini. Kami menganalisis header, autentikasi, blacklist, dan konten.", pa:"ਇਸ ਪਤੇ 'ਤੇ ਕੋਈ ਵੀ ਈਮੇਲ ਭੇਜੋ। ਅਸੀਂ ਹੈਡਰ, ਪ੍ਰਮਾਣਿਕਤਾ, ਬਲੈਕਲਿਸਟ ਅਤੇ ਸਮੱਗਰੀ ਵਿਸ਼ਲੇਸ਼ਣ ਕਰਾਂਗੇ।", jv:"Kirim email menyang alamat iki. Kita analisis header, autentikasi, blacklist, lan konten.", te:"ఈ చిరునామాకు ఏదైనా ఇమెయిల్ పంపండి. హెడర్లు, ధృవీకరణ, బ్లాక్‌లిస్ట్, కంటెంట్ విశ్లేషిస్తాం.", tr:"Bu adrese herhangi bir e-posta gönderin. Başlıkları, kimlik doğrulamayı, kara listeleri ve içeriği analiz ederiz.", ko:"이 주소로 메일을 보내면 헤더·인증·블랙리스트·본문을 분석합니다.", mr:"या पत्त्यावर कोणतेही ईमेल पाठवा. आम्ही हेडर, प्रमाणीकरण, ब्लॅकलिस्ट आणि मजकूर तपासतो.", vi:"Gửi email bất kỳ tới địa chỉ này. Chúng tôi phân tích header, xác thực, blacklist và nội dung.", ta:"இந்த முகவரிக்கு எந்த மின்னஞ்சலையும் அனுப்புங்கள். தலைப்புகள், அங்கீகாரம், கருப்புப் பட்டியல், உள்ளடக்கத்தை ஆய்வு செய்வோம்.", it:"Invia qualsiasi email a questo indirizzo. Analizziamo intestazioni, autenticazione, blacklist e contenuto.", fa:"هر ایمیلی به این نشانی بفرستید. سرآیند، احراز هویت، سیاه‌لیست و محتوا را تحلیل می‌کنیم.", tlh:"QIn yIngeH. De' wIchov." },
+  yourAddress: { en:"Your test address", ru:"Ваш тестовый адрес", zh:"您的测试地址", es:"Su dirección de prueba", hi:"आपका परीक्षण पता", ar:"عنوان الاختبار", bn:"আপনার পরীক্ষার ঠিকানা", pt:"Seu endereço de teste", fr:"Votre adresse de test", de:"Ihre Testadresse", ja:"テスト用アドレス", id:"Alamat tes Anda", pa:"ਤੁਹਾਡਾ ਟੈਸਟ ਪਤਾ", jv:"Alamat tes sampeyan", te:"మీ పరీక్ష చిరునామా", tr:"Test adresiniz", ko:"테스트 주소", mr:"तुमचा चाचणी पत्ता", vi:"Địa chỉ kiểm tra", ta:"உங்கள் சோதனை முகவரி", it:"Il tuo indirizzo di test", fa:"نشانی آزمایشی شما", tlh:"chov ID" },
+  copy: { en:"Copy", ru:"Копировать", zh:"复制", es:"Copiar", hi:"कॉपी", ar:"نسخ", bn:"কপি", pt:"Copiar", fr:"Copier", de:"Kopieren", ja:"コピー", id:"Salin", pa:"ਕਾਪੀ", jv:"Salin", te:"కాపీ", tr:"Kopyala", ko:"복사", mr:"कॉपी", vi:"Sao chép", ta:"நகல்", it:"Copia", fa:"کپی", tlh:"yIlan" },
+  copied: { en:"Copied", ru:"Скопировано", zh:"已复制", es:"Copiado", hi:"कॉपी हो गया", ar:"تم النسخ", bn:"কপি হয়েছে", pt:"Copiado", fr:"Copié", de:"Kopiert", ja:"コピーしました", id:"Disalin", pa:"ਕਾਪੀ ਹੋ ਗਿਆ", jv:"Disalin", te:"కాపీ అయింది", tr:"Kopyalandı", ko:"복사됨", mr:"कॉपी झाले", vi:"Đã sao chép", ta:"நகலெடுக்கப்பட்டது", it:"Copiato", fa:"کپی شد", tlh:"lanlu'" },
+  copyError: { en:"Could not copy", ru:"Не удалось скопировать", zh:"无法复制", es:"No se pudo copiar", hi:"कॉपी नहीं हो सका", ar:"تعذر النسخ", bn:"কপি করা যায়নি", pt:"Não foi possível copiar", fr:"Impossible de copier", de:"Kopieren fehlgeschlagen", ja:"コピーできませんでした", id:"Tidak bisa menyalin", pa:"ਕਾਪੀ ਨਹੀਂ ਹੋ ਸਕੀ", jv:"Ora bisa nyalin", te:"కాపీ కాలేదు", tr:"Kopyalanamadı", ko:"복사 실패", mr:"कॉपी झाले नाही", vi:"Không sao chép được", ta:"நகலெடுக்க முடியவில்லை", it:"Copia non riuscita", fa:"کپی نشد", tlh:"lanlaHbe'" },
+  waiting: { en:"Waiting for your email…", ru:"Ждём ваше письмо…", zh:"正在等待您的邮件…", es:"Esperando su correo…", hi:"आपके ईमेल की प्रतीक्षा…", ar:"بانتظار رسالتك…", bn:"আপনার ইমেইলের অপেক্ষা…", pt:"Aguardando seu e-mail…", fr:"En attente de votre e-mail…", de:"Warten auf Ihre E-Mail…", ja:"メールを待っています…", id:"Menunggu email Anda…", pa:"ਤੁਹਾਡੀ ਈਮੇਲ ਦੀ ਉਡੀਕ…", jv:"Ngenteni email sampeyan…", te:"మీ ఇమెయిల్ కోసం వేచి…", tr:"E-postanız bekleniyor…", ko:"메일 대기 중…", mr:"तुमच्या ईमेलची वाट…", vi:"Đang chờ email của bạn…", ta:"உங்கள் மின்னஞ்சலுக்காக காத்திருக்கிறது…", it:"In attesa della tua email…", fa:"در انتظار ایمیل شما…", tlh:"QIn wIloS…" },
+  waitingHint: { en:"Usually 10–60 seconds after you hit Send. Keep this tab open.", ru:"Обычно 10–60 секунд после отправки. Не закрывайте вкладку.", zh:"发送后通常需 10–60 秒。请保持此标签页打开。", es:"Suele tardar 10–60 s tras enviar. Mantenga esta pestaña abierta.", hi:"भेजने के बाद आमतौर पर 10–60 सेकंड। टैब खुला रखें।", ar:"عادةً 10–60 ثانية بعد الإرسال. أبقِ هذه العلامة مفتوحة.", bn:"পাঠানোর পর সাধারণত ১০–৬০ সেকেন্ড। ট্যাব খোলা রাখুন।", pt:"Costuma levar 10–60 s após enviar. Mantenha esta aba aberta.", fr:"En général 10–60 s après l’envoi. Gardez cet onglet ouvert.", de:"Meist 10–60 s nach dem Senden. Tab offen lassen.", ja:"送信後だいたい 10～60 秒。このタブを開いたままに。", id:"Biasanya 10–60 detik setelah kirim. Biarkan tab ini terbuka.", pa:"ਭੇਜਣ ਤੋਂ ਬਾਅਦ ਆਮ ਤੌਰ 'ਤੇ 10–60 ਸਕਿੰਟ। ਟੈਬ ਖੁੱਲੀ ਰੱਖੋ।", jv:"Biasane 10–60 detik sawise kirim. Tab iki tetep mbukak.", te:"పంపిన తర్వాత సాధారణంగా 10–60 సెకన్లు. ట్యాబ్ తెరిచి ఉంచండి.", tr:"Gönderdikten sonra genelde 10–60 sn. Sekmeyi açık tutun.", ko:"보낸 뒤 보통 10–60초. 이 탭을 열어 두세요.", mr:"पाठवल्यानंतर सहसा १०–६० सेकंद. टॅब उघडे ठेवा.", vi:"Thường 10–60 giây sau khi gửi. Giữ tab này mở.", ta:"அனுப்பிய பின் பொதுவாக 10–60 வினாடிகள். தாவலைத் திறந்து வைக்கவும்.", it:"Di solito 10–60 s dopo l’invio. Lascia aperta questa scheda.", fa:"معمولاً ۱۰–۶۰ ثانیه پس از ارسال. این زبانه را باز نگه دارید.", tlh:"poH loS. qawHaq yIchum." },
+  newAddress: { en:"New address", ru:"Новый адрес", zh:"新地址", es:"Nueva dirección", hi:"नया पता", ar:"عنوان جديد", bn:"নতুন ঠিকানা", pt:"Novo endereço", fr:"Nouvelle adresse", de:"Neue Adresse", ja:"新しい宛先", id:"Alamat baru", pa:"ਨਵਾਂ ਪਤਾ", jv:"Alamat anyar", te:"కొత్త చిరునామా", tr:"Yeni adres", ko:"새 주소", mr:"नवीन पत्ता", vi:"Địa chỉ mới", ta:"புதிய முகவரி", it:"Nuovo indirizzo", fa:"نشانی تازه", tlh:"ID chu'" },
+  expired: { en:"This inbox expired. Create a new address.", ru:"Срок ящика истёк. Создайте новый адрес.", zh:"收件箱已过期。请创建新地址。", es:"Esta bandeja caducó. Cree una nueva dirección.", hi:"यह इनबॉक्स समाप्त हो गया। नया पता बनाएँ।", ar:"انتهت صلاحية الصندوق. أنشئ عنواناً جديداً.", bn:"ইনবক্সের মেয়াদ শেষ। নতুন ঠিকানা তৈরি করুন।", pt:"Esta caixa expirou. Crie um novo endereço.", fr:"Cette boîte a expiré. Créez une nouvelle adresse.", de:"Dieses Postfach ist abgelaufen. Neue Adresse erstellen.", ja:"この受信箱は期限切れです。新しい宛先を作成してください。", id:"Kotak ini kedaluwarsa. Buat alamat baru.", pa:"ਇਹ ਇਨਬਾਕਸ ਖਤਮ ਹੋ ਗਿਆ। ਨਵਾਂ ਪਤਾ ਬਣਾਓ।", jv:"Kothak iki kadaluwarsa. Gawe alamat anyar.", te:"ఈ ఇన్‌బాక్స్ గడువు ముగిసింది. కొత్త చిరునామా సృష్టించండి.", tr:"Bu gelen kutusu süresi doldu. Yeni adres oluşturun.", ko:"이 받은편지함이 만료되었습니다. 새 주소를 만드세요.", mr:"ही इनबॉक्स कालबाह्य झाली. नवीन पत्ता तयार करा.", vi:"Hộp thư đã hết hạn. Tạo địa chỉ mới.", ta:"இந்த இன்பாக்ஸ் காலாவதியானது. புதிய முகவரி உருவாக்கவும்.", it:"Questa casella è scaduta. Crea un nuovo indirizzo.", fa:"مهلت این صندوق تمام شد. نشانی تازه بسازید.", tlh:"poH van. ID chu' yIchermon." },
+  errorNetwork: { en:"Network error", ru:"Ошибка сети", zh:"网络错误", es:"Error de red", hi:"नेटवर्क त्रुटि", ar:"خطأ في الشبكة", bn:"নেটওয়ার্ক ত্রুটি", pt:"Erro de rede", fr:"Erreur réseau", de:"Netzwerkfehler", ja:"ネットワークエラー", id:"Kesalahan jaringan", pa:"ਨੈੱਟਵਰਕ ਗਲਤੀ", jv:"Kasalahan jaringan", te:"నెట్‌వర్క్ లోపం", tr:"Ağ hatası", ko:"네트워크 오류", mr:"नेटवर्क त्रुटी", vi:"Lỗi mạng", ta:"பிணைய பிழை", it:"Errore di rete", fa:"خطای شبکه", tlh:"HurDaq Qagh" },
+  errorServer: { en:"Server error", ru:"Ошибка сервера", zh:"服务器错误", es:"Error del servidor", hi:"सर्वर त्रुटि", ar:"خطأ في الخادم", bn:"সার্ভার ত্রুটি", pt:"Erro do servidor", fr:"Erreur serveur", de:"Serverfehler", ja:"サーバーエラー", id:"Kesalahan server", pa:"ਸਰਵਰ ਗਲਤੀ", jv:"Kasalahan server", te:"సర్వర్ లోపం", tr:"Sunucu hatası", ko:"서버 오류", mr:"सर्व्हर त्रुटी", vi:"Lỗi máy chủ", ta:"சேவையக பிழை", it:"Errore del server", fa:"خطای سرور", tlh:"De'wI' Qagh" },
+  gradeLabel: { en:"Grade", ru:"Оценка", zh:"评级", es:"Nota", hi:"ग्रेड", ar:"الدرجة", bn:"গ্রেড", pt:"Nota", fr:"Note", de:"Note", ja:"評価", id:"Nilai", pa:"ਗ੍ਰੇਡ", jv:"Nilai", te:"గ్రేడ్", tr:"Not", ko:"등급", mr:"ग्रेड", vi:"Điểm", ta:"தரம்", it:"Voto", fa:"نمره", tlh:"Doch" },
+  findingsTitle: { en:"Findings", ru:"Результаты", zh:"发现项", es:"Hallazgos", hi:"निष्कर्ष", ar:"النتائج", bn:"ফলাফল", pt:"Achados", fr:"Résultats", de:"Befunde", ja:"結果", id:"Temuan", pa:"ਨਤੀਜੇ", jv:"Temuan", te:"ఫలితాలు", tr:"Bulgular", ko:"결과", mr:"निष्कर्ष", vi:"Phát hiện", ta:"முடிவுகள்", it:"Risultati", fa:"یافته‌ها", tlh:"chovwI'" },
+  emptyFindings: { en:"No findings.", ru:"Нет замечаний.", zh:"无发现。", es:"Sin hallazgos.", hi:"कोई निष्कर्ष नहीं।", ar:"لا نتائج.", bn:"কোনো ফলাফল নেই।", pt:"Sem achados.", fr:"Aucun résultat.", de:"Keine Befunde.", ja:"指摘なし。", id:"Tidak ada temuan.", pa:"ਕੋਈ ਨਤੀਜਾ ਨਹੀਂ।", jv:"Ora ana temuan.", te:"ఫలితాలు లేవు.", tr:"Bulgu yok.", ko:"결과 없음.", mr:"निष्कर्ष नाहीत.", vi:"Không có phát hiện.", ta:"முடிவுகள் இல்லை.", it:"Nessun risultato.", fa:"یافته‌ای نیست.", tlh:"pagh." },
+  fixLabel: { en:"Fix", ru:"Исправление", zh:"修复", es:"Corrección", hi:"सुधार", ar:"الإصلاح", bn:"সংশোধন", pt:"Correção", fr:"Correctif", de:"Fix", ja:"修正", id:"Perbaikan", pa:"ਫਿਕਸ", jv:"Perbaikan", te:"ఫిక్స్", tr:"Düzeltme", ko:"수정", mr:"सुधारणा", vi:"Sửa", ta:"திருத்தம்", it:"Fix", fa:"اصلاح", tlh:"lIng" },
+  mailMetaTitle: { en:"Message", ru:"Письмо", zh:"邮件", es:"Mensaje", hi:"संदेश", ar:"الرسالة", bn:"বার্তা", pt:"Mensagem", fr:"Message", de:"Nachricht", ja:"メッセージ", id:"Pesan", pa:"ਸੁਨੇਹਾ", jv:"Pesen", te:"సందేశం", tr:"Mesaj", ko:"메시지", mr:"संदेश", vi:"Thư", ta:"செய்தி", it:"Messaggio", fa:"پیام", tlh:"QIn" },
+  fromLabel: { en:"From", ru:"От", zh:"发件人", es:"De", hi:"प्रेषक", ar:"من", bn:"প্রেরক", pt:"De", fr:"De", de:"Von", ja:"差出人", id:"Dari", pa:"ਵੱਲੋਂ", jv:"Saka", te:"నుండి", tr:"Kimden", ko:"보낸 사람", mr:"कडून", vi:"Từ", ta:"அனுப்புநர்", it:"Da", fa:"از", tlh:"vo'" },
+  subjectLabel: { en:"Subject", ru:"Тема", zh:"主题", es:"Asunto", hi:"विषय", ar:"الموضوع", bn:"বিষয়", pt:"Assunto", fr:"Objet", de:"Betreff", ja:"件名", id:"Subjek", pa:"ਵਿਸ਼ਾ", jv:"Subyek", te:"విషయం", tr:"Konu", ko:"제목", mr:"विषय", vi:"Tiêu đề", ta:"பொருள்", it:"Oggetto", fa:"موضوع", tlh:"Subject" },
+  ipLabel: { en:"Sending IP", ru:"IP отправителя", zh:"发送 IP", es:"IP de envío", hi:"भेजने वाला IP", ar:"IP المرسل", bn:"প্রেরকের IP", pt:"IP de envio", fr:"IP d’envoi", de:"Absender-IP", ja:"送信元 IP", id:"IP pengirim", pa:"ਭੇਜਣ ਵਾਲਾ IP", jv:"IP pangirim", te:"పంపే IP", tr:"Gönderen IP", ko:"발신 IP", mr:"पाठवणारा IP", vi:"IP gửi", ta:"அனுப்பும் IP", it:"IP mittente", fa:"IP فرستنده", tlh:"IP" },
+  blacklistTitle: { en:"DNSBL", ru:"DNSBL", zh:"DNSBL", es:"DNSBL", hi:"DNSBL", ar:"DNSBL", bn:"DNSBL", pt:"DNSBL", fr:"DNSBL", de:"DNSBL", ja:"DNSBL", id:"DNSBL", pa:"DNSBL", jv:"DNSBL", te:"DNSBL", tr:"DNSBL", ko:"DNSBL", mr:"DNSBL", vi:"DNSBL", ta:"DNSBL", it:"DNSBL", fa:"DNSBL", tlh:"DNSBL" },
+  blacklistClean: { en:"Not listed on checked lists", ru:"В проверенных списках не найден", zh:"未出现在已查名单", es:"No figura en las listas comprobadas", hi:"जाँची गई सूचियों में नहीं", ar:"غير مدرج في القوائم المفحوصة", bn:"পরীক্ষিত তালিকায় নেই", pt:"Não listado nas listas verificadas", fr:"Absent des listes vérifiées", de:"Nicht auf geprüften Listen", ja:"確認したリストに未掲載", id:"Tidak ada di daftar yang dicek", pa:"ਜਾਂਚੀਆਂ ਸੂਚੀਆਂ ਵਿੱਚ ਨਹੀਂ", jv:"Ora ana ing dhaftar sing dicek", te:"తనిఖీ చేసిన జాబితాల్లో లేదు", tr:"Kontrol edilen listelerde yok", ko:"확인한 목록에 없음", mr:"तपासलेल्या याद्यांमध्ये नाही", vi:"Không có trong các danh sách đã kiểm", ta:"சரிபார்த்த பட்டியல்களில் இல்லை", it:"Non presente nelle liste controllate", fa:"در فهرست‌های بررسی‌شده نیست", tlh:"tetlhDaq tu'lu'be'" },
+  blacklistListed: { en:"Listed on: {lists}", ru:"В списках: {lists}", zh:"出现在：{lists}", es:"En listas: {lists}", hi:"सूचियों में: {lists}", ar:"مدرج في: {lists}", bn:"তালিকায়: {lists}", pt:"Listado em: {lists}", fr:"Listé sur : {lists}", de:"Gelistet auf: {lists}", ja:"掲載: {lists}", id:"Ada di: {lists}", pa:"ਸੂਚੀਆਂ ਵਿੱਚ: {lists}", jv:"Ana ing: {lists}", te:"జాబితాల్లో: {lists}", tr:"Listelerde: {lists}", ko:"목록: {lists}", mr:"याद्यांमध्ये: {lists}", vi:"Trong danh sách: {lists}", ta:"பட்டியல்கள்: {lists}", it:"Presente in: {lists}", fa:"در فهرست‌ها: {lists}", tlh:"tetlhDaq: {lists}" },
+  sevOk: { en:"OK", ru:"OK", zh:"正常", es:"OK", hi:"ठीक", ar:"حسن", bn:"ঠিক", pt:"OK", fr:"OK", de:"OK", ja:"OK", id:"OK", pa:"ਠੀਕ", jv:"OK", te:"సరే", tr:"Tamam", ko:"정상", mr:"ठीक", vi:"OK", ta:"சரி", it:"OK", fa:"خوب", tlh:"maj" },
+  sevInfo: { en:"Info", ru:"Инфо", zh:"信息", es:"Info", hi:"जानकारी", ar:"معلومة", bn:"তথ্য", pt:"Info", fr:"Info", de:"Info", ja:"情報", id:"Info", pa:"ਜਾਣਕਾਰੀ", jv:"Info", te:"సమాచారం", tr:"Bilgi", ko:"정보", mr:"माहिती", vi:"Thông tin", ta:"தகவல்", it:"Info", fa:"اطلاع", tlh:"De'" },
+  sevLow: { en:"Low", ru:"Низкий", zh:"低", es:"Bajo", hi:"कम", ar:"منخفض", bn:"কম", pt:"Baixo", fr:"Faible", de:"Niedrig", ja:"低", id:"Rendah", pa:"ਘੱਟ", jv:"Endhek", te:"తక్కువ", tr:"Düşük", ko:"낮음", mr:"कमी", vi:"Thấp", ta:"குறைவு", it:"Basso", fa:"کم", tlh:"mach" },
+  sevMedium: { en:"Medium", ru:"Средний", zh:"中", es:"Medio", hi:"मध्यम", ar:"متوسط", bn:"মাঝারি", pt:"Médio", fr:"Moyen", de:"Mittel", ja:"中", id:"Sedang", pa:"ਮੱਧਮ", jv:"Sedheng", te:"మధ్యస్థం", tr:"Orta", ko:"중간", mr:"मध्यम", vi:"Trung bình", ta:"நடுத்தரம்", it:"Medio", fa:"متوسط", tlh:"motlh" },
+  sevHigh: { en:"High", ru:"Высокий", zh:"高", es:"Alto", hi:"उच्च", ar:"مرتفع", bn:"উচ্চ", pt:"Alto", fr:"Élevé", de:"Hoch", ja:"高", id:"Tinggi", pa:"ਉੱਚ", jv:"Dhuwur", te:"ఎక్కువ", tr:"Yüksek", ko:"높음", mr:"उच्च", vi:"Cao", ta:"உயர்", it:"Alto", fa:"زیاد", tlh:"tIn" },
+  sevCritical: { en:"Critical", ru:"Критичный", zh:"严重", es:"Crítico", hi:"गंभीर", ar:"حرج", bn:"সংকটজনক", pt:"Crítico", fr:"Critique", de:"Kritisch", ja:"重大", id:"Kritis", pa:"ਗੰਭੀਰ", jv:"Kritis", te:"క్లిష్టమైన", tr:"Kritik", ko:"치명적", mr:"गंभीर", vi:"Nghiêm trọng", ta:"முக்கியமான", it:"Critico", fa:"بحرانی", tlh:"motlhbe'" },
 };
 
-function fillLocales(row) {
+function fill(row) {
   const out = {};
   for (const loc of LOCALES) out[loc] = row[loc] ?? row.en;
   return out;
 }
 
 function genUi() {
-  const keys = Object.keys(ui);
   let body = `import type { MessageKey } from "./i18n-keys";\nimport { localeNames, type Locale } from "./site-config";\n\nfunction pack(\n  rows: Record<MessageKey, Partial<Record<Locale, string>> & { en: string }>,\n): Record<Locale, Record<MessageKey, string>> {\n  const keys = Object.keys(rows) as MessageKey[];\n  const out = {} as Record<Locale, Record<MessageKey, string>>;\n  for (const key of keys) {\n    const byLocale = localeNames(rows[key]);\n    for (const locale of Object.keys(byLocale) as Locale[]) {\n      if (!out[locale]) out[locale] = {} as Record<MessageKey, string>;\n      out[locale][key] = byLocale[locale];\n    }\n  }\n  return out;\n}\n\nexport const UI_MESSAGES = pack({\n`;
-  for (const key of keys) {
-    const row = fillLocales(ui[key]);
+  for (const key of Object.keys(ui)) {
+    const row = fill(ui[key]);
     body += `  ${key}: {\n`;
-    for (const loc of LOCALES) {
-      body += `    ${loc}: ${JSON.stringify(row[loc])},\n`;
-    }
+    for (const loc of LOCALES) body += `    ${loc}: ${JSON.stringify(row[loc])},\n`;
     body += `  },\n`;
   }
   body += `});\n`;
   fs.writeFileSync(path.join(srcDir, "i18n-messages.ts"), body);
 }
 
-function seoFor(locale) {
-  const isRu = locale === "ru";
-  const title = isRu
-    ? "supermail — проверка MX, SPF, DKIM, DMARC и DNSBL"
-    : "supermail — check MX, SPF, DKIM, DMARC and DNSBL";
-  const description = isRu
-    ? "Проверьте почтовый домен: MX, SPF/DKIM/DMARC/BIMI, чёрные списки DNSBL, PTR и SMTP STARTTLS. Оценка A–F и копируемые фиксы."
-    : "Check a mail domain: MX, SPF/DKIM/DMARC/BIMI, DNSBL lists, PTR and SMTP STARTTLS. Grade A–F with copy-paste fixes.";
-  const heading = isRu ? "Проверка почтового сервера" : "Mail server check";
-  const leadHtml = isRu
-    ? "Введите домен — получите разбор DNS-авторизации, репутации IP и лёгкий SMTP-probe. Без регистрации."
-    : "Enter a domain for DNS authentication, IP reputation and a light SMTP probe. No signup.";
+function seoFor(isRu) {
   return {
-    title, description, heading, leadHtml,
-    benefitsTitle: isRu ? "Зачем это нужно" : "Why use it",
+    title: isRu ? "supermail — спам-тест письма для почтового сервера" : "supermail — email spam test for your mail server",
+    description: isRu
+      ? "Отправьте письмо на одноразовый адрес и получите разбор: SPF/DKIM/DMARC, DNSBL, PTR, стоп-слова и оценка A–F."
+      : "Send a message to a one-time address and get SPF/DKIM/DMARC, DNSBL, PTR, spam-word checks and an A–F grade.",
+    heading: isRu ? "Спам-тест вашего письма" : "Spam-test your email",
+    leadHtml: isRu
+      ? "Мы выдаём уникальный ящик. Вы отправляете письмо со своего SMTP — и видите, почему оно может уйти в спам."
+      : "We give you a unique inbox. Send from your SMTP and see why the message may land in spam.",
+    benefitsTitle: isRu ? "Что проверяем" : "What we check",
     benefits: isRu
-      ? ["Оценка A–F и числовой балл", "MX, SPF, DKIM, DMARC и BIMI в одном отчёте", "DNSBL и PTR по IP SMTP", "Стартовые TXT для SPF и DMARC", "Понятные findings с фиксами"]
-      : ["A–F grade and numeric score", "MX, SPF, DKIM, DMARC and BIMI in one report", "DNSBL and PTR for the SMTP IP", "Starter SPF and DMARC TXT", "Plain-language findings with fixes"],
-    howTitle: isRu ? "Как проверить" : "How to check",
+      ? ["Реальное письмо, не только DNS-форма", "SPF / DKIM / DMARC по домену From", "DNSBL и PTR IP отправителя", "Тема и тело: стоп-слова, CAPS, сокращённые URL", "Оценка A–F и копируемые фиксы"]
+      : ["A real message, not just a DNS form", "SPF / DKIM / DMARC for the From domain", "DNSBL and PTR of the sending IP", "Subject/body: spam words, CAPS, short URLs", "A–F grade with copy-paste fixes"],
+    howTitle: isRu ? "Как пользоваться" : "How to use",
     howSteps: isRu
-      ? ["Укажите домен отправителя", "При необходимости — селектор DKIM и IP SMTP", "Нажмите «Проверить»", "Скопируйте фиксы или стартовые записи"]
-      : ["Enter the sending domain", "Optionally add a DKIM selector and SMTP IP", "Press Check", "Copy fixes or starter records"],
+      ? ["Скопируйте тестовый адрес на странице", "Отправьте на него письмо со своего сервера или ящика", "Подождите 10–60 секунд — вкладку не закрывайте", "Разберите findings и поправьте DNS/контент"]
+      : ["Copy the test address on the page", "Send a message to it from your server or mailbox", "Wait 10–60 seconds — keep the tab open", "Read findings and fix DNS/content"],
     strongTitle: isRu ? "Советы по доставке" : "Deliverability tips",
     strongLead: isRu
-      ? "SPF, DKIM и DMARC работают вместе: выравнивание From и корректный PTR сильно влияют на inbox."
-      : "SPF, DKIM and DMARC work together; From alignment and a correct PTR strongly affect inbox placement.",
+      ? "Фильтры смотрят и на инфраструктуру, и на текст. Исправляйте auth и контент вместе."
+      : "Filters look at both infrastructure and wording. Fix auth and content together.",
     tipsLabel: isRu ? "Практика" : "Practice",
     strongTips: isRu
-      ? ["Один SPF на домен и не больше 10 DNS-lookup", "Начните DMARC с p=none, затем quarantine/reject", "Селектор DKIM должен совпадать с тем, что ставит MTA", "PTR SMTP-хоста должен совпадать с EHLO", "Не используйте +all в SPF"]
-      : ["One SPF per domain and at most 10 DNS lookups", "Start DMARC at p=none, then quarantine/reject", "DKIM selector must match what your MTA signs", "SMTP PTR should match EHLO", "Never use +all in SPF"],
-    usesTitle: isRu ? "Типичные задачи" : "Typical uses",
+      ? ["Подписывайте DKIM тем же доменом, что в From", "Не используйте +all в SPF", "PTR SMTP должен совпадать с EHLO", "Избегайте публичных коротких ссылок", "Добавьте текстовую часть, не только картинку"]
+      : ["Sign DKIM with the same domain as From", "Never use +all in SPF", "SMTP PTR should match EHLO", "Avoid public URL shorteners", "Include a text part, not only an image"],
+    usesTitle: isRu ? "Когда это нужно" : "When you need it",
     uses: isRu
-      ? ["Перед запуском корпоративной почты", "После смены провайдера рассылок", "Когда письма уходят в спам", "Аудит DNSBL для IP SMTP"]
-      : ["Before launching corporate mail", "After changing an ESP", "When mail lands in spam", "DNSBL audit for an SMTP IP"],
+      ? ["Перед массовой рассылкой", "После смены ESP или своего Postfix/Exim", "Когда Gmail/Mail.ru кладут письма в спам", "Проверка репутации IP отправителя"]
+      : ["Before a bulk campaign", "After changing ESP or your Postfix/Exim", "When Gmail/Mail.ru file mail as spam", "Checking sending-IP reputation"],
     faqTitle: isRu ? "Вопросы и ответы" : "FAQ",
     faq: isRu
       ? [
-          { q: "Это mail-tester?", a: "Режим A проверяет DNS/SMTP без письма. Тест исходящего письма (одноразовый ящик) планируется отдельно." },
-          { q: "Нужен ли селектор DKIM?", a: "Да, если ключ не на default._domainkey. Укажите тот же селектор, что в подписи." },
-          { q: "Зачем IP?", a: "Если MX указывает не на ваш исходящий SMTP, задайте IP отправителя для DNSBL и PTR." },
-          { q: "Храните ли вы домены?", a: "Проверка выполняется на лету; отдельной истории аккаунтов нет." },
-          { q: "Платно ли это?", a: "Нет, сервис бесплатный." },
-          { q: "Как считается оценка?", a: "Стартуем со 100 и снимаем баллы за critical/high/medium/low findings." },
+          { q: "Куда слать письмо?", a: "На уникальный адрес вида …@inbox.supermail.dmosk.net, который показывает страница." },
+          { q: "Сколько живёт ящик?", a: "Около 30 минут. После истечения создайте новый адрес." },
+          { q: "Читаете ли вы чужие письма?", a: "Только то, что вы сами отправили на тестовый адрес. Тела дольше сессии не храним." },
+          { q: "Это замена mail-tester?", a: "По сценарию — да: ящик → письмо → отчёт. Набор тестов и формулировки — наши." },
+          { q: "Платно?", a: "Нет, сервис бесплатный." },
+          { q: "Как считается оценка?", a: "Со 100 баллов снимаем critical/high/medium/low findings." },
         ]
       : [
-          { q: "Is this mail-tester?", a: "Mode A checks DNS/SMTP without receiving mail. An outbound spam-score inbox is planned separately." },
-          { q: "Do I need a DKIM selector?", a: "Yes if the key is not at default._domainkey. Use the same selector your MTA signs with." },
-          { q: "Why an IP?", a: "If MX is not your outbound SMTP, set the sending IP for DNSBL and PTR checks." },
-          { q: "Do you store domains?", a: "Checks run on the fly; there is no account history." },
-          { q: "Is it free?", a: "Yes, the service is free." },
+          { q: "Where do I send mail?", a: "To the unique …@inbox.supermail.dmosk.net address shown on the page." },
+          { q: "How long does the inbox live?", a: "About 30 minutes. Create a new address when it expires." },
+          { q: "Do you read other people’s mail?", a: "Only what you send to the test address. Bodies are not kept past the session." },
+          { q: "Is this a mail-tester clone?", a: "Same flow: inbox → message → report. The checks and wording are ours." },
+          { q: "Is it free?", a: "Yes." },
           { q: "How is the grade calculated?", a: "We start at 100 and subtract for critical/high/medium/low findings." },
         ],
     appName: "supermail",
@@ -207,10 +112,7 @@ function seoFor(locale) {
 function genSeo() {
   let body = `import type { Locale } from "./site-config";\n\nexport type SeoCopy = {\n  title: string;\n  description: string;\n  heading: string;\n  leadHtml: string;\n  benefitsTitle: string;\n  benefits: string[];\n  howTitle: string;\n  howSteps: string[];\n  strongTitle: string;\n  strongLead: string;\n  tipsLabel: string;\n  strongTips: string[];\n  usesTitle: string;\n  uses: string[];\n  faqTitle: string;\n  faq: { q: string; a: string }[];\n  appName: string;\n};\n\nexport const SEO_COPY: Record<Locale, SeoCopy> = {\n`;
   for (const loc of LOCALES) {
-    const c = seoFor(loc === "ru" ? "ru" : "en");
-    if (loc !== "ru" && loc !== "en") {
-      c.title = c.title.replace("supermail —", `supermail —`);
-    }
+    const c = seoFor(loc === "ru");
     body += `  ${loc}: ${JSON.stringify(c, null, 2).replace(/\n/g, "\n  ")},\n`;
   }
   body += `};\n`;
@@ -219,4 +121,4 @@ function genSeo() {
 
 genUi();
 genSeo();
-console.log("wrote i18n-messages.ts and seo-messages.ts");
+console.log("ok");
