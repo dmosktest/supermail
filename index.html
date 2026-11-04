@@ -14,10 +14,10 @@
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-    <title>supermail — проверка MX, SPF, DKIM, DMARC и DNSBL</title>
+    <title>supermail — спам-тест письма для почтового сервера</title>
     <meta
       name="description"
-      content="Проверьте почтовый домен: MX, SPF/DKIM/DMARC/BIMI, чёрные списки DNSBL, PTR и SMTP STARTTLS. Оценка A–F и копируемые фиксы."
+      content="Отправьте письмо на одноразовый адрес и получите разбор: SPF/DKIM/DMARC, DNSBL, PTR, стоп-слова и оценка A–F."
     />
     <link rel="canonical" href="https://supermail.dmosk.net/ru/" />
     <link rel="alternate" hreflang="ru" href="https://supermail.dmosk.net/ru/" />
@@ -25,10 +25,10 @@
     <link rel="alternate" hreflang="x-default" href="https://supermail.dmosk.net/en/" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://supermail.dmosk.net/ru/" />
-    <meta property="og:title" content="supermail — проверка MX, SPF, DKIM, DMARC и DNSBL" />
+    <meta property="og:title" content="supermail — спам-тест письма для почтового сервера" />
     <meta
       property="og:description"
-      content="Проверьте почтовый домен: MX, SPF/DKIM/DMARC/BIMI, чёрные списки DNSBL, PTR и SMTP STARTTLS. Оценка A–F и копируемые фиксы."
+      content="Отправьте письмо на одноразовый адрес и получите разбор: SPF/DKIM/DMARC, DNSBL, PTR, стоп-слова и оценка A–F."
     />
     <meta property="og:locale" content="ru_RU" />
     <meta property="og:locale:alternate" content="en_US" />
@@ -90,37 +90,29 @@
         </div>
       </div>
 
-      <h1 id="heading">Проверка почтового сервера</h1>
+      <h1 id="heading">Спам-тест вашего письма</h1>
       <p class="lead" id="lead">
-        Введите домен — получите разбор DNS-авторизации, репутации IP и лёгкий SMTP-probe. Без регистрации.
+        Мы выдаём уникальный ящик. Вы отправляете письмо со своего SMTP — и видите, почему оно может уйти в спам.
       </p>
 
       <noscript>
-        <p class="noscript" data-i18n="noscript">
-          Включите JavaScript, чтобы проверить DNS и SMTP почты.
-        </p>
+        <p class="noscript">Включите JavaScript, чтобы запустить спам-тест письма.</p>
       </noscript>
 
-      <form class="panel check-form" id="check-form">
-        <label class="field">
-          <span class="field-label" id="domain-label">Домен</span>
-          <input type="text" id="domain" name="domain" autocomplete="off" spellcheck="false" placeholder="example.com" required />
-        </label>
-        <div class="field-row">
-          <label class="field">
-            <span class="field-label" id="selector-label">Селектор DKIM</span>
-            <input type="text" id="selector" name="selector" autocomplete="off" spellcheck="false" placeholder="default" />
-          </label>
-          <label class="field">
-            <span class="field-label" id="ip-label">IP SMTP (необязательно)</span>
-            <input type="text" id="ip" name="ip" autocomplete="off" spellcheck="false" placeholder="203.0.113.10" />
-          </label>
+      <section class="panel inbox-panel" id="inbox-panel">
+        <p class="inbox-lead" id="inbox-lead">
+          Отправьте любое письмо на этот адрес. Разберём заголовки, аутентификацию, чёрные списки и контент.
+        </p>
+        <p class="field-label" id="your-address-label">Ваш тестовый адрес</p>
+        <div class="address-row">
+          <code class="address" id="address">…</code>
+          <button type="button" class="btn" id="copy-btn">Копировать</button>
+          <button type="button" class="btn btn-ghost" id="new-btn">Новый адрес</button>
         </div>
-        <div class="toolbar">
-          <button type="submit" class="btn" id="check-btn">Проверить</button>
-          <p class="status" id="status" role="status" aria-live="polite"></p>
-        </div>
-      </form>
+        <p class="status waiting-status" id="waiting-status" role="status" aria-live="polite"></p>
+        <p class="muted" id="waiting-hint"></p>
+        <p class="status is-error" id="status" role="status" aria-live="polite"></p>
+      </section>
 
       <section class="panel results" id="results" hidden>
         <div class="grade-row">
@@ -131,24 +123,18 @@
           </div>
         </div>
 
+        <h2 class="panel-title" id="mail-meta-title">Письмо</h2>
+        <div id="mail-meta" class="meta-block"></div>
+
         <h2 class="panel-title" id="findings-title">Результаты</h2>
         <div id="findings" class="findings"></div>
 
-        <h2 class="panel-title" id="records-title">DNS-записи</h2>
-        <div id="records" class="records"></div>
-
-        <h2 class="panel-title" id="generators-title">Стартовые записи</h2>
-        <div id="generators" class="generators"></div>
-
         <h2 class="panel-title" id="blacklist-title">DNSBL</h2>
         <p id="blacklist" class="meta-block"></p>
-
-        <h2 class="panel-title" id="smtp-title">SMTP</h2>
-        <p id="smtp" class="meta-block"></p>
       </section>
 
       <article class="seo" id="seo-root"></article>
-      <p class="version" id="version">supermail 0.1.0</p>
+      <p class="version" id="version">supermail 0.2.0</p>
     </main>
     <script type="module" src="/src/main.ts"></script>
   </body>
