@@ -1,4 +1,5 @@
 import { findingCopy } from "./findings-messages";
+import { formatDelistFix, parseListedZonesFromDetail } from "./dnsbl-delist";
 import type { Locale } from "./site-config";
 
 export type BriefFinding = {
@@ -44,16 +45,25 @@ function isProblem(f: BriefFinding): boolean {
 function localizedParts(
   locale: Locale,
   f: BriefFinding,
-): { title: string; detail: string; why: string; fix: string } {
+  rep?: BriefReport,
+): { title: string; detail: string; problem: string; why: string; fix: string } {
   const copy = findingCopy(locale, f.code || "");
   const title = copy?.title || f.title;
   let detail = copy?.detail ?? "{detail}";
   if (detail.includes("{detail}")) {
     detail = detail.replaceAll("{detail}", f.detail || "").trim() || f.detail || "";
   }
+  const problem = (copy?.problem || "").trim();
   const why = (copy?.why || "").trim();
   const sev = (f.severity || "").toLowerCase();
   let fix = (copy?.fix || f.fix || "").trim();
+  if (f.code === "BL1_LISTED" || f.id === "BL1") {
+    const zones = rep?.blacklist?.listed?.length
+      ? rep.blacklist.listed
+      : parseListedZonesFromDetail(f.detail || "");
+    const ip = rep?.blacklist?.ip || rep?.mail?.remoteIp || "";
+    if (zones.length) fix = formatDelistFix(zones, ip, locale);
+  }
   if (!fix) {
     if (sev === "info") {
       fix = isRu(locale)
@@ -69,7 +79,7 @@ function localizedParts(
         : "No change needed — this check passed.";
     }
   }
-  return { title, detail, why, fix };
+  return { title, detail, problem, why, fix };
 }
 
 function gradeHint(locale: Locale, grade: string): string {
@@ -120,22 +130,23 @@ export function buildAiBrief(rep: BriefReport, locale: Locale, reportUrl: string
     .sort((a, b) => (b.score || 0) - (a.score || 0))
     .slice(0, 5)
     .map((f) => {
-      const p = localizedParts(locale, f);
+      const p = localizedParts(locale, f, rep);
       return `- ${p.title} [\`${f.code || f.id}\`] · ${f.severity}${typeof f.score === "number" ? ` · score ${spamStr(f.score)}` : ""}`;
     })
     .join("\n");
 
   const blocks = problems
     .map((f, i) => {
-      const p = localizedParts(locale, f);
+      const p = localizedParts(locale, f, rep);
       return [
         `## ${i + 1}. ${p.title} [\`${f.code || f.id}\`]`,
         `- Severity: ${f.severity}`,
         typeof f.score === "number" ? `- Spam score delta: ${spamStr(f.score)}` : "",
-        p.detail ? `- Evidence: ${p.detail}` : "",
-        p.why ? `- Why it matters for spam: ${p.why}` : "",
+        p.detail ? `- What we saw: ${p.detail}` : "",
+        p.problem ? `- What's wrong: ${p.problem}` : "",
+        p.why ? `- Why this can look like spam: ${p.why}` : "",
         ``,
-        `### Fix`,
+        `### How to fix`,
         p.fix,
       ]
         .filter((line) => line !== "")
@@ -242,27 +253,31 @@ export function buildAdminBrief(rep: BriefReport, locale: Locale, reportUrl: str
 
   const items = problems
     .map((f, i) => {
-      const p = localizedParts(locale, f);
+      const p = localizedParts(locale, f, rep);
       if (isRu(locale)) {
         return [
           `### ${i + 1}. ${p.title}`,
           ``,
           `**Что увидели:** ${p.detail || "см. заголовок проверки"}`,
           ``,
-          `**Почему это важно для спама:** ${p.why || "фильтры учитывают такой сигнал при оценке письма"}`,
+          `**В чём проблема:** ${p.problem || p.title}`,
           ``,
-          `**Что сделать простыми словами:** ${p.fix}`,
+          `**Почему письмо могут счесть спамом:** ${p.why || "фильтры учитывают такой сигнал при оценке письма"}`,
+          ``,
+          `**Как исправить:** ${p.fix}`,
           ``,
         ].join("\n");
       }
       return [
         `### ${i + 1}. ${p.title}`,
         ``,
-        `**Evidence:** ${p.detail || "see the check title"}`,
+        `**What we saw:** ${p.detail || "see the check title"}`,
         ``,
-        `**Why it matters for spam:** ${p.why || "filters use this signal when scoring mail"}`,
+        `**What's wrong:** ${p.problem || p.title}`,
         ``,
-        `**What to do in plain words:** ${p.fix}`,
+        `**Why this can look like spam:** ${p.why || "filters use this signal when scoring mail"}`,
+        ``,
+        `**How to fix:** ${p.fix}`,
         ``,
       ].join("\n");
     })

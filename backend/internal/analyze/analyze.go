@@ -55,7 +55,6 @@ type Report struct {
 	Mail        MailMeta      `json:"mail"`
 	Headers     []HeaderField `json:"headers,omitempty"`
 	Findings    []Finding     `json:"findings"`
-	DnsHints    []DnsHint     `json:"dnsHints,omitempty"`
 	PTR         string        `json:"ptr,omitempty"`
 	Blacklist   dnsbl.Result  `json:"blacklist"`
 }
@@ -103,7 +102,7 @@ func Run(ctx context.Context, raw []byte, remoteIP, helo, mailFrom string, inbou
 	msg, err := mail.ReadMessage(bytes.NewReader(raw))
 	if err != nil {
 		findings = append(findings, f("PARSE1", "PARSE1", "critical", "Could not parse message", err.Error(), "", 2.0))
-		return finalize(meta, findings, "", dnsbl.Result{}, headers, nil)
+		return finalize(meta, findings, "", dnsbl.Result{}, headers)
 	}
 
 	meta.From = prettyAddressHeader(msg.Header.Get("From"))
@@ -161,7 +160,7 @@ func Run(ctx context.Context, raw []byte, remoteIP, helo, mailFrom string, inbou
 			sev, sc := dnsblSeverity(bl.Listed)
 			findings = append(findings, f("BL1", "BL1_LISTED", sev, "Sending IP listed on DNSBL",
 				fmt.Sprintf("%s → %s", remoteIP, strings.Join(bl.Listed, ", ")),
-				"Request delisting and stop compromised senders / open relays.", sc))
+				dnsbl.FormatDelistHints(remoteIP, bl.Listed), sc))
 		} else {
 			findings = append(findings, f("BL1", "BL1_CLEAN", "ok", "Sending IP not listed on checked DNSBLs",
 				fmt.Sprintf("%s · %d", remoteIP, bl.Checked), "", -0.1))
@@ -179,10 +178,10 @@ func Run(ctx context.Context, raw []byte, remoteIP, helo, mailFrom string, inbou
 		}
 	}
 
-	return finalize(meta, findings, ptr, bl, headers, buildDnsHints(fromDomain))
+	return finalize(meta, findings, ptr, bl, headers)
 }
 
-func finalize(meta MailMeta, findings []Finding, ptr string, bl dnsbl.Result, headers []HeaderField, hints []DnsHint) Report {
+func finalize(meta MailMeta, findings []Finding, ptr string, bl dnsbl.Result, headers []HeaderField) Report {
 	score, grade := scoreOf(findings)
 	pass, fail := 0, 0
 	spam := 0.0
@@ -199,7 +198,7 @@ func finalize(meta MailMeta, findings []Finding, ptr string, bl dnsbl.Result, he
 	return Report{
 		Grade: grade, Score: score, SpamScore: round1(spam),
 		TestsTotal: len(findings), TestsPass: pass, TestsFail: fail,
-		Mail: meta, Headers: headers, Findings: findings, DnsHints: hints, PTR: ptr, Blacklist: bl,
+		Mail: meta, Headers: headers, Findings: findings, PTR: ptr, Blacklist: bl,
 	}
 }
 

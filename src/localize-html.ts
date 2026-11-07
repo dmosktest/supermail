@@ -180,9 +180,6 @@ export function localizeIndexHtml(html: string, locale: Locale): string {
   out = replaceTagContent(out, "h2", "headers-title", t(locale, "headersTitle"));
   out = replaceTagContent(out, "button", "headers-copy", t(locale, "copy"));
   out = replaceTagContent(out, "p", "headers-empty", t(locale, "headersEmpty"));
-  out = replaceTagContent(out, "h2", "blacklist-title", t(locale, "blacklistTitle"));
-  out = replaceTagContent(out, "h2", "dns-hints-title", t(locale, "dnsHintsTitle"));
-  out = replaceTagContent(out, "button", "export-json-btn", t(locale, "exportJson"));
   out = replaceTagContent(out, "button", "export-pdf-btn", t(locale, "exportPdf"));
   out = out.replace(
     /(<a[^>]*id=["']privacy-link["'][^>]*href=["'])[^"']*(["'][^>]*>)([\s\S]*?)(<\/a>)/i,

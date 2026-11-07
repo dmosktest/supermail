@@ -401,8 +401,8 @@ WHY: dict[str, tuple[str, str]] = {
         "SPF fail значит: IP не авторизован для домена — реальная проблема auth, сильнее softfail.",
     ),
     "SPF2_SOFTFAIL": (
-        "Softfail means this IP is not in the SPF allow list (typical with ~all). That is not hardfail; swapping ~all for -all alone hardly changes spam scoring — list the outbound IP so SPF returns pass.",
-        "Softfail значит: этот IP не в allow-list SPF (часто при ~all). Это не hardfail; одна замена ~all на -all спам-фильтры почти не двигает — важнее включить исходящий IP, чтобы был pass.",
+        "Softfail is not a hard reject, but it is not a pass either — filters trust the message less. Changing ~all to -all alone barely moves spam scores; get the outbound IP to pass.",
+        "Softfail — ещё не жёсткий отказ, но и не pass: фильтры меньше доверяют письму. Одна замена ~all на -all почти ничего не меняет — нужно, чтобы исходящий IP давал pass.",
     ),
     "SPF2_SOFTFAIL_FREEMAIL": (
         "On freemail this usually reflects the provider’s SPF tree, not a mistake in your Thunderbird settings.",
@@ -533,8 +533,8 @@ WHY: dict[str, tuple[str, str]] = {
         "HELO указывает не на IP клиента — похоже на open proxy или рассинхрон личности.",
     ),
     "BL1_LISTED": (
-        "DNSBL hits mean other networks already reported this IP for abuse — inbox providers trust that.",
-        "Попадание в DNSBL значит: другие сети уже жаловались на IP — провайдеры этому доверяют.",
+        "Inbox providers often reject or junk mail from listed IPs. Fix the cause, then delist on each list — links are in the report.",
+        "Провайдеры часто режут или кладут в спам письма с такого IP. Уберите причину и снимите IP с каждого списка — ссылки в отчёте.",
     ),
     "BL1_CLEAN": (
         "Not listed on major DNSBLs is a baseline requirement for good delivery.",

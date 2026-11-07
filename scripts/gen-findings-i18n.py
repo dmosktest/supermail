@@ -17,6 +17,7 @@ LOCALES = [
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from findings_locale_extra import OTHER_LOCALES, TR_LISTS  # noqa: E402
+from findings_problem import PROBLEM  # noqa: E402
 from findings_why import WHY  # noqa: E402
 
 # code -> {title_en, title_ru, detail_en, detail_ru, fix_en?, fix_ru?}
@@ -669,12 +670,12 @@ COPY: dict[str, dict[str, str]] = {
         "fix_ru": "Разрешите этот IP (или include) в SPF TXT.",
     },
     "SPF2_SOFTFAIL": {
-        "title_en": "SPF softfail for sending IP",
-        "title_ru": "SPF softfail для IP отправителя",
+        "title_en": "Sending IP got SPF softfail",
+        "title_ru": "IP отправителя получил SPF softfail",
         "detail_en": "{detail}",
         "detail_ru": "{detail}",
-        "fix_en": "Add the outbound IP (or include) so SPF returns pass. Do not treat ~all→-all as a spam fix by itself.",
-        "fix_ru": "Добавьте исходящий IP (или include), чтобы SPF дал pass. Одну замену ~all на -all спам-фиксом не считайте.",
+        "fix_en": "Add your outbound IP (or the right include) to SPF so the check returns pass. Do not treat swapping ~all for -all as the spam fix by itself.",
+        "fix_ru": "Добавьте свой исходящий IP (или нужный include) в SPF, чтобы проверка дала pass. Не считайте одной заменой ~all на -all исправление спама.",
     },
     "SPF2_SOFTFAIL_FREEMAIL": {
         "title_en": "SPF softfail on freemail path (informational)",
@@ -900,11 +901,11 @@ COPY: dict[str, dict[str, str]] = {
     },
     "BL1_LISTED": {
         "title_en": "Sending IP listed on DNSBL",
-        "title_ru": "IP отправителя в DNSBL",
+        "title_ru": "IP отправителя в чёрном списке DNSBL",
         "detail_en": "{detail}",
         "detail_ru": "{detail}",
-        "fix_en": "Request delisting and stop compromised senders / open relays.",
-        "fix_ru": "Запросите delisting и уберите компрометацию / open relay.",
+        "fix_en": "Stop the abuse source first, then open each list’s removal page (links are in the report).",
+        "fix_ru": "Сначала уберите причину, затем откройте страницу снятия у каждого списка (ссылки — в отчёте).",
     },
     "BL1_CLEAN": {
         "title_en": "Sending IP not listed on checked DNSBLs",
@@ -995,6 +996,7 @@ def main() -> None:
         "export type FindingCopy = {",
         "  title: string;",
         "  detail?: string;",
+        "  problem?: string;",
         "  why?: string;",
         "  fix?: string;",
         "};",
@@ -1002,6 +1004,7 @@ def main() -> None:
         "type FindingPack = {",
         "  title: Partial<Record<Locale, string>> & { en: string };",
         "  detail?: Partial<Record<Locale, string>> & { en: string };",
+        "  problem?: Partial<Record<Locale, string>> & { en: string };",
         "  why?: Partial<Record<Locale, string>> & { en: string };",
         "  fix?: Partial<Record<Locale, string>> & { en: string };",
         "};",
@@ -1011,6 +1014,9 @@ def main() -> None:
     missing_why = [c for c in codes if c not in WHY]
     if missing_why:
         raise SystemExit(f"missing WHY for: {', '.join(missing_why)}")
+    missing_problem = [c for c in codes if c not in PROBLEM]
+    if missing_problem:
+        raise SystemExit(f"missing PROBLEM for: {', '.join(missing_problem)}")
     for code in codes:
         c = COPY[code]
         lines.append(f"  {code}: {{")
@@ -1019,6 +1025,9 @@ def main() -> None:
         if "detail_en" in c or "detail_ru" in c:
             detail = locale_row(c.get("detail_en", ""), c.get("detail_ru", ""))
             lines.append(f"    detail: {emit_locale_object(detail)},")
+        problem_en, problem_ru = PROBLEM[code]
+        problem = locale_row_soft(problem_en, problem_ru)
+        lines.append(f"    problem: {emit_locale_object(problem)},")
         why_en, why_ru = WHY[code]
         why = locale_row_soft(why_en, why_ru)
         lines.append(f"    why: {emit_locale_object(why)},")
@@ -1042,6 +1051,10 @@ def main() -> None:
     lines.append("  if (!pack) return null;")
     lines.append("  const out: FindingCopy = { title: pick(pack.title, locale) };")
     lines.append("  if (pack.detail) out.detail = pick(pack.detail, locale);")
+    lines.append("  if (pack.problem) {")
+    lines.append("    const problem = pick(pack.problem, locale);")
+    lines.append("    if (problem) out.problem = problem;")
+    lines.append("  }")
     lines.append("  if (pack.why) {")
     lines.append("    const why = pick(pack.why, locale);")
     lines.append("    if (why) out.why = why;")
@@ -1055,7 +1068,7 @@ def main() -> None:
     lines.append("")
 
     OUT.write_text("\n".join(lines), encoding="utf-8")
-    print(f"wrote {OUT.name} codes={len(codes)} locales={len(LOCALES)} why={len(WHY)}")
+    print(f"wrote {OUT.name} codes={len(codes)} locales={len(LOCALES)} why={len(WHY)} problem={len(PROBLEM)}")
 
 
 if __name__ == "__main__":

@@ -6,13 +6,6 @@ import (
 	"strings"
 )
 
-type DnsHint struct {
-	Host  string `json:"host"`
-	Type  string `json:"type"`
-	Value string `json:"value"`
-	Note  string `json:"note,omitempty"`
-}
-
 func checkMTASTS(ctx context.Context, domain string) []Finding {
 	if domain == "" {
 		return nil
@@ -66,49 +59,4 @@ func checkBIMI(ctx context.Context, domain string) []Finding {
 		}
 	}
 	return []Finding{f("BIMI1", "BIMI1_MISSING", "info", "No BIMI DNS record", host, "", 0)}
-}
-
-func buildDnsHints(domain string) []DnsHint {
-	domain = strings.ToLower(strings.TrimSuffix(strings.TrimSpace(domain), "."))
-	if domain == "" {
-		return nil
-	}
-	return []DnsHint{
-		{
-			Host:  domain,
-			Type:  "TXT",
-			Value: "v=spf1 mx a -all",
-			Note:  "SPF — adjust includes for your ESP before -all",
-		},
-		{
-			Host:  "_dmarc." + domain,
-			Type:  "TXT",
-			Value: fmt.Sprintf("v=DMARC1; p=none; rua=mailto:dmarc@%s; fo=1", domain),
-			Note:  "DMARC — start with p=none, then quarantine/reject",
-		},
-		{
-			Host:  "selector._domainkey." + domain,
-			Type:  "TXT",
-			Value: "v=DKIM1; k=rsa; p=YOUR_PUBLIC_KEY",
-			Note:  "DKIM — replace selector and p= with your MTA key",
-		},
-		{
-			Host:  "_mta-sts." + domain,
-			Type:  "TXT",
-			Value: "v=STSv1; id=20260101T000000Z",
-			Note:  "MTA-STS discovery (optional)",
-		},
-		{
-			Host:  "_smtp._tls." + domain,
-			Type:  "TXT",
-			Value: fmt.Sprintf("v=TLSRPTv1; rua=mailto:tlsrpt@%s", domain),
-			Note:  "TLS reporting (optional)",
-		},
-		{
-			Host:  "default._bimi." + domain,
-			Type:  "TXT",
-			Value: fmt.Sprintf("v=BIMI1; l=https://%s/bimi/logo.svg;", domain),
-			Note:  "BIMI (optional; needs DMARC enforce)",
-		},
-	}
 }

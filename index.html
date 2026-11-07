@@ -14,10 +14,10 @@
     <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
     <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-    <title>supermail — спам-тест письма: DKIM, SPF по IP, DMARC, DNS-мастер</title>
+    <title>supermail — спам-тест письма: DKIM, SPF по IP, DMARC</title>
     <meta
       name="description"
-      content="Одноразовый ящик и письмо с вашего SMTP. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, DNS-мастер, JSON/PDF, ТЗ для ИИ."
+      content="Одноразовый ящик и письмо с вашего SMTP. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, JSON/PDF, ТЗ для ИИ."
     />
     <link rel="canonical" href="https://supermail.dmosk.net/ru/" />
     <link rel="alternate" hreflang="ru" href="https://supermail.dmosk.net/ru/" />
@@ -25,10 +25,10 @@
     <link rel="alternate" hreflang="x-default" href="https://supermail.dmosk.net/en/" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://supermail.dmosk.net/ru/" />
-    <meta property="og:title" content="supermail — спам-тест письма: DKIM, SPF по IP, DMARC, DNS-мастер" />
+    <meta property="og:title" content="supermail — спам-тест письма: DKIM, SPF по IP, DMARC" />
     <meta
       property="og:description"
-      content="Одноразовый ящик и письмо с вашего SMTP. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, DNS-мастер, JSON/PDF, ТЗ для ИИ."
+      content="Одноразовый ящик и письмо с вашего SMTP. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, JSON/PDF, ТЗ для ИИ."
     />
     <meta property="og:locale" content="ru_RU" />
     <meta property="og:locale:alternate" content="en_US" />
@@ -92,7 +92,7 @@
 
       <h1 id="heading">Спам-тест вашего исходящего письма</h1>
       <p class="lead" id="lead">
-        Выдаём уникальный адрес @supermail.dmosk.net. Вы шлёте письмо со своего SMTP — получаете оценку A–F, криптопроверку DKIM, SPF по IP, DMARC alignment, DNS-мастер, экспорт JSON/PDF и ТЗ для ИИ или админа почты.
+        Выдаём уникальный адрес @supermail.dmosk.net. Вы шлёте письмо со своего SMTP — получаете оценку A–F, криптопроверку DKIM, SPF по IP, DMARC alignment, экспорт JSON/PDF и ТЗ для ИИ или админа почты.
       </p>
 
       <noscript>
@@ -101,7 +101,7 @@
 
       <section class="panel inbox-panel" id="inbox-panel">
         <p class="inbox-lead" id="inbox-lead">
-          Отправьте любое письмо сюда. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, заголовки и контент — плюс DNS-мастер, JSON/PDF, ТЗ для ИИ и админа почты.
+          Отправьте любое письмо сюда. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, заголовки и контент — плюс JSON/PDF, ТЗ для ИИ и админа почты.
         </p>
         <p class="field-label" id="your-address-label">Ваш тестовый адрес — отправьте на него письмо с сервера, который нужно проверить</p>
         <div class="address-row">
@@ -126,7 +126,10 @@
               <input class="share-url" id="report-share-url" type="text" readonly value="" />
               <button type="button" class="btn btn-ghost" id="report-share-copy">Копировать</button>
             </div>
-            <button type="button" class="btn retest-btn" id="retest-btn">Перепроверить это письмо</button>
+            <div class="report-actions">
+              <button type="button" class="btn retest-btn" id="retest-btn">Перепроверить это письмо</button>
+              <button type="button" class="btn btn-ghost" id="export-pdf-btn">Печать / PDF</button>
+            </div>
           </div>
         </header>
 
@@ -183,19 +186,6 @@
         <p class="tests-summary" id="tests-summary" hidden></p>
         <p class="score-explain" id="score-explain" hidden></p>
         <div id="findings" class="findings"></div>
-
-        <h2 class="panel-title" id="blacklist-title">DNSBL</h2>
-        <p id="blacklist" class="meta-block"></p>
-
-        <div class="dns-hints-section" id="dns-hints-section" hidden>
-          <h2 class="panel-title" id="dns-hints-title">DNS-мастер</h2>
-          <div id="dns-hints" class="dns-hints"></div>
-        </div>
-
-        <div class="export-row" id="export-row" hidden>
-          <button type="button" class="btn btn-ghost" id="export-json-btn">JSON</button>
-          <button type="button" class="btn btn-ghost" id="export-pdf-btn">Печать / PDF</button>
-        </div>
 
         <div class="headers-section" id="headers-section" hidden>
           <div class="headers-head">

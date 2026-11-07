@@ -2,6 +2,12 @@ import "./style.css";
 import { detectLocale, t } from "./i18n";
 import { findingCopy } from "./findings-messages";
 import { downloadAdminBrief, downloadAiBrief, solutionForFinding } from "./briefs";
+import {
+  DNSBL_DELIST,
+  expandDelistUrl,
+  formatDelistFix,
+  parseListedZonesFromDetail,
+} from "./dnsbl-delist";
 import { registerServiceWorker } from "./register-sw";
 import type { Locale } from "./site-config";
 import type { MessageKey } from "./i18n-keys";
@@ -14,13 +20,6 @@ type Finding = {
   detail: string;
   fix?: string;
   score?: number;
-};
-
-type DnsHint = {
-  host: string;
-  type: string;
-  value: string;
-  note?: string;
 };
 
 type Report = {
@@ -40,7 +39,6 @@ type Report = {
   };
   headers?: { name: string; value: string }[];
   findings: Finding[];
-  dnsHints?: DnsHint[];
   ptr?: string;
   blacklist?: { ip: string; listed: string[]; checked: number };
 };
@@ -141,9 +139,6 @@ function applyChrome(): void {
   byId("headers-title").textContent = t(loc, "headersTitle");
   byId("headers-copy").textContent = t(loc, "copy");
   byId("headers-empty").textContent = t(loc, "headersEmpty");
-  byId("blacklist-title").textContent = t(loc, "blacklistTitle");
-  byId("dns-hints-title").textContent = t(loc, "dnsHintsTitle");
-  byId("export-json-btn").textContent = t(loc, "exportJson");
   byId("export-pdf-btn").textContent = t(loc, "exportPdf");
   const privacy = byId<HTMLAnchorElement>("privacy-link");
   privacy.textContent = t(loc, "privacyLink");
@@ -217,12 +212,19 @@ function spamParts(list: Finding[]): { fail: number; pass: number; total: number
   return { fail, pass, total: fail + pass };
 }
 
-function localizedFinding(f: Finding): { title: string; detail: string; why: string; fix: string } {
+function localizedFinding(f: Finding): {
+  title: string;
+  detail: string;
+  problem: string;
+  why: string;
+  fix: string;
+} {
   const copy = findingCopy(state.locale, f.code || "");
   if (!copy) {
     return {
       title: f.title,
       detail: f.detail,
+      problem: "",
       why: "",
       fix: f.fix || solutionForFinding(state.locale, f),
     };
@@ -232,6 +234,7 @@ function localizedFinding(f: Finding): { title: string; detail: string; why: str
   return {
     title: copy.title || f.title,
     detail,
+    problem: (copy.problem || "").trim(),
     why: (copy.why || "").trim(),
     fix: copy.fix || solutionForFinding(state.locale, f),
   };
@@ -256,12 +259,32 @@ function stopPoll(): void {
   }
 }
 
-function findingByPrefix(list: Finding[], prefixes: string[]): Finding | undefined {
-  for (const prefix of prefixes) {
-    const hit = list.find((f) => f.id === prefix || f.id.startsWith(prefix));
-    if (hit) return hit;
+function findingsByPrefixes(list: Finding[], prefixes: string[]): Finding[] {
+  return list.filter((f) =>
+    prefixes.some((prefix) => f.id === prefix || f.id.startsWith(prefix)),
+  );
+}
+
+const SEV_RANK: Record<string, number> = {
+  ok: 0,
+  info: 1,
+  low: 2,
+  medium: 3,
+  high: 4,
+  critical: 5,
+};
+
+function worstFinding(list: Finding[]): Finding | undefined {
+  let best: Finding | undefined;
+  let rank = -1;
+  for (const f of list) {
+    const r = SEV_RANK[f.severity] ?? -1;
+    if (r > rank) {
+      rank = r;
+      best = f;
+    }
   }
-  return undefined;
+  return best;
 }
 
 function pillarFromFinding(f: Finding | undefined): PillarState {
@@ -272,25 +295,35 @@ function pillarFromFinding(f: Finding | undefined): PillarState {
   return "unknown";
 }
 
+/** Auth pillar: any real issue → fail (do not show Pass when a sibling check failed). */
+function pillarAuthState(list: Finding[]): PillarState {
+  const worst = worstFinding(list);
+  if (!worst) return "unknown";
+  if (worst.severity === "ok" || worst.severity === "info") return "pass";
+  return "fail";
+}
+
 function resolvePillars(rep: Report): { name: string; state: PillarState }[] {
   const findings = rep.findings || [];
-  const spf = findingByPrefix(findings, ["AUTH1", "SPF1"]);
-  const dkim = findingByPrefix(findings, ["AUTH2", "DKIM1"]);
-  const dmarc = findingByPrefix(findings, ["AUTH3", "DMARC1"]);
-  let dnsbl = findingByPrefix(findings, ["BL1"]);
-  if (!dnsbl && rep.blacklist) {
-    dnsbl = {
-      id: "BL1",
-      severity: rep.blacklist.listed?.length ? "critical" : "ok",
-      title: "",
-      detail: "",
-    };
+  const spf = findingsByPrefixes(findings, ["AUTH1", "SPF"]);
+  const dkim = findingsByPrefixes(findings, ["AUTH2", "DKIM"]);
+  const dmarc = findingsByPrefixes(findings, ["AUTH3", "DMARC"]);
+  let dnsbl = findingsByPrefixes(findings, ["BL1"]);
+  if (!dnsbl.length && rep.blacklist) {
+    dnsbl = [
+      {
+        id: "BL1",
+        severity: rep.blacklist.listed?.length ? "critical" : "ok",
+        title: "",
+        detail: "",
+      },
+    ];
   }
   return [
-    { name: "SPF", state: pillarFromFinding(spf) },
-    { name: "DKIM", state: pillarFromFinding(dkim) },
-    { name: "DMARC", state: pillarFromFinding(dmarc) },
-    { name: "DNSBL", state: pillarFromFinding(dnsbl) },
+    { name: "SPF", state: pillarAuthState(spf) },
+    { name: "DKIM", state: pillarAuthState(dkim) },
+    { name: "DMARC", state: pillarAuthState(dmarc) },
+    { name: "DNSBL", state: pillarAuthState(dnsbl) },
   ];
 }
 
@@ -398,7 +431,7 @@ function applyFindingsFilter(mode: "all" | "fail" | "pass" = state.findingsFilte
 
 function buildFindingSummary(
   f: Finding,
-  loc: { title: string; detail: string; why: string; fix: string },
+  loc: { title: string; detail: string; problem: string; why: string; fix: string },
   gradeDelta: number,
   solution: string,
 ): string {
@@ -407,6 +440,7 @@ function buildFindingSummary(
     `${f.id}${f.code ? ` · ${f.code}` : ""} · ${f.severity || "info"}`,
   ];
   if (loc.detail) lines.push(`${t(state.locale, "evidenceLabel")}: ${loc.detail}`);
+  if (loc.problem) lines.push(`${t(state.locale, "problemLabel")}: ${loc.problem}`);
   if (loc.why) lines.push(`${t(state.locale, "whyLabel")}: ${loc.why}`);
   if (gradeDelta !== 0) {
     lines.push(
@@ -468,6 +502,15 @@ function renderFindings(list: Finding[]): void {
       }
       card.append(evidence);
     }
+    if (loc.problem && isIssue) {
+      const problem = document.createElement("p");
+      problem.className = "finding-problem";
+      const problemLabel = document.createElement("span");
+      problemLabel.className = "finding-inline-label";
+      problemLabel.textContent = `${t(state.locale, "problemLabel")}: `;
+      problem.append(problemLabel, document.createTextNode(loc.problem));
+      card.append(problem);
+    }
     if (loc.why && isIssue) {
       const why = document.createElement("p");
       why.className = "finding-why";
@@ -502,7 +545,17 @@ function renderFindings(list: Finding[]): void {
       }
       card.append(metrics);
     }
-    const solution = (loc.fix || solutionForFinding(state.locale, f)).trim();
+    let solution = (loc.fix || solutionForFinding(state.locale, f)).trim();
+    const listedZones =
+      f.code === "BL1_LISTED" || f.id === "BL1"
+        ? state.lastReport?.blacklist?.listed?.length
+          ? state.lastReport.blacklist.listed
+          : parseListedZonesFromDetail(f.detail || "")
+        : [];
+    const blIp = state.lastReport?.blacklist?.ip || state.lastReport?.mail?.remoteIp || "";
+    if (listedZones.length) {
+      solution = formatDelistFix(listedZones, blIp, state.locale);
+    }
     if (solution) {
       const fixWrap = document.createElement("div");
       fixWrap.className = "fix-block";
@@ -515,14 +568,42 @@ function renderFindings(list: Finding[]): void {
       btn.type = "button";
       btn.className = "btn btn-ghost";
       btn.textContent = t(state.locale, "copy");
-      const summary = buildFindingSummary(f, loc, gradeDelta, solution);
+      const summary = buildFindingSummary(f, { ...loc, fix: solution }, gradeDelta, solution);
       btn.addEventListener("click", () => void copyText(summary));
       fixWrap.append(fixLabel, pre, btn);
+      if (listedZones.length) {
+        fixWrap.append(renderDelistLinks(listedZones, blIp));
+      }
       card.append(fixWrap);
     }
     root.append(card);
   }
   applyFindingsFilter(state.findingsFilter);
+}
+
+function renderDelistLinks(zones: string[], ip: string): HTMLElement {
+  const wrap = document.createElement("ul");
+  wrap.className = "dnsbl-delist-list";
+  for (const zone of zones) {
+    const info = DNSBL_DELIST[zone];
+    const li = document.createElement("li");
+    if (!info) {
+      li.textContent = zone;
+      wrap.append(li);
+      continue;
+    }
+    const a = document.createElement("a");
+    a.href = expandDelistUrl(info.url, ip);
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+    a.textContent = `${info.name} — ${zone}`;
+    const note = document.createElement("span");
+    note.className = "dnsbl-delist-note";
+    note.textContent = ` — ${state.locale === "ru" ? info.noteRu : info.noteEn}`;
+    li.append(a, note);
+    wrap.append(li);
+  }
+  return wrap;
 }
 
 function showReport(rep: Report): void {
@@ -610,66 +691,7 @@ function showReport(rep: Report): void {
 
   renderFindings(findings);
 
-  const bl = byId("blacklist");
-  if (rep.blacklist?.listed?.length) {
-    bl.textContent = format(t(state.locale, "blacklistListed"), {
-      lists: rep.blacklist.listed.join(", "),
-    });
-  } else if (rep.blacklist?.ip) {
-    bl.textContent = `${rep.blacklist.ip}: ${t(state.locale, "blacklistClean")}`;
-  } else {
-    bl.textContent = t(state.locale, "blacklistClean");
-  }
-
-  renderDnsHints(rep.dnsHints || []);
-  byId("export-row").hidden = false;
-
   results.scrollIntoView({ behavior: "smooth", block: "start" });
-}
-
-function renderDnsHints(hints: DnsHint[]): void {
-  const section = byId("dns-hints-section");
-  const root = byId("dns-hints");
-  root.replaceChildren();
-  if (!hints.length) {
-    section.hidden = true;
-    return;
-  }
-  section.hidden = false;
-  for (const h of hints) {
-    const card = document.createElement("div");
-    card.className = "dns-hint";
-    const head = document.createElement("p");
-    head.className = "dns-hint-host";
-    head.textContent = `${h.type}  ${h.host}`;
-    const pre = document.createElement("pre");
-    pre.className = "dns-hint-value";
-    pre.textContent = h.value;
-    const btn = document.createElement("button");
-    btn.type = "button";
-    btn.className = "btn btn-ghost";
-    btn.textContent = t(state.locale, "copy");
-    const payload = `${h.host}.\tIN\t${h.type}\t"${h.value}"`;
-    btn.addEventListener("click", () => void copyText(payload));
-    card.append(head, pre);
-    if (h.note) {
-      const note = document.createElement("p");
-      note.className = "muted dns-hint-note";
-      note.textContent = h.note;
-      card.append(note);
-    }
-    card.append(btn);
-    root.append(card);
-  }
-}
-
-function downloadReportJson(rep: Report): void {
-  const blob = new Blob([JSON.stringify(rep, null, 2)], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `supermail-report-${state.inboxId || "export"}.json`;
-  a.click();
-  URL.revokeObjectURL(a.href);
 }
 
 async function pollOnce(): Promise<void> {
@@ -713,8 +735,6 @@ async function createInbox(opts?: { scrollToInbox?: boolean }): Promise<void> {
   stopPoll();
   state.lastReport = null;
   byId("results").hidden = true;
-  byId("export-row").hidden = true;
-  byId("dns-hints-section").hidden = true;
   byId("address").textContent = "…";
   try {
     const res = await fetch("/api/v1/inbox", { method: "POST" });
@@ -822,9 +842,6 @@ byId("admin-brief-btn").addEventListener("click", () => {
   if (!state.lastReport) return;
   const url = byId<HTMLInputElement>("report-share-url").value || window.location.href;
   downloadAdminBrief(state.lastReport, state.locale, url);
-});
-byId("export-json-btn").addEventListener("click", () => {
-  if (state.lastReport) downloadReportJson(state.lastReport);
 });
 byId("export-pdf-btn").addEventListener("click", () => {
   window.print();

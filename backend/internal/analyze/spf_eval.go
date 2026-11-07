@@ -63,8 +63,8 @@ func spfEvalFindings(r spfEvalResult, domain string) []Finding {
 			return []Finding{f("SPF2", "SPF2_SOFTFAIL_FREEMAIL", "info", "SPF softfail on freemail path (informational)", r.Detail,
 				"Typical for some freemail/ESP hops — not a sender config error. Ignore for personal freemail; for your domain, list the outbound IP.", 0)}
 		}
-		return []Finding{f("SPF2", "SPF2_SOFTFAIL", "low", "SPF softfail for sending IP", r.Detail,
-			"Add the outbound IP (or include) so SPF returns pass. Do not treat ~all→-all as a spam fix by itself.", 0.3)}
+		return []Finding{f("SPF2", "SPF2_SOFTFAIL", "low", "Sending IP got SPF softfail", r.Detail,
+			"Add your outbound IP (or the right include) to SPF so the check returns pass. Do not treat swapping ~all for -all as the spam fix by itself.", 0.3)}
 	case spfNeutral:
 		if free {
 			return []Finding{f("SPF2", "SPF2_NEUTRAL_FREEMAIL", "info", "SPF neutral on freemail path (informational)", r.Detail,
