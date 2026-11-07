@@ -9,7 +9,7 @@ const LOCALES = ["ru","en","zh","es","hi","ar","bn","pt","fr","de","ja","id","pa
 const ui = {
   langSwitch: { en:"Site language", ru:"Язык сайта", zh:"网站语言", es:"Idioma del sitio", hi:"साइट की भाषा", ar:"لغة الموقع", bn:"সাইটের ভাষা", pt:"Idioma do site", fr:"Langue du site", de:"Website-Sprache", ja:"サイトの言語", id:"Bahasa situs", pa:"ਸਾਈਟ ਦੀ ਭਾਸ਼ਾ", jv:"Basa situs", te:"సైట్ భాష", tr:"Site dili", ko:"사이트 언어", mr:"साइटची भाषा", vi:"Ngôn ngữ trang", ta:"தள மொழி", it:"Lingua del sito", fa:"زبان سایت", tlh:"jan Hol" },
   noscript: { en:"Enable JavaScript to create a test inbox and run the spam test. The guide and FAQ below work without JavaScript.", ru:"Включите JavaScript, чтобы создать тестовый ящик и запустить спам-тест. Гайд и FAQ ниже читаются и без JavaScript.", zh:"请启用 JavaScript 以创建测试收件箱并运行垃圾邮件测试。下方指南与 FAQ 无需 JS 即可阅读。", es:"Active JavaScript para crear el buzón de prueba. La guía y el FAQ de abajo funcionan sin JavaScript.", pt:"Ative o JavaScript para criar a caixa de teste. O guia e o FAQ abaixo funcionam sem JavaScript.", fr:"Activez JavaScript pour créer la boîte de test. Le guide et la FAQ ci-dessous fonctionnent sans JavaScript.", de:"Aktivieren Sie JavaScript für das Testpostfach. Leitfaden und FAQ darunter funktionieren ohne JavaScript.", ja:"テスト用受信箱とスパムテストには JavaScript が必要です。下のガイドと FAQ は JS なしで読めます。" },
-  inboxLead: { en:"Send any email here. You get an A–F grade: crypto DKIM, SPF-by-IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, headers and content — plus JSON/PDF export, AI and admin briefs.", ru:"Отправьте любое письмо сюда. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, заголовки и контент — плюс JSON/PDF, ТЗ для ИИ и админа почты.", zh:"向此地址发送任意邮件。A–F：加密 DKIM、按 IP 的 SPF、DMARC alignment、MTA-STS/TLS-RPT/BIMI、DNSBL、标头与内容，另有 JSON/PDF 与 AI/管理员任务书。", es:"Envíe cualquier correo aquí. Nota A–F: DKIM crypto, SPF por IP, alineación DMARC, MTA-STS/TLS-RPT/BIMI, DNSBL, cabeceras y contenido — más JSON/PDF y briefs IA/admin.", pt:"Envie qualquer e-mail aqui. Nota A–F: DKIM crypto, SPF por IP, alinhamento DMARC, MTA-STS/TLS-RPT/BIMI, DNSBL, cabeçalhos e conteúdo — mais JSON/PDF e briefs IA/admin.", fr:"Envoyez un e-mail ici. Note A–F : DKIM crypto, SPF par IP, alignement DMARC, MTA-STS/TLS-RPT/BIMI, DNSBL, en-têtes et contenu — plus JSON/PDF et briefs IA/admin.", de:"Senden Sie hier eine E-Mail. Note A–F: DKIM-Crypto, SPF nach IP, DMARC-Alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, Header und Inhalt — plus JSON/PDF und KI-/Admin-Briefs.", ja:"ここにメールを送ると A–F：暗号 DKIM、IP ベース SPF、DMARC alignment、MTA-STS/TLS-RPT/BIMI、DNSBL、ヘッダーと本文。JSON/PDF、AI／管理者ブリーフ付き。" },
+  inboxLead: { en:"Send any email here. You get an A–F grade: crypto DKIM, SPF-by-IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, headers and content — plus Print/PDF and AI/admin briefs.", ru:"Отправьте любое письмо сюда. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, заголовки и контент — плюс Печать/PDF и ТЗ для ИИ и админа почты.", zh:"向此地址发送任意邮件。A–F：加密 DKIM、按 IP 的 SPF、DMARC alignment、MTA-STS/TLS-RPT/BIMI、DNSBL、标头与内容，另有打印/PDF 与 AI/管理员任务书。", es:"Envíe cualquier correo aquí. Nota A–F: DKIM crypto, SPF por IP, alineación DMARC, MTA-STS/TLS-RPT/BIMI, DNSBL, cabeceras y contenido — más Imprimir/PDF y briefs IA/admin.", pt:"Envie qualquer e-mail aqui. Nota A–F: DKIM crypto, SPF por IP, alinhamento DMARC, MTA-STS/TLS-RPT/BIMI, DNSBL, cabeçalhos e conteúdo — mais Imprimir/PDF e briefs IA/admin.", fr:"Envoyez un e-mail ici. Note A–F : DKIM crypto, SPF par IP, alignement DMARC, MTA-STS/TLS-RPT/BIMI, DNSBL, en-têtes et contenu — plus Imprimer/PDF et briefs IA/admin.", de:"Senden Sie hier eine E-Mail. Note A–F: DKIM-Crypto, SPF nach IP, DMARC-Alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, Header und Inhalt — plus Drucken/PDF und KI-/Admin-Briefs.", ja:"ここにメールを送ると A–F：暗号 DKIM、IP ベース SPF、DMARC alignment、MTA-STS/TLS-RPT/BIMI、DNSBL、ヘッダーと本文。印刷/PDF と AI／管理者ブリーフ付き。" },
   yourAddress: { en:"Your test address — send a message to it from the mail server you want to check", ru:"Ваш тестовый адрес — отправьте на него письмо с сервера, который нужно проверить", zh:"您的测试地址 — 请从待测邮件服务器向此地址发信", es:"Su dirección de prueba — envíe un correo desde el servidor que quiera comprobar", hi:"आपका परीक्षण पता — जिस मेल सर्वर की जाँच करनी है, वहाँ से यहाँ पत्र भेजें", ar:"عنوان الاختبار — أرسل إليه رسالة من الخادم الذي تريد فحصه", bn:"আপনার পরীক্ষার ঠিকানা — যে মেইল সার্ভার পরীক্ষা করবেন, সেখান থেকে এখানে চিঠি পাঠান", pt:"Seu endereço de teste — envie um e-mail do servidor que deseja verificar", fr:"Votre adresse de test — envoyez-y un message depuis le serveur à contrôler", de:"Ihre Testadresse — senden Sie eine Mail vom zu prüfenden Server hierher", ja:"テスト用アドレス — 確認したいメールサーバーからここに送信してください", id:"Alamat tes Anda — kirim email dari server yang ingin diperiksa", pa:"ਤੁਹਾਡਾ ਟੈਸਟ ਪਤਾ — ਜਿਸ ਮੇਲ ਸਰਵਰ ਦੀ ਜਾਂਚ ਕਰਨੀ ਹੈ, ਉੱਥੋਂ ਇੱਥੇ ਪੱਤਰ ਭੇਜੋ", jv:"Alamat tes sampeyan — kirim email saka server sing arep dicek", te:"మీ పరీక్ష చిరునామా — పరిశీలించాల్సిన మెయిల్ సర్వర్ నుండి ఇక్కడకు పంపండి", tr:"Test adresiniz — kontrol etmek istediğiniz sunucudan buraya bir e-posta gönderin", ko:"테스트 주소 — 점검할 메일 서버에서 이곳으로 메일을 보내세요", mr:"तुमचा चाचणी पत्ता — तपासायच्या मेल सर्व्हरवरून येथे पत्र पाठवा", vi:"Địa chỉ kiểm tra — gửi thư từ máy chủ cần kiểm tra tới đây", ta:"உங்கள் சோதனை முகவரி — சோதிக்க வேண்டிய அஞ்சல் சேவையகத்திலிருந்து இங்கே அனுப்புங்கள்", it:"Il tuo indirizzo di test — invia un messaggio dal server di posta da verificare", fa:"نشانی آزمایشی شما — از سروری که می‌خواهید بررسی کنید به اینجا نامه بفرستید", tlh:"chov ID — QIn yIngeH" },
   copy: { en:"Copy", ru:"Копировать", zh:"复制", es:"Copiar", hi:"कॉपी", ar:"نسخ", bn:"কপি", pt:"Copiar", fr:"Copier", de:"Kopieren", ja:"コピー", id:"Salin", pa:"ਕਾਪੀ", jv:"Salin", te:"కాపీ", tr:"Kopyala", ko:"복사", mr:"कॉपी", vi:"Sao chép", ta:"நகல்", it:"Copia", fa:"کپی", tlh:"yIlan" },
   copied: { en:"Copied", ru:"Скопировано", zh:"已复制", es:"Copiado", hi:"कॉपी हो गया", ar:"تم النسخ", bn:"কপি হয়েছে", pt:"Copiado", fr:"Copié", de:"Kopiert", ja:"コピーしました", id:"Disalin", pa:"ਕਾਪੀ ਹੋ ਗਿਆ", jv:"Disalin", te:"కాపీ అయింది", tr:"Kopyalandı", ko:"복사됨", mr:"कॉपी झाले", vi:"Đã sao chép", ta:"நகலெடுக்கப்பட்டது", it:"Copiato", fa:"کپی شد", tlh:"lanlu'" },
@@ -95,12 +95,12 @@ function seoFor(isRu) {
       ? "supermail — спам-тест письма: DKIM, SPF по IP, DMARC"
       : "supermail — email spam test: DKIM crypto, SPF-by-IP, DMARC",
     description: isRu
-      ? "Одноразовый ящик и реальное письмо с вашего SMTP. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, JSON/PDF, ТЗ для ИИ. Бесплатно."
-      : "One-time inbox and a real message from your SMTP. A–F grade: crypto DKIM, SPF-by-IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, JSON/PDF, AI briefs. Free.",
+      ? "Одноразовый ящик и реальное письмо с вашего SMTP. Оценка A–F: крипто-DKIM, SPF по IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, Печать/PDF, ТЗ для ИИ. Бесплатно."
+      : "One-time inbox and a real message from your SMTP. A–F grade: crypto DKIM, SPF-by-IP, DMARC alignment, MTA-STS/TLS-RPT/BIMI, DNSBL, Print/PDF, AI briefs. Free.",
     heading: isRu ? "Спам-тест вашего исходящего письма" : "Spam-test your outbound email",
     leadHtml: isRu
-      ? "Выдаём уникальный адрес @supermail.dmosk.net. Вы шлёте письмо со своего SMTP — получаете оценку A–F, криптопроверку DKIM, SPF по IP соединения, DMARC alignment, экспорт JSON и Печать/PDF, исходные заголовки и два Markdown-ТЗ: для ИИ и для админа почты. Ссылка на отчёт живёт около 7 дней."
-      : "We give a unique @supermail.dmosk.net address. Send from your SMTP — get an A–F grade, crypto DKIM verify, SPF against the connecting IP, DMARC alignment, JSON and Print/PDF export, raw headers, and two Markdown briefs for AI and your mail admin. The report link lasts about 7 days.",
+      ? "Выдаём уникальный адрес @supermail.dmosk.net. Вы шлёте письмо со своего SMTP — получаете оценку A–F, криптопроверку DKIM, SPF по IP соединения, DMARC alignment, Печать/PDF, исходные заголовки и два Markdown-ТЗ: для ИИ и для админа почты. Ссылка на отчёт живёт около 7 дней."
+      : "We give a unique @supermail.dmosk.net address. Send from your SMTP — get an A–F grade, crypto DKIM verify, SPF against the connecting IP, DMARC alignment, Print/PDF, raw headers, and two Markdown briefs for AI and your mail admin. The report link lasts about 7 days.",
     benefitsTitle: isRu ? "Что умеет supermail" : "What supermail covers",
     benefits: isRu
       ? [
@@ -110,7 +110,7 @@ function seoFor(isRu) {
           "DMARC: политика, rua/ruf, alignment со From",
           "MTA-STS, TLS-RPT и BIMI в DNS (по желанию домена)",
           "DNSBL, PTR↔HELO, A у HELO, контент и MIME",
-          "Экспорт отчёта: JSON и Печать/PDF; ТЗ для ИИ и админа",
+          "Печать/PDF и ТЗ для ИИ и админа",
           "Фильтр разбора (Все / Ошибки / Пройдено), 23 языка UI",
         ]
       : [
@@ -120,7 +120,7 @@ function seoFor(isRu) {
           "DMARC policy, rua/ruf, and alignment with From",
           "MTA-STS, TLS-RPT and BIMI DNS checks (optional)",
           "DNSBL, PTR↔HELO, HELO A, content and MIME",
-          "Export: JSON and Print/PDF; AI and mail-admin briefs",
+          "Print/PDF plus AI and mail-admin briefs",
           "Findings filter (All / Errors / Passed), 23 UI languages",
         ],
     howTitle: isRu ? "Как пользоваться" : "How to use",
@@ -130,14 +130,14 @@ function seoFor(isRu) {
           "Отправьте письмо со своего сервера, ESP или обычного ящика",
           "Подождите 10–60 секунд — вкладку не закрывайте",
           "Смотрите оценку, фильтр разбора и заголовки",
-          "Скачайте JSON, распечатайте в PDF, возьмите ТЗ для ИИ или админа",
+          "Распечатайте в PDF или возьмите ТЗ для ИИ / админа",
         ]
       : [
           "Copy the test address (you can keep or share the ?i=… link)",
           "Send a message from your server, ESP or normal mailbox",
           "Wait 10–60 seconds — keep the tab open",
           "Read the grade, findings filter and headers",
-          "Download JSON, print to PDF, or take the AI / admin brief",
+          "Print to PDF or take the AI / admin brief",
         ],
     strongTitle: isRu ? "Советы по доставке" : "Deliverability tips",
     strongLead: isRu
@@ -184,7 +184,7 @@ function seoFor(isRu) {
           },
           {
             q: "Что именно проверяете?",
-            a: "Криптопроверку DKIM, SPF-запись и SPF по IP соединения, DMARC (политика, rua/ruf, alignment с From), DNS-ключ DKIM, MX, MTA-STS / TLS-RPT / BIMI, DNSBL, PTR↔HELO и A у HELO, контент и MIME, Authentication-Results, Received/TLS, List-Unsubscribe, ARC и др. В отчёте — оценка A–F, спам-балл, заголовки, JSON и Печать/PDF.",
+            a: "Криптопроверку DKIM, SPF-запись и SPF по IP соединения, DMARC (политика, rua/ruf, alignment с From), DNS-ключ DKIM, MX, MTA-STS / TLS-RPT / BIMI, DNSBL, PTR↔HELO и A у HELO, контент и MIME, Authentication-Results, Received/TLS, List-Unsubscribe, ARC и др. В отчёте — оценка A–F, спам-балл, заголовки и Печать/PDF.",
           },
           {
             q: "Как считается оценка?",
@@ -195,8 +195,8 @@ function seoFor(isRu) {
             a: "Да. Подпись DKIM проверяем криптографически; SPF оцениваем по IP соединения и домену MAIL FROM / From. Плюс смотрим публикацию ключа DKIM и alignment DMARC.",
           },
           {
-            q: "Как скачать отчёт?",
-            a: "Кнопки «Скачать JSON» и «Печать / PDF» в отчёте. Также два Markdown-ТЗ: для ИИ-агента (без повторных сетевых сканов) и понятный чеклист для админа почты.",
+            q: "Как сохранить отчёт?",
+            a: "Кнопка «Печать / PDF» в отчёте. Также два Markdown-ТЗ: для ИИ-агента (без повторных сетевых сканов) и понятный чеклист для админа почты.",
           },
           {
             q: "Сколько живёт ящик и ссылка на отчёт?",
@@ -226,7 +226,7 @@ function seoFor(isRu) {
           },
           {
             q: "What exactly do you check?",
-            a: "Crypto DKIM verify, SPF record and SPF against the connecting IP, DMARC (policy, rua/ruf, alignment with From), DKIM DNS key, MX, MTA-STS / TLS-RPT / BIMI, DNSBL, PTR↔HELO and HELO A, content and MIME, Authentication-Results, Received/TLS, List-Unsubscribe, ARC and more. The report includes an A–F grade, spam score, headers, JSON and Print/PDF.",
+            a: "Crypto DKIM verify, SPF record and SPF against the connecting IP, DMARC (policy, rua/ruf, alignment with From), DKIM DNS key, MX, MTA-STS / TLS-RPT / BIMI, DNSBL, PTR↔HELO and HELO A, content and MIME, Authentication-Results, Received/TLS, List-Unsubscribe, ARC and more. The report includes an A–F grade, spam score, headers and Print/PDF.",
           },
           {
             q: "How is the grade calculated?",
@@ -237,8 +237,8 @@ function seoFor(isRu) {
             a: "Yes. We cryptographically verify DKIM and evaluate SPF for the connecting IP and MAIL FROM / From domain, plus DKIM key publication and DMARC alignment.",
           },
           {
-            q: "How do I export the report?",
-            a: "Use Download JSON and Print / PDF on the report. There are also two Markdown briefs: an AI agent task (no live rescans) and a plain mail-admin checklist.",
+            q: "How do I save the report?",
+            a: "Use Print / PDF on the report. There are also two Markdown briefs: an AI agent task (no live rescans) and a plain mail-admin checklist.",
           },
           {
             q: "How long do the inbox and report link live?",
