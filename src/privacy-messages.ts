@@ -24,18 +24,18 @@ const rows = {
   bodyHtml: {
     en: `<p>supermail creates a one-time inbox so you can send a test message from your mail server.</p>
 <ul>
-<li>We store the generated report on the server disk (not only in RAM) so a deploy or container restart does not erase a ready share link.</li>
+<li>We store the generated report and a copy of the raw message on the server disk (not only in RAM) so a deploy or restart does not erase a ready share link and so you can retest the same email after DNS changes without resending.</li>
 <li>Waiting inboxes expire in about 30 minutes if no mail arrives.</li>
-<li>Ready reports stay reachable by share link for about 7 days across restarts, then are removed.</li>
+<li>Ready reports and raw messages stay reachable by share link for about 7 days across restarts, then are removed.</li>
 <li>We do not sell message content. Logs may keep connection metadata (IP, time) for abuse control.</li>
 <li>DNS lookups (SPF, DKIM, DMARC, MTA-STS, TLS-RPT, BIMI, DNSBL) use public DNS for the domains in the message.</li>
 </ul>
 <p>Questions: <a href="https://t.me/dmosk">Telegram @dmosk</a>.</p>`,
     ru: `<p>supermail выдаёт одноразовый ящик, чтобы вы отправили тестовое письмо со своего почтового сервера.</p>
 <ul>
-<li>Готовый отчёт пишется на диск сервера (не только в RAM), поэтому деплой или рестарт контейнера не стирают рабочую ссылку.</li>
+<li>Готовый отчёт и копия сырого письма пишутся на диск сервера (не только в RAM), чтобы деплой/рестарт не стирали ссылку и чтобы можно было перепроверить то же письмо после правок DNS без повторной отправки.</li>
 <li>Если письмо не пришло, ожидание ящика истекает примерно через 30 минут.</li>
-<li>Готовый отчёт по ссылке доступен около 7 дней и переживает перезапуск, затем удаляется.</li>
+<li>Готовый отчёт и сырое письмо по ссылке доступны около 7 дней и переживают перезапуск, затем удаляются.</li>
 <li>Мы не продаём содержимое писем. В логах могут остаться метаданные соединения (IP, время) против злоупотреблений.</li>
 <li>DNS-запросы (SPF, DKIM, DMARC, MTA-STS, TLS-RPT, BIMI, DNSBL) идут в публичный DNS по доменам из письма.</li>
 </ul>

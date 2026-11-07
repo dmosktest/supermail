@@ -129,8 +129,12 @@ func checkDMARCAlignment(fromDomain, mailFromDomain string, spf spfEvalResult, d
 	if spf.Outcome == spfNone && len(dkimDomains) == 0 {
 		return []Finding{f("DMARC2", "DMARC2_ALIGN_NA", "info", "DMARC alignment not evaluated", detail, "", 0)}
 	}
-	return []Finding{f("DMARC2", "DMARC2_ALIGN_FAIL", "high", "DMARC alignment fail", detail,
-		"Make SPF Mail-From or DKIM d= align with From (relaxed or strict per aspf/adkim).", 1.5)}
+	sev, spam := "medium", 0.8
+	if pol.P == "reject" {
+		sev, spam = "high", 1.2
+	}
+	return []Finding{f("DMARC2", "DMARC2_ALIGN_FAIL", sev, "DMARC alignment fail", detail,
+		"Make SPF Mail-From or DKIM d= align with From (relaxed or strict per aspf/adkim).", spam)}
 }
 
 func domainsAligned(from, auth string, strict bool) bool {

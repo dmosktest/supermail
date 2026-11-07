@@ -158,9 +158,10 @@ func Run(ctx context.Context, raw []byte, remoteIP, helo, mailFrom string, inbou
 	if remoteIP != "" && net.ParseIP(remoteIP) != nil {
 		bl = dnsbl.Check(ctx, remoteIP)
 		if len(bl.Listed) > 0 {
-			findings = append(findings, f("BL1", "BL1_LISTED", "critical", "Sending IP listed on DNSBL",
+			sev, sc := dnsblSeverity(bl.Listed)
+			findings = append(findings, f("BL1", "BL1_LISTED", sev, "Sending IP listed on DNSBL",
 				fmt.Sprintf("%s → %s", remoteIP, strings.Join(bl.Listed, ", ")),
-				"Request delisting and stop compromised senders / open relays.", 2.5))
+				"Request delisting and stop compromised senders / open relays.", sc))
 		} else {
 			findings = append(findings, f("BL1", "BL1_CLEAN", "ok", "Sending IP not listed on checked DNSBLs",
 				fmt.Sprintf("%s · %d", remoteIP, bl.Checked), "", -0.1))
@@ -719,9 +720,9 @@ func checkDMARC(ctx context.Context, domain string) (dmarcPolicy, []Finding) {
 func checkDKIMHeader(ctx context.Context, h mail.Header) []Finding {
 	dkim := headerGet(h, "DKIM-Signature", "Dkim-Signature")
 	if dkim == "" {
-		return []Finding{f("DKIM1", "DKIM1_MISSING", "high", "No DKIM-Signature header",
+		return []Finding{f("DKIM1", "DKIM1_MISSING", "low", "No DKIM-Signature header",
 			"Message arrived without DKIM signature.",
-			"Enable DKIM signing on the sending MTA and publish the public key as TXT.", 1.5)}
+			"Optional but recommended: enable DKIM signing and publish the public key as TXT. Missing DKIM is milder than a broken signature.", 0.4)}
 	}
 	out := []Finding{f("DKIM1", "DKIM1_OK", "ok", "DKIM-Signature header present", truncate(dkim, 180), "", -0.2)}
 	d, s := "", ""
@@ -972,19 +973,43 @@ func lookupTXT(ctx context.Context, host string) ([]string, error) {
 	return net.DefaultResolver.LookupTXT(cctx, host)
 }
 
+// GradePenalty is the /100 grade cut for a finding severity.
+// Keep in sync with UI gradeDeltaFor (src/main.ts) and SEO/FAQ copy.
+func GradePenalty(severity string) int {
+	switch severity {
+	case "critical":
+		return 25
+	case "high":
+		return 12
+	case "medium":
+		return 6
+	case "low":
+		return 3
+	default:
+		return 0
+	}
+}
+
+func dnsblSeverity(listed []string) (sev string, spam float64) {
+	major := map[string]bool{
+		"zen.spamhaus.org":         true,
+		"bl.spamcop.net":           true,
+		"b.barracudacentral.org":   true,
+		"cbl.abuseat.org":          true,
+		"dnsbl-1.uceprotect.net":   true,
+	}
+	for _, z := range listed {
+		if major[strings.ToLower(z)] {
+			return "critical", 2.5
+		}
+	}
+	return "high", 1.4
+}
+
 func scoreOf(findings []Finding) (int, string) {
 	s := 100
 	for _, f := range findings {
-		switch f.Severity {
-		case "critical":
-			s -= 35
-		case "high":
-			s -= 20
-		case "medium":
-			s -= 10
-		case "low":
-			s -= 5
-		}
+		s -= GradePenalty(f.Severity)
 	}
 	if s < 0 {
 		s = 0

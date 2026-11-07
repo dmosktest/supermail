@@ -51,6 +51,7 @@ type Inbox = {
   status: "waiting" | "ready" | "expired";
   expiresAt?: string;
   report?: Report;
+  hasRaw?: boolean;
 };
 
 type PillarState = "pass" | "fail" | "warn" | "unknown";
@@ -142,7 +143,6 @@ function applyChrome(): void {
   byId("headers-empty").textContent = t(loc, "headersEmpty");
   byId("blacklist-title").textContent = t(loc, "blacklistTitle");
   byId("dns-hints-title").textContent = t(loc, "dnsHintsTitle");
-  byId("dns-hints-lead").textContent = t(loc, "dnsHintsLead");
   byId("export-json-btn").textContent = t(loc, "exportJson");
   byId("export-pdf-btn").textContent = t(loc, "exportPdf");
   const privacy = byId<HTMLAnchorElement>("privacy-link");
@@ -189,13 +189,13 @@ function formatSpamScore(score: number): string {
 function gradeDeltaFor(severity: string): number {
   switch (severity) {
     case "critical":
-      return -35;
+      return -25;
     case "high":
-      return -20;
+      return -12;
     case "medium":
-      return -10;
+      return -6;
     case "low":
-      return -5;
+      return -3;
     default:
       return 0;
   }
@@ -636,7 +636,6 @@ function renderDnsHints(hints: DnsHint[]): void {
     return;
   }
   section.hidden = false;
-  byId("dns-hints-lead").textContent = t(state.locale, "dnsHintsLead");
   for (const h of hints) {
     const card = document.createElement("div");
     card.className = "dns-hint";
@@ -738,6 +737,35 @@ async function createInbox(opts?: { scrollToInbox?: boolean }): Promise<void> {
   }
 }
 
+async function retestCurrent(): Promise<void> {
+  if (!state.inboxId || !state.lastReport) {
+    setError(t(state.locale, "retestUnavailable"));
+    return;
+  }
+  const btn = byId<HTMLButtonElement>("retest-btn");
+  setError("");
+  btn.disabled = true;
+  btn.textContent = t(state.locale, "retesting");
+  try {
+    const res = await fetch(`/api/v1/inbox/${state.inboxId}/retest`, { method: "POST" });
+    const data = (await res.json()) as Inbox & { message?: string };
+    if (!res.ok) {
+      setError(data.message || t(state.locale, "retestUnavailable"));
+      return;
+    }
+    if (data.status === "ready" && data.report) {
+      showReport(data.report);
+      return;
+    }
+    setError(t(state.locale, "retestUnavailable"));
+  } catch {
+    setError(t(state.locale, "errorNetwork"));
+  } finally {
+    btn.disabled = false;
+    btn.textContent = t(state.locale, "retest");
+  }
+}
+
 async function resumeOrCreate(): Promise<void> {
   const id = new URL(window.location.href).searchParams.get("i");
   if (!id) {
@@ -776,7 +804,7 @@ byId("copy-btn").addEventListener("click", () => {
   if (addr && addr !== "…") void copyText(addr);
 });
 byId("new-btn").addEventListener("click", () => void createInbox({ scrollToInbox: true }));
-byId("retest-btn").addEventListener("click", () => void createInbox({ scrollToInbox: true }));
+byId("retest-btn").addEventListener("click", () => void retestCurrent());
 byId("report-share-copy").addEventListener("click", () => {
   const url = byId<HTMLInputElement>("report-share-url").value;
   if (url) void copyText(url, "share");

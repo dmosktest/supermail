@@ -55,7 +55,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, затем quarantine → reject; следите за alignment",
       "PTR IP должен совпадать с HELO/EHLO, у HELO — рабочий A",
       "По желанию: MTA-STS и TLS-RPT; BIMI — после жёсткого DMARC",
-      "Черновики TXT берите из DNS-мастера и подставляйте свои selector/ключи"
+      "Черновики TXT для From — в DNS-мастере отчёта"
     ],
     "usesTitle": "Когда это нужно",
     "uses": [
@@ -77,7 +77,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "Как считается оценка?",
-        "a": "Оценка из 100 и спам-балл — разные шкалы. Оценка: старт 100, за замечание снимаем по серьёзности (critical −35, high −20, medium −10, low −5). Спам-балл эвристик — сумма мелких вкладов по проверкам; он не обязан совпадать с «сколько сняли из 100»."
+        "a": "Оценка из 100 и спам-балл — разные шкалы. Оценка: старт 100, за замечание снимаем по серьёзности (critical −25, high −12, medium −6, low −3). Нет DKIM — мягкий минус; сломанный DKIM жёстче. Спам-балл эвристик — сумма мелких вкладов; он не обязан совпадать с «сколько сняли из 100»."
       },
       {
         "q": "Проверяете ли криптографию DKIM и SPF по IP?",
@@ -85,7 +85,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "Что такое DNS-мастер?",
-        "a": "В отчёте — черновики TXT (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) для домена From. Скопируйте запись и подставьте свои selector, ключи и include перед публикацией в DNS."
+        "a": "В отчёте — черновики TXT (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) для домена From. Скопируйте нужные записи в DNS."
       },
       {
         "q": "Как скачать отчёт?",
@@ -148,7 +148,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -170,7 +170,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -178,7 +178,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -241,7 +241,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -263,7 +263,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -271,7 +271,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -334,7 +334,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -356,7 +356,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -364,7 +364,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -427,7 +427,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -449,7 +449,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -457,7 +457,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -520,7 +520,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -542,7 +542,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -550,7 +550,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -613,7 +613,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -635,7 +635,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -643,7 +643,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -706,7 +706,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -728,7 +728,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -736,7 +736,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -799,7 +799,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -821,7 +821,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -829,7 +829,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -892,7 +892,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -914,7 +914,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -922,7 +922,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -985,7 +985,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -1007,7 +1007,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -1015,7 +1015,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -1078,7 +1078,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -1100,7 +1100,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -1108,7 +1108,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -1171,7 +1171,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -1193,7 +1193,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -1201,7 +1201,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -1264,7 +1264,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -1286,7 +1286,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -1294,7 +1294,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -1357,7 +1357,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -1379,7 +1379,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -1387,7 +1387,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -1450,7 +1450,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -1472,7 +1472,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -1480,7 +1480,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -1543,7 +1543,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -1565,7 +1565,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -1573,7 +1573,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -1636,7 +1636,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -1658,7 +1658,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -1666,7 +1666,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -1729,7 +1729,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -1751,7 +1751,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -1759,7 +1759,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -1822,7 +1822,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -1844,7 +1844,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -1852,7 +1852,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -1915,7 +1915,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -1937,7 +1937,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -1945,7 +1945,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -2008,7 +2008,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -2030,7 +2030,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -2038,7 +2038,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",
@@ -2101,7 +2101,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       "DMARC: p=none + rua, then quarantine → reject; watch alignment",
       "IP PTR should match HELO/EHLO; HELO needs a working A record",
       "Optional: MTA-STS and TLS-RPT; BIMI after enforce DMARC",
-      "Copy TXT drafts from the DNS wizard and fill in your selector/keys"
+      "TXT drafts for the From domain are in the report DNS wizard"
     ],
     "usesTitle": "When you need it",
     "uses": [
@@ -2123,7 +2123,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "How is the grade calculated?",
-        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −35, high −20, medium −10, low −5). Spam score sums small per-check weights; it does not have to match points taken from 100."
+        "a": "The /100 grade and the heuristic spam score are different scales. Grade: start at 100, subtract by severity (critical −25, high −12, medium −6, low −3). Missing DKIM is a mild cut; a broken DKIM signature is harsher. Spam score sums small per-check weights; it does not have to match points taken from 100."
       },
       {
         "q": "Do you verify DKIM crypto and SPF against the IP?",
@@ -2131,7 +2131,7 @@ export const SEO_COPY: Record<Locale, SeoCopy> = {
       },
       {
         "q": "What is the DNS wizard?",
-        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy them and fill in your selector, keys and includes before publishing DNS."
+        "a": "The report includes TXT drafts (SPF, DMARC, DKIM, MTA-STS, TLS-RPT, BIMI) for the From domain. Copy the ones you need into DNS."
       },
       {
         "q": "How do I export the report?",

@@ -309,8 +309,8 @@ WHY: dict[str, tuple[str, str]] = {
         "SPF pass значит: IP отправителя разрешён для домена envelope — базовая защита от спуфинга.",
     ),
     "AUTH1_SPF_FAIL": (
-        "SPF fail is a strong spam/phish signal: the IP was not allowed to send for that domain.",
-        "SPF fail — сильный сигнал спама/фишинга: IP не имел права слать за этот домен.",
+        "SPF fail means the connecting IP was not allowed for that domain — a real auth miss, not a soft ~all quirk.",
+        "SPF fail значит: IP не был разрешён для этого домена — реальный провал auth, не нюанс ~all.",
     ),
     "AUTH2_DKIM_PASS": (
         "DKIM pass proves the body/headers were signed by a key published for the domain.",
@@ -333,8 +333,8 @@ WHY: dict[str, tuple[str, str]] = {
         "Без домена нельзя опубликовать SPF — получатели не смогут авторизовать ваши IP.",
     ),
     "SPF1_MISSING": (
-        "No SPF lets anyone try to send as your domain; many systems soft-fail or reject such mail.",
-        "Без SPF кто угодно может пытаться слать «от вашего домена»; многие системы режут такую почту.",
+        "Without SPF receivers cannot tell which hosts may send as your domain — publish a record and aim for pass from your outbound IP.",
+        "Без SPF получатели не видят, каким хостам можно слать от вашего домена — опубликуйте запись и добейтесь pass с исходящего IP.",
     ),
     "SPF1_PLUSALL": (
         "+all authorizes the whole internet — filters treat that as “SPF is useless / suspicious”.",
@@ -361,8 +361,8 @@ WHY: dict[str, tuple[str, str]] = {
         "p=none только мониторит и не мешает спуфу доходить до ящиков.",
     ),
     "DKIM1_MISSING": (
-        "Without a DKIM signature receivers cannot cryptographically tie the message to your domain.",
-        "Без DKIM-подписи получатель не может криптографически связать письмо с вашим доменом.",
+        "No DKIM is common and milder than a broken signature — mail still delivers; add DKIM when you can, but do not invent a bad one.",
+        "Без DKIM почта часто ходит нормально; это мягче, чем сломанная подпись. Имеет смысл добавить DKIM, но кривую подпись лучше не публиковать.",
     ),
     "DKIM1_OK": (
         "A DKIM-Signature header is the starting point for body integrity checks.",
@@ -397,12 +397,12 @@ WHY: dict[str, tuple[str, str]] = {
         "Мы проверили SPF по IP соединения — pass значит, хост может слать за домен.",
     ),
     "SPF2_FAIL": (
-        "SPF fail for the real sending IP is a hard spam signal even if Authentication-Results is missing.",
-        "SPF fail по реальному IP — жёсткий спам-сигнал даже без Authentication-Results.",
+        "SPF fail means the sending IP is not authorized for the domain — a real auth problem, stronger than softfail.",
+        "SPF fail значит: IP не авторизован для домена — реальная проблема auth, сильнее softfail.",
     ),
     "SPF2_SOFTFAIL": (
-        "Softfail often means the IP is not listed but the domain uses ~all — many filters still mark it.",
-        "Softfail часто значит IP не в списке при ~all — многие фильтры всё равно режут.",
+        "Softfail means this IP is not in the SPF allow list (typical with ~all). That is not hardfail; swapping ~all for -all alone hardly changes spam scoring — list the outbound IP so SPF returns pass.",
+        "Softfail значит: этот IP не в allow-list SPF (часто при ~all). Это не hardfail; одна замена ~all на -all спам-фильтры почти не двигает — важнее включить исходящий IP, чтобы был pass.",
     ),
     "SPF2_SOFTFAIL_FREEMAIL": (
         "On freemail this usually reflects the provider’s SPF tree, not a mistake in your Thunderbird settings.",
@@ -441,8 +441,8 @@ WHY: dict[str, tuple[str, str]] = {
         "Alignment DMARC связывает SPF/DKIM с видимым From — ключ против спуфа.",
     ),
     "DMARC2_ALIGN_FAIL": (
-        "Without SPF or DKIM alignment, DMARC cannot protect the From identity from spoofing.",
-        "Без alignment SPF или DKIM DMARC не защищает From от подделки.",
+        "No SPF/DKIM alignment with From — with p=quarantine/reject receivers may quarantine or reject; fix pass+align, do not stack this as “no DKIM = zero score”.",
+        "Нет alignment SPF/DKIM с From — при p=quarantine/reject получатель может карантинировать или отклонять. Чините pass+align; отсутствие DKIM само по себе не обнуляет оценку.",
     ),
     "DMARC2_ALIGN_NA": (
         "Not enough SPF/DKIM data to judge alignment for this message.",
@@ -489,8 +489,8 @@ WHY: dict[str, tuple[str, str]] = {
         "BIMI — опциональный бренд-знак, не обязателен для доставки, но полезен для доверия.",
     ),
     "MX1_MISSING": (
-        "Domains that send but have no MX look incomplete and sometimes get scored down.",
-        "Домен шлёт почту, но без MX выглядит незавершённым — иногда режут оценку.",
+        "A sending domain without MX looks incomplete; some checkers note it, but missing MX alone rarely decides spam vs inbox.",
+        "Домен шлёт почту без MX — выглядит незавершённым; часть чекеров это отмечают, но само по себе почти не решает спам vs inbox.",
     ),
     "MX1_OK": (
         "MX present means the From domain can also receive mail — normal for real domains.",

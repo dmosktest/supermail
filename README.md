@@ -4,7 +4,7 @@ Spam-test your outbound email: one-time `@supermail.dmosk.net` inbox, send from 
 
 **Live (prod):** https://supermail.dmosk.net/  
 **Privacy:** https://supermail.dmosk.net/en/privacy/  
-**Version:** `0.3.4`
+**Version:** `0.4.0`
 
 ## Stack
 
@@ -18,8 +18,11 @@ Spam-test your outbound email: one-time `@supermail.dmosk.net` inbox, send from 
 | `GET` | `/health` | healthcheck |
 | `POST` | `/api/v1/inbox` | create inbox → `{ id, address, expiresAt, … }` |
 | `GET` | `/api/v1/inbox/{id}` | `waiting` / `ready` (+ `report`) / `expired` |
+| `POST` | `/api/v1/inbox/{id}/retest` | re-analyze the **same** stored message (no resend) after DNS fixes |
 
-Waiting inbox ~30 minutes; ready report retention ~7 days on disk (survives restarts). Create-inbox rate limit ~10s per IP. Report fields include `findings`, `headers`, `dnsHints`, scores and blacklist.
+Waiting inbox ~30 minutes; ready report + raw message retention ~7 days on disk (survives restarts). Repeat `POST /api/v1/inbox` from the same IP while status is still `waiting` returns the same address. Retest rate limit ~10s per IP. Report fields include `findings`, `headers`, `dnsHints`, scores and blacklist.
+
+Grade `/100`: start at 100; critical −25, high −12, medium −6, low −3. Missing DKIM is `low` (broken DKIM crypto stays `high`). SPF softfail is `low`. DMARC alignment fail is `medium` (`high` only with `p=reject`). DNSBL is `critical` only for major lists.
 
 ## Mirror note
 

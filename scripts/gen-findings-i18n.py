@@ -605,8 +605,8 @@ COPY: dict[str, dict[str, str]] = {
         "title_ru": "Нет заголовка DKIM-Signature",
         "detail_en": "Message arrived without DKIM signature.",
         "detail_ru": "Письмо пришло без DKIM-подписи.",
-        "fix_en": "Enable DKIM signing on the sending MTA and publish the public key as TXT.",
-        "fix_ru": "Включите DKIM на отправляющем MTA и опубликуйте ключ в TXT.",
+        "fix_en": "Optional but recommended: enable DKIM and publish the public key. Missing is milder than a broken signature.",
+        "fix_ru": "По желанию, но лучше: включите DKIM и опубликуйте ключ. Отсутствие мягче, чем сломанная подпись.",
     },
     "DKIM1_OK": {
         "title_en": "DKIM-Signature header present",
@@ -673,8 +673,8 @@ COPY: dict[str, dict[str, str]] = {
         "title_ru": "SPF softfail для IP отправителя",
         "detail_en": "{detail}",
         "detail_ru": "{detail}",
-        "fix_en": "Tighten SPF and ensure the outbound IP is listed.",
-        "fix_ru": "Ужесточите SPF и убедитесь, что исходящий IP в списке.",
+        "fix_en": "Add the outbound IP (or include) so SPF returns pass. Do not treat ~all→-all as a spam fix by itself.",
+        "fix_ru": "Добавьте исходящий IP (или include), чтобы SPF дал pass. Одну замену ~all на -all спам-фиксом не считайте.",
     },
     "SPF2_SOFTFAIL_FREEMAIL": {
         "title_en": "SPF softfail on freemail path (informational)",

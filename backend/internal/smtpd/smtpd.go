@@ -175,7 +175,13 @@ func handle(conn net.Conn, st *store.Store, domain string, tlsCfg *tls.Config) {
 			ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 			rep := analyze.Run(ctx, rawMsg, remoteIP, helo, mailFrom, usingTLS)
 			cancel()
-			if ok := st.Complete(toLocal, rep, len(rawMsg)); !ok {
+			mailCtx := store.MailContext{
+				RemoteIP:   remoteIP,
+				Helo:       helo,
+				MailFrom:   mailFrom,
+				InboundTLS: usingTLS,
+			}
+			if ok := st.Complete(toLocal, rep, rawMsg, mailCtx); !ok {
 				log.Printf("discard mail for unavailable %s@%s from %s (%d bytes)", toLocal, domain, remoteIP, len(rawMsg))
 				writeLine("250 OK")
 				mailFrom = ""

@@ -341,13 +341,13 @@ func score(findings []Finding) (int, string) {
 	for _, f := range findings {
 		switch f.Severity {
 		case "critical":
-			s -= 35
+			s -= 25
 		case "high":
-			s -= 20
+			s -= 12
 		case "medium":
-			s -= 10
+			s -= 6
 		case "low":
-			s -= 5
+			s -= 3
 		}
 	}
 	if s < 0 {
