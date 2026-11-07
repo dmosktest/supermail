@@ -365,20 +365,20 @@ PROBLEM: dict[str, tuple[str, str]] = {
         'Не удалось разобрать письмо.',
     ),
     'PTR1_MISSING': (
-        'No reverse DNS (PTR).',
-        'Нет обратного DNS (PTR).',
+        'The sending IP has no reverse DNS (PTR) name — receivers see an unnamed address.',
+        'У IP отправителя нет имени в обратном DNS (PTR) — получатели видят «безымянный» адрес.',
     ),
     'PTR1_OK': (
         'Check result: reverse DNS present.',
         'Результат проверки: обратный DNS (PTR) есть.',
     ),
     'PTR2_MATCH': (
-        'Check result: pTR matches HELO.',
-        'Результат проверки: pTR совпадает с HELO.',
+        'Check result: PTR matches HELO.',
+        'Результат проверки: PTR совпадает с HELO.',
     ),
     'PTR2_MISMATCH': (
-        'PTR does not match HELO.',
-        'PTR не совпадает с HELO.',
+        'The PTR name for the sending IP does not match the SMTP HELO/EHLO hostname.',
+        'Имя PTR у IP отправителя не совпадает с hostname в SMTP HELO/EHLO.',
     ),
     'RCPT1_FEW': (
         'Few recipients.',

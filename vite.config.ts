@@ -231,6 +231,11 @@ function emitLangPages(): Plugin {
       if (!fs.existsSync(indexPath)) return;
 
       const template = fs.readFileSync(indexPath, "utf8");
+      const assetsDir = path.join(dist, "assets");
+      const cssName = fs.existsSync(assetsDir)
+        ? fs.readdirSync(assetsDir).find((name) => /^index-.*\.css$/.test(name))
+        : undefined;
+      const cssHref = cssName ? `/assets/${cssName}` : undefined;
       for (const locale of LOCALES) {
         const dir = path.join(dist, locale);
         fs.mkdirSync(dir, { recursive: true });
@@ -248,7 +253,7 @@ function emitLangPages(): Plugin {
         fs.mkdirSync(privacyDir, { recursive: true });
         fs.writeFileSync(
           path.join(privacyDir, "index.html"),
-          renderPrivacyHtml(locale),
+          renderPrivacyHtml(locale, { cssHref }),
           "utf8",
         );
       }

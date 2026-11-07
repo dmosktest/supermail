@@ -1,5 +1,6 @@
 import { findingCopy } from "./findings-messages";
 import { formatDelistFix, parseListedZonesFromDetail } from "./dnsbl-delist";
+import { applyDnsFixVars } from "./dns-fix-vars";
 import type { Locale } from "./site-config";
 
 export type BriefFinding = {
@@ -64,6 +65,7 @@ function localizedParts(
     const ip = rep?.blacklist?.ip || rep?.mail?.remoteIp || "";
     if (zones.length) fix = formatDelistFix(zones, ip, locale);
   }
+  fix = applyDnsFixVars(fix, rep, f);
   if (!fix) {
     if (sev === "info") {
       fix = isRu(locale)

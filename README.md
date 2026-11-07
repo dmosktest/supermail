@@ -1,10 +1,10 @@
 # supermail
 
-Spam-test your outbound email: one-time `@supermail.dmosk.net` inbox, send from your SMTP, get an **A–F** grade plus heuristic spam score. Checks cover crypto DKIM verify, SPF evaluation by connecting IP, DMARC alignment (rua/ruf), MTA-STS / TLS-RPT / BIMI DNS, DKIM DNS key, MX, DNSBL, PTR↔HELO, subject/body, MIME and more. The report includes raw headers, Print/PDF (next to Retest), All / Errors / Passed filters, and downloadable Markdown briefs for an AI agent and a mail administrator (23 UI languages). Ready report links last about 7 days.
+Spam-test your outbound email: one-time `@supermail.dmosk.net` inbox, send from your SMTP, get an **A–F** grade plus heuristic spam score. Checks cover crypto DKIM verify, SPF evaluation by connecting IP, DMARC alignment (rua/ruf), MTA-STS / TLS-RPT / BIMI DNS, DKIM DNS key, MX, DNSBL, PTR↔HELO, subject/body, MIME and more. The report includes raw headers, Print/PDF (next to Retest), All / Errors / Passed filters, per-finding recheck for DNS/live checks (disabled with a note when the message itself must change, e.g. missing DKIM), and downloadable Markdown briefs for an AI agent and a mail administrator (23 UI languages). Ready report links last about 7 days.
 
 **Live (prod):** https://supermail.dmosk.net/  
 **Privacy:** https://supermail.dmosk.net/en/privacy/  
-**Version:** `1.0.3`
+**Version:** `1.0.5`
 
 ## Stack
 

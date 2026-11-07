@@ -545,15 +545,15 @@ WHY: dict[str, tuple[str, str]] = {
         "PTR показывает, что у IP есть имя от оператора; у спам-зомби PTR часто нет.",
     ),
     "PTR1_MISSING": (
-        "No PTR is one of the strongest “don’t trust this SMTP client” signals.",
-        "Нет PTR — один из самых сильных сигналов «этому SMTP-клиенту нельзя доверять».",
+        "Large receivers treat a missing PTR as a strong “don’t trust this SMTP client” signal — often spam or a misconfigured server.",
+        "Крупные получатели без PTR сильно меньше доверяют SMTP-клиенту — часто так выглядят спам или кривой сервер.",
     ),
     "PTR2_MATCH": (
         "PTR matching HELO is the classic “consistent SMTP identity” check used by big receivers.",
         "PTR = HELO — классическая проверка «цельной SMTP-личности» у крупных получателей.",
     ),
     "PTR2_MISMATCH": (
-        "PTR≠HELO looks like a rented/compromised host or lazy reverse DNS — spam score goes up.",
-        "PTR≠HELO похоже на чужой/взломанный хост или ленивый rDNS — спам-балл растёт.",
+        "When PTR and HELO disagree, the server looks inconsistent (wrong rDNS or wrong HELO) — filters trust it less.",
+        "Если PTR и HELO расходятся, сервер выглядит непоследовательным (чужой rDNS или неверный HELO) — фильтры доверяют меньше.",
     ),
 }

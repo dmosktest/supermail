@@ -8,6 +8,7 @@ import {
   formatDelistFix,
   parseListedZonesFromDetail,
 } from "./dnsbl-delist";
+import { applyDnsFixVars } from "./dns-fix-vars";
 import { registerServiceWorker } from "./register-sw";
 import type { Locale } from "./site-config";
 import type { MessageKey } from "./i18n-keys";
@@ -59,8 +60,59 @@ const state: {
   inboxId: string | null;
   pollTimer: number | null;
   lastReport: Report | null;
+  hasRaw: boolean;
   findingsFilter: "all" | "fail" | "pass";
-} = { locale: "ru", inboxId: null, pollTimer: null, lastReport: null, findingsFilter: "fail" };
+  findingRetestBusy: boolean;
+} = {
+  locale: "ru",
+  inboxId: null,
+  pollTimer: null,
+  lastReport: null,
+  hasRaw: false,
+  findingsFilter: "fail",
+  findingRetestBusy: false,
+};
+
+/** DNS / live checks that can improve without a new message. */
+const LIVE_RETEST_IDS = new Set([
+  "SPF1",
+  "SPF2",
+  "DMARC1",
+  "DMARC2",
+  "DMARC3",
+  "DKIM3",
+  "DKIM4",
+  "STS1",
+  "TLSRPT1",
+  "BIMI1",
+  "MX1",
+  "HELO2",
+  "BL1",
+  "PTR1",
+  "PTR2",
+]);
+
+function isIssueFinding(f: Finding): boolean {
+  return (
+    f.severity === "low" ||
+    f.severity === "medium" ||
+    f.severity === "high" ||
+    f.severity === "critical"
+  );
+}
+
+function isOkFinding(f: Finding): boolean {
+  return f.severity === "ok" || f.severity === "info";
+}
+
+type FindingRetestKind = "live" | "blocked_dkim" | "blocked_mail" | "none";
+
+function findingRetestKind(f: Finding): FindingRetestKind {
+  if (!isIssueFinding(f)) return "none";
+  if (f.code === "DKIM1_MISSING" || f.id === "DKIM1") return "blocked_dkim";
+  if (LIVE_RETEST_IDS.has(f.id)) return "live";
+  return "blocked_mail";
+}
 
 function byId<T extends HTMLElement>(id: string): T {
   return document.getElementById(id) as T;
@@ -226,17 +278,26 @@ function localizedFinding(f: Finding): {
       detail: f.detail,
       problem: "",
       why: "",
-      fix: f.fix || solutionForFinding(state.locale, f),
+      fix: applyDnsFixVars(
+        f.fix || solutionForFinding(state.locale, f),
+        state.lastReport,
+        f,
+      ),
     };
   }
   const detailTpl = copy.detail ?? "{detail}";
   const detail = format(detailTpl, { detail: f.detail || "" }).trim();
+  const fix = applyDnsFixVars(
+    (copy.fix || solutionForFinding(state.locale, f) || "").trim(),
+    state.lastReport,
+    f,
+  );
   return {
     title: copy.title || f.title,
     detail,
     problem: (copy.problem || "").trim(),
     why: (copy.why || "").trim(),
-    fix: copy.fix || solutionForFinding(state.locale, f),
+    fix,
   };
 }
 
@@ -508,6 +569,179 @@ function buildFindingSummary(
   return lines.join("\n");
 }
 
+function setFindingRetestMsg(
+  card: HTMLElement,
+  text: string,
+  tone: "ok" | "fail" | "err" | "blocked",
+): void {
+  const el = card.querySelector<HTMLElement>(".finding-retest-msg");
+  if (!el) return;
+  el.hidden = !text;
+  el.textContent = text;
+  el.dataset.tone = tone;
+}
+
+function appendFindingRetestControls(card: HTMLElement, f: Finding): void {
+  const kind = findingRetestKind(f);
+  if (kind === "none") return;
+
+  const msg = document.createElement("p");
+  msg.className = "finding-retest-msg";
+  msg.hidden = true;
+  card.prepend(msg);
+
+  const head = card.querySelector(".finding-head");
+  if (!head) return;
+  const title = head.querySelector("h3");
+  const titleRow = document.createElement("div");
+  titleRow.className = "finding-title-row";
+  if (title) titleRow.append(title);
+
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "finding-retest-btn";
+  btn.dataset.findingId = f.id;
+  btn.textContent = t(state.locale, "findingRetest");
+
+  if (kind === "live" && state.hasRaw) {
+    btn.addEventListener("click", () => void onFindingRetestClick(btn));
+  } else {
+    btn.disabled = true;
+    btn.classList.add("is-blocked");
+    const reason =
+      kind === "blocked_dkim"
+        ? t(state.locale, "findingRetestNeedsDkimMail")
+        : !state.hasRaw
+          ? t(state.locale, "retestUnavailable")
+          : t(state.locale, "findingRetestNeedsNewMail");
+    btn.title = reason;
+    if (kind === "blocked_dkim" || !state.hasRaw) {
+      setFindingRetestMsg(card, reason, "blocked");
+    }
+  }
+  titleRow.append(btn);
+  head.append(titleRow);
+}
+
+function buildFindingCard(f: Finding): HTMLElement {
+  const loc = localizedFinding(f);
+  const card = document.createElement("article");
+  card.className = `finding sev-${f.severity || "info"}`;
+  card.dataset.status = findingFilterStatus(f);
+  card.dataset.id = f.id;
+  if (f.code) card.dataset.code = f.code;
+
+  const head = document.createElement("div");
+  head.className = "finding-head";
+  const badge = document.createElement("span");
+  badge.className = "sev-badge";
+  badge.textContent = t(state.locale, sevKey(f.severity));
+  const code = document.createElement("span");
+  code.className = "finding-id";
+  code.textContent = f.id;
+  const title = document.createElement("h3");
+  title.textContent = loc.title;
+  head.append(badge, code, title);
+  card.append(head);
+
+  const isIssue = isIssueFinding(f);
+  if (loc.detail) {
+    const evidence = document.createElement("p");
+    evidence.className = "finding-detail";
+    if (isIssue) {
+      const evLabel = document.createElement("span");
+      evLabel.className = "finding-inline-label";
+      evLabel.textContent = `${t(state.locale, "evidenceLabel")}: `;
+      evidence.append(evLabel, document.createTextNode(loc.detail));
+    } else {
+      evidence.textContent = loc.detail;
+    }
+    card.append(evidence);
+  }
+  if (loc.problem && isIssue) {
+    const problem = document.createElement("p");
+    problem.className = "finding-problem";
+    const problemLabel = document.createElement("span");
+    problemLabel.className = "finding-inline-label";
+    problemLabel.textContent = `${t(state.locale, "problemLabel")}: `;
+    problem.append(problemLabel, document.createTextNode(loc.problem));
+    card.append(problem);
+  }
+  if (loc.why && isIssue) {
+    const why = document.createElement("p");
+    why.className = "finding-why";
+    const whyLabel = document.createElement("span");
+    whyLabel.className = "finding-inline-label";
+    whyLabel.textContent = `${t(state.locale, "whyLabel")}: `;
+    why.append(whyLabel, document.createTextNode(loc.why));
+    card.append(why);
+  }
+  const gradeDelta = gradeDeltaFor(f.severity);
+  const hasSpam = typeof f.score === "number" && f.score !== 0;
+  if (gradeDelta !== 0 || hasSpam) {
+    const metrics = document.createElement("div");
+    metrics.className = "finding-metrics";
+    if (gradeDelta !== 0) {
+      const gd = document.createElement("p");
+      gd.className = "finding-grade-delta is-bad";
+      gd.textContent = format(t(state.locale, "gradeDeltaLabel"), {
+        delta: formatGradeDelta(gradeDelta),
+      });
+      metrics.append(gd);
+    }
+    if (hasSpam) {
+      const sc = document.createElement("p");
+      sc.className = "finding-score";
+      if ((f.score as number) > 0) sc.classList.add("is-bad");
+      if ((f.score as number) < 0) sc.classList.add("is-good");
+      sc.textContent = format(t(state.locale, "spamScoreLabel"), {
+        score: formatSpamScore(f.score as number),
+      });
+      metrics.append(sc);
+    }
+    card.append(metrics);
+  }
+  let solution = (loc.fix || solutionForFinding(state.locale, f)).trim();
+  const listedZones =
+    f.code === "BL1_LISTED" || f.id === "BL1"
+      ? state.lastReport?.blacklist?.listed?.length
+        ? state.lastReport.blacklist.listed
+        : parseListedZonesFromDetail(f.detail || "")
+      : [];
+  const blIp =
+    state.lastReport?.blacklist?.ip || state.lastReport?.mail?.remoteIp || "";
+  if (listedZones.length) {
+    solution = formatDelistFix(listedZones, blIp, state.locale);
+  }
+  if (solution) {
+    const fixWrap = document.createElement("div");
+    fixWrap.className = "fix-block";
+    const fixLabel = document.createElement("p");
+    fixLabel.className = "seo-label";
+    fixLabel.textContent = t(state.locale, "fixLabel");
+    const pre = document.createElement("pre");
+    pre.textContent = solution;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "btn btn-ghost";
+    btn.textContent = t(state.locale, "copy");
+    const summary = buildFindingSummary(
+      f,
+      { ...loc, fix: solution },
+      gradeDelta,
+      solution,
+    );
+    btn.addEventListener("click", () => void copyText(summary));
+    fixWrap.append(fixLabel, pre, btn);
+    if (listedZones.length) {
+      fixWrap.append(renderDelistLinks(listedZones, blIp));
+    }
+    card.append(fixWrap);
+  }
+  appendFindingRetestControls(card, f);
+  return card;
+}
+
 function renderFindings(list: Finding[]): void {
   const root = byId("findings");
   root.replaceChildren();
@@ -519,116 +753,82 @@ function renderFindings(list: Finding[]): void {
     return;
   }
   for (const f of list) {
-    const loc = localizedFinding(f);
-    const card = document.createElement("article");
-    card.className = `finding sev-${f.severity || "info"}`;
-    card.dataset.status = findingFilterStatus(f);
-    const head = document.createElement("div");
-    head.className = "finding-head";
-    const badge = document.createElement("span");
-    badge.className = "sev-badge";
-    badge.textContent = t(state.locale, sevKey(f.severity));
-    const code = document.createElement("span");
-    code.className = "finding-id";
-    code.textContent = f.id;
-    const title = document.createElement("h3");
-    title.textContent = loc.title;
-    head.append(badge, code, title);
-    const isIssue =
-      f.severity === "low" ||
-      f.severity === "medium" ||
-      f.severity === "high" ||
-      f.severity === "critical";
-    if (loc.detail) {
-      const evidence = document.createElement("p");
-      evidence.className = "finding-detail";
-      if (isIssue) {
-        const evLabel = document.createElement("span");
-        evLabel.className = "finding-inline-label";
-        evLabel.textContent = `${t(state.locale, "evidenceLabel")}: `;
-        evidence.append(evLabel, document.createTextNode(loc.detail));
-      } else {
-        evidence.textContent = loc.detail;
-      }
-      card.append(evidence);
-    }
-    if (loc.problem && isIssue) {
-      const problem = document.createElement("p");
-      problem.className = "finding-problem";
-      const problemLabel = document.createElement("span");
-      problemLabel.className = "finding-inline-label";
-      problemLabel.textContent = `${t(state.locale, "problemLabel")}: `;
-      problem.append(problemLabel, document.createTextNode(loc.problem));
-      card.append(problem);
-    }
-    if (loc.why && isIssue) {
-      const why = document.createElement("p");
-      why.className = "finding-why";
-      const whyLabel = document.createElement("span");
-      whyLabel.className = "finding-inline-label";
-      whyLabel.textContent = `${t(state.locale, "whyLabel")}: `;
-      why.append(whyLabel, document.createTextNode(loc.why));
-      card.append(why);
-    }
-    const gradeDelta = gradeDeltaFor(f.severity);
-    const hasSpam = typeof f.score === "number" && f.score !== 0;
-    if (gradeDelta !== 0 || hasSpam) {
-      const metrics = document.createElement("div");
-      metrics.className = "finding-metrics";
-      if (gradeDelta !== 0) {
-        const gd = document.createElement("p");
-        gd.className = "finding-grade-delta is-bad";
-        gd.textContent = format(t(state.locale, "gradeDeltaLabel"), {
-          delta: formatGradeDelta(gradeDelta),
-        });
-        metrics.append(gd);
-      }
-      if (hasSpam) {
-        const sc = document.createElement("p");
-        sc.className = "finding-score";
-        if ((f.score as number) > 0) sc.classList.add("is-bad");
-        if ((f.score as number) < 0) sc.classList.add("is-good");
-        sc.textContent = format(t(state.locale, "spamScoreLabel"), {
-          score: formatSpamScore(f.score as number),
-        });
-        metrics.append(sc);
-      }
-      card.append(metrics);
-    }
-    let solution = (loc.fix || solutionForFinding(state.locale, f)).trim();
-    const listedZones =
-      f.code === "BL1_LISTED" || f.id === "BL1"
-        ? state.lastReport?.blacklist?.listed?.length
-          ? state.lastReport.blacklist.listed
-          : parseListedZonesFromDetail(f.detail || "")
-        : [];
-    const blIp = state.lastReport?.blacklist?.ip || state.lastReport?.mail?.remoteIp || "";
-    if (listedZones.length) {
-      solution = formatDelistFix(listedZones, blIp, state.locale);
-    }
-    if (solution) {
-      const fixWrap = document.createElement("div");
-      fixWrap.className = "fix-block";
-      const fixLabel = document.createElement("p");
-      fixLabel.className = "seo-label";
-      fixLabel.textContent = t(state.locale, "fixLabel");
-      const pre = document.createElement("pre");
-      pre.textContent = solution;
-      const btn = document.createElement("button");
-      btn.type = "button";
-      btn.className = "btn btn-ghost";
-      btn.textContent = t(state.locale, "copy");
-      const summary = buildFindingSummary(f, { ...loc, fix: solution }, gradeDelta, solution);
-      btn.addEventListener("click", () => void copyText(summary));
-      fixWrap.append(fixLabel, pre, btn);
-      if (listedZones.length) {
-        fixWrap.append(renderDelistLinks(listedZones, blIp));
-      }
-      card.append(fixWrap);
-    }
-    root.append(card);
+    root.append(buildFindingCard(f));
   }
   applyFindingsFilter(state.findingsFilter);
+}
+
+async function onFindingRetestClick(btn: HTMLButtonElement): Promise<void> {
+  if (state.findingRetestBusy || !state.inboxId || !state.lastReport) return;
+  const findingId = btn.dataset.findingId || "";
+  const card = btn.closest<HTMLElement>(".finding");
+  if (!findingId || !card) return;
+
+  const prev = (state.lastReport.findings || []).find((f) => f.id === findingId);
+  state.findingRetestBusy = true;
+  btn.disabled = true;
+  const prevLabel = btn.textContent || "";
+  btn.textContent = t(state.locale, "retesting");
+  setFindingRetestMsg(card, "", "fail");
+  card.classList.add("finding-retesting");
+  setError("");
+
+  try {
+    const res = await fetch(`/api/v1/inbox/${state.inboxId}/retest`, {
+      method: "POST",
+    });
+    const data = (await res.json()) as Inbox & { message?: string };
+    if (!res.ok || data.status !== "ready" || !data.report) {
+      setFindingRetestMsg(
+        card,
+        `${t(state.locale, "findingRetestFailed")}: ${data.message || t(state.locale, "retestUnavailable")}`,
+        "err",
+      );
+      btn.disabled = false;
+      btn.textContent = prevLabel;
+      card.classList.remove("finding-retesting");
+      return;
+    }
+    state.lastReport = data.report;
+    const next = (data.report.findings || []).find((f) => f.id === findingId);
+    const becameOk = Boolean(prev && isIssueFinding(prev) && next && isOkFinding(next));
+
+    if (becameOk) {
+      setFindingRetestMsg(card, t(state.locale, "findingBecameOk"), "ok");
+      card.classList.remove("finding-retesting");
+      card.classList.add("finding-just-ok");
+      await new Promise((r) => window.setTimeout(r, 1400));
+      card.classList.add("finding-leaving");
+      await new Promise((r) => window.setTimeout(r, 550));
+      showReport(data.report, { hasRaw: data.hasRaw });
+      return;
+    }
+
+    showReport(data.report, { hasRaw: data.hasRaw });
+    const refreshed = byId("findings").querySelector<HTMLElement>(
+      `.finding[data-id="${findingId.replace(/"/g, "")}"]`,
+    );
+    if (refreshed && next && isIssueFinding(next)) {
+      setFindingRetestMsg(
+        refreshed,
+        t(state.locale, "findingRetestStillFail"),
+        "fail",
+      );
+    } else if (refreshed && next && isOkFinding(next)) {
+      setFindingRetestMsg(refreshed, t(state.locale, "findingBecameOk"), "ok");
+    }
+  } catch {
+    setFindingRetestMsg(
+      card,
+      `${t(state.locale, "findingRetestFailed")}: ${t(state.locale, "errorNetwork")}`,
+      "err",
+    );
+    btn.disabled = false;
+    btn.textContent = prevLabel;
+    card.classList.remove("finding-retesting");
+  } finally {
+    state.findingRetestBusy = false;
+  }
 }
 
 function renderDelistLinks(zones: string[], ip: string): HTMLElement {
@@ -656,8 +856,9 @@ function renderDelistLinks(zones: string[], ip: string): HTMLElement {
   return wrap;
 }
 
-function showReport(rep: Report): void {
+function showReport(rep: Report, inboxMeta?: { hasRaw?: boolean }): void {
   state.lastReport = rep;
+  if (typeof inboxMeta?.hasRaw === "boolean") state.hasRaw = inboxMeta.hasRaw;
   const results = byId("results");
   results.hidden = false;
   byId("waiting-status").textContent = "";
@@ -755,7 +956,7 @@ async function pollOnce(): Promise<void> {
     }
     if (data.status === "ready" && data.report) {
       stopPoll();
-      showReport(data.report);
+      showReport(data.report, { hasRaw: data.hasRaw });
       return;
     }
     if (data.status === "expired") {
@@ -784,6 +985,7 @@ async function createInbox(opts?: { scrollToInbox?: boolean }): Promise<void> {
   setError("");
   stopPoll();
   state.lastReport = null;
+  state.hasRaw = false;
   byId("results").hidden = true;
   byId("address").textContent = "…";
   try {
@@ -824,7 +1026,7 @@ async function retestCurrent(): Promise<void> {
       return;
     }
     if (data.status === "ready" && data.report) {
-      showReport(data.report);
+      showReport(data.report, { hasRaw: data.hasRaw });
       return;
     }
     setError(t(state.locale, "retestUnavailable"));
@@ -852,7 +1054,7 @@ async function resumeOrCreate(): Promise<void> {
     state.inboxId = data.id;
     byId("address").textContent = data.address;
     if (data.status === "ready" && data.report) {
-      showReport(data.report);
+      showReport(data.report, { hasRaw: data.hasRaw });
       return;
     }
     if (data.status === "expired") {

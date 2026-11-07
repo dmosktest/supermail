@@ -174,7 +174,7 @@ func Run(ctx context.Context, raw []byte, remoteIP, helo, mailFrom string, inbou
 		} else {
 			findings = append(findings, f("PTR1", "PTR1_MISSING", "medium", "No reverse DNS (PTR)",
 				remoteIP,
-				"Ask the hosting provider to set PTR matching the SMTP hostname.", 0.8))
+				"Set PTR for this IP in the hoster panel (rDNS) or ask the ISP; use the SMTP HELO hostname.", 0.8))
 		}
 	}
 
@@ -832,7 +832,7 @@ func checkPtrHelo(ptr, helo string) []Finding {
 	}
 	return []Finding{f("PTR2", "PTR2_MISMATCH", "medium", "PTR does not match HELO",
 		fmt.Sprintf("%s ≠ %s", ptr, helo),
-		"Set PTR to the SMTP HELO hostname (or the reverse).", 0.5)}
+		"Set PTR to the HELO hostname in the hoster panel, or change HELO to match PTR; for ISP IPs email support with IP + hostname.", 0.5)}
 }
 
 func extractBodies(msg *mail.Message) (textBody, htmlBody, kind string) {

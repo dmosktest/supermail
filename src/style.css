@@ -1222,6 +1222,48 @@ h1 {
   border-radius: var(--radius);
   padding: 0.85rem 1rem;
   background: var(--bg-elevated);
+  overflow: hidden;
+  max-height: 2000px;
+  transition:
+    opacity 0.55s ease,
+    transform 0.55s ease,
+    max-height 0.55s ease,
+    margin 0.55s ease,
+    padding 0.55s ease,
+    border-width 0.55s ease;
+}
+
+.finding-retest-msg {
+  margin: 0 0 0.55rem;
+  padding: 0.4rem 0.65rem;
+  border-radius: var(--radius);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.finding-retest-msg[data-tone="ok"] {
+  color: var(--ok);
+  border: 1px solid color-mix(in srgb, var(--ok) 45%, var(--border));
+  background: color-mix(in srgb, var(--ok) 12%, var(--bg-elevated));
+}
+
+.finding-retest-msg[data-tone="fail"] {
+  color: var(--sev-high);
+  border: 1px solid color-mix(in srgb, var(--sev-high) 45%, var(--border));
+  background: color-mix(in srgb, var(--sev-high) 12%, var(--bg-elevated));
+}
+
+.finding-retest-msg[data-tone="err"],
+.finding-retest-msg[data-tone="blocked"] {
+  color: var(--muted);
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--bg) 35%, var(--bg-elevated));
+}
+
+.finding-retest-msg[data-tone="err"] {
+  color: var(--danger);
+  border-color: color-mix(in srgb, var(--danger) 45%, var(--border));
+  background: color-mix(in srgb, var(--danger) 12%, var(--bg-elevated));
 }
 
 .finding-head {
@@ -1232,10 +1274,68 @@ h1 {
   margin-bottom: 0.35rem;
 }
 
+.finding-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  width: 100%;
+  order: -1;
+}
+
 .finding-head h3 {
   margin: 0;
   font-size: 1rem;
   flex: 1 1 12rem;
+}
+
+.finding-retest-btn {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.finding-retest-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.finding-retest-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.finding-retest-btn.is-blocked {
+  cursor: not-allowed;
+}
+
+.finding-retesting {
+  opacity: 0.72;
+}
+
+.finding-just-ok {
+  border-color: var(--ok);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--ok) 55%, transparent);
+  background: color-mix(in srgb, var(--ok) 12%, var(--bg-elevated));
+}
+
+.finding-leaving {
+  opacity: 0;
+  transform: translateY(-10px) scale(0.98);
+  max-height: 0 !important;
+  margin: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  border-width: 0 !important;
 }
 
 .finding-id {
@@ -1350,6 +1450,49 @@ h1 {
   color: var(--accent);
 }
 
+.privacy-page {
+  max-width: 46rem;
+}
+
+.privacy-panel {
+  padding: 1.15rem 1.25rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: color-mix(in srgb, var(--bg-elevated) 70%, transparent);
+}
+
+.privacy-body {
+  color: var(--text);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+.privacy-body > :first-child {
+  margin-top: 0;
+}
+
+.privacy-body > :last-child {
+  margin-bottom: 0;
+}
+
+.privacy-body p {
+  margin: 0.85rem 0;
+}
+
+.privacy-body ul {
+  margin: 0.85rem 0;
+  padding-inline-start: 1.25rem;
+}
+
+.privacy-body li {
+  margin: 0.45rem 0;
+  color: var(--text);
+}
+
+.privacy-body a {
+  color: var(--accent);
+}
+
 @media print {
   .topbar,
   .inbox-panel,
@@ -1358,6 +1501,8 @@ h1 {
   .report-actions,
   .site-links,
   .seo,
+  .finding-retest-btn,
+  .finding-retest-msg,
   noscript {
     display: none !important;
   }
