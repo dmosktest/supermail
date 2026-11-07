@@ -295,8 +295,8 @@ function pillarFromFinding(f: Finding | undefined): PillarState {
   return "unknown";
 }
 
-/** Auth pillar: any real issue → fail (do not show Pass when a sibling check failed). */
-function pillarAuthState(list: Finding[]): PillarState {
+/** SPF pillar only: any real issue → fail (e.g. SPF1 ok must not hide SPF2 softfail). */
+function pillarSpfState(list: Finding[]): PillarState {
   const worst = worstFinding(list);
   if (!worst) return "unknown";
   if (worst.severity === "ok" || worst.severity === "info") return "pass";
@@ -320,10 +320,10 @@ function resolvePillars(rep: Report): { name: string; state: PillarState }[] {
     ];
   }
   return [
-    { name: "SPF", state: pillarAuthState(spf) },
-    { name: "DKIM", state: pillarAuthState(dkim) },
-    { name: "DMARC", state: pillarAuthState(dmarc) },
-    { name: "DNSBL", state: pillarAuthState(dnsbl) },
+    { name: "SPF", state: pillarSpfState(spf) },
+    { name: "DKIM", state: pillarFromFinding(worstFinding(dkim)) },
+    { name: "DMARC", state: pillarFromFinding(worstFinding(dmarc)) },
+    { name: "DNSBL", state: pillarFromFinding(worstFinding(dnsbl)) },
   ];
 }
 

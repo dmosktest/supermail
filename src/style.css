@@ -786,37 +786,26 @@ h1 {
   word-break: break-all;
 }
 
-.report-share .field-label {
-  margin: 0 0 0.35rem;
-}
-
-.share-row {
-  display: flex;
-  gap: 0.5rem;
+.report-share {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 0.5rem;
+  row-gap: 0.5rem;
   align-items: stretch;
 }
 
+.report-share > .field-label {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+
+.share-row,
 .report-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: stretch;
-  justify-content: flex-end;
-  margin-top: 0.65rem;
-}
-
-.retest-btn {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.report-actions #export-pdf-btn {
-  flex: 0 0 auto;
-  white-space: nowrap;
+  display: contents;
 }
 
 .share-url {
-  flex: 1 1 auto;
+  grid-column: 1;
   min-width: 0;
   box-sizing: border-box;
   background: var(--bg);
@@ -826,6 +815,25 @@ h1 {
   font-family: var(--mono);
   font-size: 0.82rem;
   padding: 0.55rem 0.7rem;
+}
+
+.retest-btn {
+  grid-column: 1;
+  min-width: 0;
+  margin-top: 0.15rem;
+}
+
+#report-share-copy,
+#export-pdf-btn {
+  grid-column: 2;
+  width: 100%;
+  box-sizing: border-box;
+  white-space: nowrap;
+  text-align: center;
+}
+
+#export-pdf-btn {
+  margin-top: 0.15rem;
 }
 
 .report-rule {
