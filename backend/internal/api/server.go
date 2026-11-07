@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -73,8 +74,16 @@ func (s *Server) retestInbox(w http.ResponseWriter, r *http.Request) {
 	id := r.PathValue("id")
 	ip := clientIP(r)
 	if ok, wait := s.limiter.Allow("retest:" + ip); !ok {
-		w.Header().Set("Retry-After", strings.TrimSuffix(wait.Round(time.Second).String(), "s"))
-		writeErr(w, http.StatusTooManyRequests, "rate_limited", "Too many retests; wait and retry")
+		sec := int((wait + time.Second - 1) / time.Second)
+		if sec < 1 {
+			sec = 1
+		}
+		w.Header().Set("Retry-After", strconv.Itoa(sec))
+		writeJSON(w, http.StatusTooManyRequests, map[string]any{
+			"error":              "rate_limited",
+			"message":            "Too many retests; wait and retry",
+			"retryAfterSeconds":  sec,
+		})
 		return
 	}
 	raw, mailCtx, ok := s.store.LoadRaw(id)

@@ -772,6 +772,33 @@ function renderFindings(list: Finding[]): void {
   applyFindingsFilter(state.findingsFilter);
 }
 
+type ApiErr = {
+  error?: string;
+  message?: string;
+  retryAfterSeconds?: number;
+  status?: string;
+  report?: Report;
+  hasRaw?: boolean;
+};
+
+function retestErrorText(res: Response, data: ApiErr): string {
+  const fromHeader = Number.parseInt(res.headers.get("Retry-After") || "", 10);
+  const sec =
+    (typeof data.retryAfterSeconds === "number" && data.retryAfterSeconds > 0
+      ? Math.ceil(data.retryAfterSeconds)
+      : 0) ||
+    (Number.isFinite(fromHeader) && fromHeader > 0 ? fromHeader : 0);
+  if (data.error === "rate_limited" || res.status === 429) {
+    return format(t(state.locale, "retestRateLimited"), {
+      seconds: sec > 0 ? sec : 10,
+    });
+  }
+  if (data.error === "retest_unavailable") {
+    return t(state.locale, "retestUnavailable");
+  }
+  return t(state.locale, "retestUnavailable");
+}
+
 async function onFindingRetestClick(btn: HTMLButtonElement): Promise<void> {
   if (state.findingRetestBusy || !state.inboxId || !state.lastReport) return;
   const findingId = btn.dataset.findingId || "";
@@ -791,11 +818,11 @@ async function onFindingRetestClick(btn: HTMLButtonElement): Promise<void> {
     const res = await fetch(`/api/v1/inbox/${state.inboxId}/retest`, {
       method: "POST",
     });
-    const data = (await res.json()) as Inbox & { message?: string };
+    const data = (await res.json()) as Inbox & ApiErr;
     if (!res.ok || data.status !== "ready" || !data.report) {
       setFindingRetestMsg(
         card,
-        `${t(state.locale, "findingRetestFailed")}: ${data.message || t(state.locale, "retestUnavailable")}`,
+        `${t(state.locale, "findingRetestFailed")}: ${retestErrorText(res, data)}`,
         "err",
       );
       btn.disabled = false;
@@ -1044,9 +1071,9 @@ async function retestCurrent(): Promise<void> {
   btn.textContent = t(state.locale, "retesting");
   try {
     const res = await fetch(`/api/v1/inbox/${state.inboxId}/retest`, { method: "POST" });
-    const data = (await res.json()) as Inbox & { message?: string };
+    const data = (await res.json()) as Inbox & ApiErr;
     if (!res.ok) {
-      setError(data.message || t(state.locale, "retestUnavailable"));
+      setError(retestErrorText(res, data));
       return;
     }
     if (data.status === "ready" && data.report) {

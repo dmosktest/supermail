@@ -16,6 +16,7 @@ export const MESSAGE_KEYS = [
   "findingBecameOk",
   "findingRetestStillFail",
   "findingRetestFailed",
+  "retestRateLimited",
   "findingRetestNeedsNewMail",
   "findingRetestNeedsDkimMail",
   "expired",
