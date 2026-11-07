@@ -454,7 +454,7 @@ func checkAddresses(fromHeader, fromAddr, mailFrom, fromDomain, envDomain string
 		} else {
 			out = append(out, f("ADDR3", "ADDR3_DIFF", "medium", "From differs from envelope",
 				fmt.Sprintf("%s ≠ %s", fromAddr, envAddr),
-				"Align header From with SMTP MAIL FROM when possible.", 0.5))
+				"When possible, use the same address in header From and in SMTP MAIL FROM.", 0.5))
 		}
 	}
 
@@ -704,8 +704,8 @@ func checkDMARC(ctx context.Context, domain string) (dmarcPolicy, []Finding) {
 	host := "_dmarc." + domain
 	txts, err := lookupTXT(ctx, host)
 	if err != nil || len(txts) == 0 {
-		return dmarcPolicy{}, []Finding{f("DMARC1", "DMARC1_MISSING", "high", "No DMARC record", host,
-			fmt.Sprintf("Add TXT on %s: v=DMARC1; p=none; rua=mailto:dmarc@%s", host, domain), 1.0)}
+		return dmarcPolicy{}, []Finding{f("DMARC1", "DMARC1_MISSING", "medium", "No DMARC record", host,
+			fmt.Sprintf("Add TXT on %s: v=DMARC1; p=none; rua=mailto:dmarc@%s", host, domain), 0.6)}
 	}
 	for _, t := range txts {
 		if strings.Contains(strings.ToUpper(t), "V=DMARC1") {
@@ -713,7 +713,7 @@ func checkDMARC(ctx context.Context, domain string) (dmarcPolicy, []Finding) {
 			return pol, dmarcRecordFindings(host, t, pol)
 		}
 	}
-	return dmarcPolicy{}, []Finding{f("DMARC1", "DMARC1_MISSING", "high", "No DMARC record", host, "", 1.0)}
+	return dmarcPolicy{}, []Finding{f("DMARC1", "DMARC1_MISSING", "medium", "No DMARC record", host, "", 0.6)}
 }
 
 func checkDKIMHeader(ctx context.Context, h mail.Header) []Finding {
@@ -815,7 +815,7 @@ func checkHelo(ctx context.Context, helo, remoteIP string) []Finding {
 	} else {
 		out = append(out, f("HELO2", "HELO2_MISMATCH", "low", "HELO hostname does not resolve to connecting IP",
 			fmt.Sprintf("%s → %s (peer %s)", host, strings.Join(addrs, ","), remoteIP),
-			"Align HELO A/AAAA with the SMTP client IP.", 0.3))
+			"Point the HELO hostname’s A/AAAA records at the SMTP client IP.", 0.3))
 	}
 	return out
 }

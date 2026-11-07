@@ -29,7 +29,7 @@ const ui = {
   reportPillarsTitle: { en:"Core auth signals", ru:"Ключевые сигналы аутентификации", zh:"核心认证信号", es:"Señales de autenticación", fr:"Signaux d’authentification", de:"Kernsignale der Authentifizierung", ja:"認証の主要シグナル", pt:"Sinais de autenticação" },
   pillarPass: { en:"Pass", ru:"Пройдено", zh:"通过", es:"Correcto", fr:"OK", de:"Bestanden", ja:"成功", pt:"OK" },
   pillarFail: { en:"Fail", ru:"Провал", zh:"失败", es:"Fallo", fr:"Échec", de:"Fehlgeschlagen", ja:"失敗", pt:"Falha" },
-  pillarWarn: { en:"Weak", ru:"Слабо", zh:"较弱", es:"Débil", fr:"Faible", de:"Schwach", ja:"弱い", pt:"Fraco" },
+  pillarWarn: { en:"Bad", ru:"Плохо", zh:"差", es:"Mal", fr:"Mauvais", de:"Schlecht", ja:"不良", pt:"Ruim" },
   pillarUnknown: { en:"n/a", ru:"нет данных", zh:"无数据", es:"n/d", fr:"n/d", de:"k. A.", ja:"なし", pt:"n/d" },
   verdictExcellent: { en:"Excellent", ru:"Отлично", zh:"优秀", es:"Excelente", fr:"Excellent", de:"Ausgezeichnet", ja:"優秀", pt:"Excelente" },
   verdictGood: { en:"Solid", ru:"Хорошо", zh:"良好", es:"Sólido", fr:"Solide", de:"Solid", ja:"良好", pt:"Sólido" },

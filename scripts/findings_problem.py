@@ -237,8 +237,8 @@ PROBLEM: dict[str, tuple[str, str]] = {
         'DMARC с политикой reject.',
     ),
     'DMARC2_ALIGN_FAIL': (
-        'SPF/DKIM domains do not align with the From domain under the DMARC policy.',
-        'Домены SPF/DKIM не совпадают с From так, как требует DMARC.',
+        'Neither the SPF MAIL FROM domain nor DKIM d= matches the From domain the way DMARC requires.',
+        'Ни домен SPF MAIL FROM, ни DKIM d= не совпадают с доменом From так, как требует DMARC.',
     ),
     'DMARC2_ALIGN_NA': (
         'DMARC alignment not evaluated.',
@@ -489,8 +489,8 @@ PROBLEM: dict[str, tuple[str, str]] = {
         'Разбор SPF freemail неполный (информационно).',
     ),
     'SPF2_SOFTFAIL': (
-        'The server that sent this mail is not on the domain’s SPF allow list, so SPF returned softfail. That often happens when the record ends with ~all and the outbound IP was never added.',
-        'Сервер, с которого ушло письмо, не в разрешённом списке SPF домена — поэтому softfail. Так бывает, когда в конце записи стоит ~all, а исходящий IP туда не добавили.',
+        'The domain’s SPF TXT does not list the outbound IP (or include) that sent this message — the check did not pass and ended in softfail.',
+        'В SPF TXT домена нет исходящего IP (или include), с которого ушло письмо — проверка не дала pass и закончилась softfail.',
     ),
     'SPF2_SOFTFAIL_FREEMAIL': (
         'SPF softfail on freemail path (informational).',

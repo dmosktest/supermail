@@ -295,12 +295,62 @@ function pillarFromFinding(f: Finding | undefined): PillarState {
   return "unknown";
 }
 
-/** SPF pillar only: any real issue → fail (e.g. SPF1 ok must not hide SPF2 softfail). */
+function hasFindingCode(list: Finding[], code: string): boolean {
+  return list.some((f) => f.code === code);
+}
+
+function findingIssue(f: Finding | undefined): boolean {
+  if (!f) return false;
+  return f.severity !== "ok" && f.severity !== "info";
+}
+
+/** SPF pillar: any real issue → fail (e.g. SPF1 ok must not hide SPF2 softfail). */
 function pillarSpfState(list: Finding[]): PillarState {
   const worst = worstFinding(list);
   if (!worst) return "unknown";
   if (worst.severity === "ok" || worst.severity === "info") return "pass";
   return "fail";
+}
+
+/** DKIM: no DNS key → fail; message without signature → warn (Плохо). */
+function pillarDkimState(list: Finding[]): PillarState {
+  if (!list.length) return "unknown";
+  if (
+    hasFindingCode(list, "DKIM3_DNS_MISSING") ||
+    hasFindingCode(list, "DKIM4_FAIL")
+  ) {
+    return "fail";
+  }
+  if (hasFindingCode(list, "DKIM1_MISSING")) return "warn";
+  return pillarFromFinding(worstFinding(list));
+}
+
+/**
+ * DMARC depends on SPF/DKIM auth:
+ * missing DNS → warn; record present + alignment fail when SPF and/or DKIM
+ * path needed for DMARC failed → fail.
+ */
+function pillarDmarcState(
+  dmarc: Finding[],
+  spf: Finding[],
+  dkim: Finding[],
+): PillarState {
+  if (!dmarc.length) return "unknown";
+  if (hasFindingCode(dmarc, "DMARC1_MISSING")) return "warn";
+
+  // Record present: DMARC needs an SPF-aligned pass or a DKIM-aligned pass.
+  // If alignment failed, whichever path had to carry DMARC (SPF and/or DKIM) failed → Fail.
+  if (hasFindingCode(dmarc, "DMARC2_ALIGN_FAIL")) {
+    const spfFailed = findingIssue(worstFinding(spf));
+    const dkimFailed =
+      hasFindingCode(dkim, "DKIM1_MISSING") ||
+      hasFindingCode(dkim, "DKIM4_FAIL") ||
+      hasFindingCode(dkim, "DKIM3_DNS_MISSING") ||
+      findingIssue(worstFinding(dkim));
+    if (spfFailed || dkimFailed) return "fail";
+  }
+
+  return pillarFromFinding(worstFinding(dmarc));
 }
 
 function resolvePillars(rep: Report): { name: string; state: PillarState }[] {
@@ -321,8 +371,8 @@ function resolvePillars(rep: Report): { name: string; state: PillarState }[] {
   }
   return [
     { name: "SPF", state: pillarSpfState(spf) },
-    { name: "DKIM", state: pillarFromFinding(worstFinding(dkim)) },
-    { name: "DMARC", state: pillarFromFinding(worstFinding(dmarc)) },
+    { name: "DKIM", state: pillarDkimState(dkim) },
+    { name: "DMARC", state: pillarDmarcState(dmarc, spf, dkim) },
     { name: "DNSBL", state: pillarFromFinding(worstFinding(dnsbl)) },
   ];
 }

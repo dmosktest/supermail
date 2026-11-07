@@ -268,8 +268,8 @@ COPY: dict[str, dict[str, str]] = {
         "title_ru": "From не совпадает с envelope",
         "detail_en": "{detail}",
         "detail_ru": "{detail}",
-        "fix_en": "Align header From with SMTP MAIL FROM when possible.",
-        "fix_ru": "По возможности выровняйте From и SMTP MAIL FROM.",
+        "fix_en": "When possible, use the same address in header From and in SMTP MAIL FROM.",
+        "fix_ru": "По возможности укажите один и тот же адрес в From и в SMTP MAIL FROM.",
     },
     "ADDR4_DN": {
         "title_en": "From has a display name",
@@ -674,8 +674,8 @@ COPY: dict[str, dict[str, str]] = {
         "title_ru": "IP отправителя получил SPF softfail",
         "detail_en": "{detail}",
         "detail_ru": "{detail}",
-        "fix_en": "Add your outbound IP (or the right include) to SPF so the check returns pass. Do not treat swapping ~all for -all as the spam fix by itself.",
-        "fix_ru": "Добавьте свой исходящий IP (или нужный include) в SPF, чтобы проверка дала pass. Не считайте одной заменой ~all на -all исправление спама.",
+        "fix_en": "Add the outbound IP or the right include to the domain’s SPF TXT so the check returns pass.",
+        "fix_ru": "Добавьте исходящий IP или нужный include в SPF TXT домена, чтобы проверка дала pass.",
     },
     "SPF2_SOFTFAIL_FREEMAIL": {
         "title_en": "SPF softfail on freemail path (informational)",
@@ -748,8 +748,8 @@ COPY: dict[str, dict[str, str]] = {
         "title_ru": "DMARC alignment не пройден",
         "detail_en": "{detail}",
         "detail_ru": "{detail}",
-        "fix_en": "Make SPF Mail-From or DKIM d= align with From (aspf/adkim).",
-        "fix_ru": "Выровняйте SPF Mail-From или DKIM d= с From (aspf/adkim).",
+        "fix_en": "Set MAIL FROM (for SPF) or DKIM d= to the same domain as From — or a parent domain if aspf/adkim is relaxed.",
+        "fix_ru": "Укажите в MAIL FROM (для SPF) или в DKIM d= тот же домен, что в From — или родительский, если aspf/adkim=relaxed.",
     },
     "DMARC2_ALIGN_NA": {
         "title_en": "DMARC alignment not evaluated",
@@ -896,8 +896,8 @@ COPY: dict[str, dict[str, str]] = {
         "title_ru": "HELO hostname не совпадает с IP соединения",
         "detail_en": "{detail}",
         "detail_ru": "{detail}",
-        "fix_en": "Align HELO A/AAAA with the SMTP client IP.",
-        "fix_ru": "Выровняйте A/AAAA HELO с IP SMTP-клиента.",
+        "fix_en": "Point the HELO hostname’s A/AAAA records at the SMTP client IP.",
+        "fix_ru": "Пропишите у имени HELO записи A/AAAA на IP SMTP-клиента.",
     },
     "BL1_LISTED": {
         "title_en": "Sending IP listed on DNSBL",

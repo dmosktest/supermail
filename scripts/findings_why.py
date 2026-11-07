@@ -145,8 +145,8 @@ WHY: dict[str, tuple[str, str]] = {
         "Пустой MAIL FROM бывает у bounce; у обычного письма это похоже на спуфинг или сломанный MTA.",
     ),
     "ADDR3_MATCH": (
-        "Aligned From and MAIL FROM make spoofing harder and DMARC happier.",
-        "Совпадение From и MAIL FROM усложняет спуфинг и нравится DMARC.",
+        "Matching From and MAIL FROM make spoofing harder and help DMARC.",
+        "Совпадение From и MAIL FROM усложняет спуфинг и помогает DMARC.",
     ),
     "ADDR3_DIFF": (
         "Header From ≠ envelope is a classic spoof/forward pattern that spam and phish abuse.",
@@ -321,12 +321,12 @@ WHY: dict[str, tuple[str, str]] = {
         "Сломанный DKIM похож на подмену или кривой сайнер — фильтры штрафуют оба случая.",
     ),
     "AUTH3_DMARC_PASS": (
-        "DMARC pass means SPF/DKIM aligned with From — the main brand-protection signal.",
-        "DMARC pass значит SPF/DKIM выровнены с From — главный сигнал защиты бренда.",
+        "DMARC pass means SPF/DKIM domains match From — the main brand-protection signal.",
+        "DMARC pass значит домены SPF/DKIM совпадают с From — главный сигнал защиты бренда.",
     ),
     "AUTH3_DMARC_FAIL": (
-        "DMARC fail tells receivers the message failed domain alignment — often spam or spoof.",
-        "DMARC fail говорит получателю: выравнивание домена провалено — часто спам или спуф.",
+        "DMARC fail tells receivers From was not confirmed by SPF/DKIM — often spam or spoof.",
+        "DMARC fail говорит получателю: домен From не подтверждён SPF/DKIM — часто спам или спуф.",
     ),
     "SPF1_NO_DOMAIN": (
         "Without a domain we cannot publish SPF, so receivers cannot authorize your IPs.",
@@ -401,8 +401,8 @@ WHY: dict[str, tuple[str, str]] = {
         "SPF fail значит: IP не авторизован для домена — реальная проблема auth, сильнее softfail.",
     ),
     "SPF2_SOFTFAIL": (
-        "Softfail is not a hard reject, but it is not a pass either — filters trust the message less. Changing ~all to -all alone barely moves spam scores; get the outbound IP to pass.",
-        "Softfail — ещё не жёсткий отказ, но и не pass: фильтры меньше доверяют письму. Одна замена ~all на -all почти ничего не меняет — нужно, чтобы исходящий IP давал pass.",
+        "Until the outbound IP is in the SPF TXT, the domain does not vouch for this server. Softfail is milder than fail, but it is still not a pass — filters trust the message less.",
+        "Пока исходящего IP нет в SPF TXT, домен не подтверждает этот сервер. Softfail слабее fail, но это всё равно не pass — фильтры доверяют письму меньше.",
     ),
     "SPF2_SOFTFAIL_FREEMAIL": (
         "On freemail this usually reflects the provider’s SPF tree, not a mistake in your Thunderbird settings.",
@@ -437,16 +437,16 @@ WHY: dict[str, tuple[str, str]] = {
         "Не удалось полностью разобрать SPF freemail-провайдера — для личной почты только информация.",
     ),
     "DMARC2_ALIGN_PASS": (
-        "DMARC alignment ties SPF/DKIM to the visible From domain — the key anti-spoof check.",
-        "Alignment DMARC связывает SPF/DKIM с видимым From — ключ против спуфа.",
+        "DMARC checks that SPF or DKIM covers the same domain as the visible From — the key anti-spoof check.",
+        "DMARC проверяет, что SPF или DKIM относятся к тому же домену, что и видимый From — главный антиспуф-сигнал.",
     ),
     "DMARC2_ALIGN_FAIL": (
-        "No SPF/DKIM alignment with From — with p=quarantine/reject receivers may quarantine or reject; fix pass+align, do not stack this as “no DKIM = zero score”.",
-        "Нет alignment SPF/DKIM с From — при p=quarantine/reject получатель может карантинировать или отклонять. Чините pass+align; отсутствие DKIM само по себе не обнуляет оценку.",
+        "Neither SPF nor DKIM confirms the From domain — with p=quarantine/reject receivers may quarantine or reject. Fix domain match on MAIL FROM or DKIM d=; missing DKIM alone does not zero the grade.",
+        "Ни SPF, ни DKIM не подтверждают домен From — при p=quarantine/reject получатель может карантинировать или отклонять. Сделайте совпадение домена в MAIL FROM или в DKIM d=; отсутствие DKIM само по себе не обнуляет оценку.",
     ),
     "DMARC2_ALIGN_NA": (
-        "Not enough SPF/DKIM data to judge alignment for this message.",
-        "Недостаточно данных SPF/DKIM, чтобы судить об alignment.",
+        "Not enough SPF/DKIM data to judge whether From is confirmed for this message.",
+        "Недостаточно данных SPF/DKIM, чтобы понять, подтверждён ли домен From для этого письма.",
     ),
     "DMARC3_RUA": (
         "Aggregate rua reports show who is sending as your domain — essential before enforce.",
@@ -461,8 +461,8 @@ WHY: dict[str, tuple[str, str]] = {
         "Отчёты о сбоях (ruf) — опциональная детализация жёстких fail.",
     ),
     "DMARC3_OPTS": (
-        "aspf/adkim/sp/pct control how strict alignment and subdomain policy are.",
-        "aspf/adkim/sp/pct задают строгость alignment и политику поддоменов.",
+        "aspf/adkim/sp/pct control how strict domain matching and subdomain policy are.",
+        "aspf/adkim/sp/pct задают, насколько строго домены должны совпадать, и политику поддоменов.",
     ),
     "STS1_OK": (
         "MTA-STS helps receiving MTAs insist on TLS for your domain.",
