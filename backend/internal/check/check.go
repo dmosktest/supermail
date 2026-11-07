@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"supermail/internal/dnsauth"
 	"supermail/internal/dnsbl"
 )
 
@@ -97,13 +98,11 @@ func Run(ctx context.Context, req Request) (Report, error) {
 		},
 	}
 
-	resolver := &net.Resolver{}
-
-	mxHosts, mxFindings := checkMX(ctx, resolver, domain)
+	mxHosts, mxFindings := checkMX(ctx, domain)
 	rep.Records.MX = mxHosts
 	rep.Findings = append(rep.Findings, mxFindings...)
 
-	spf, spfFindings := checkTXTContains(ctx, resolver, domain, "v=spf1", "SPF1", "SPF",
+	spf, spfFindings := checkTXTContains(ctx, domain, "v=spf1", "SPF1", "SPF",
 		"No SPF TXT record",
 		"SPF record found",
 		fmt.Sprintf("Add a TXT record on %s, e.g. v=spf1 mx a ~all (avoid +all).", domain),
@@ -119,7 +118,7 @@ func Run(ctx context.Context, req Request) (Report, error) {
 	}
 
 	dmarcHost := "_dmarc." + domain
-	dmarc, dmarcFindings := checkTXTContains(ctx, resolver, dmarcHost, "v=DMARC1", "DMARC1", "DMARC",
+	dmarc, dmarcFindings := checkTXTContains(ctx, dmarcHost, "v=DMARC1", "DMARC1", "DMARC",
 		"No DMARC record",
 		"DMARC record found",
 		fmt.Sprintf("Add TXT on _dmarc.%s: v=DMARC1; p=none; rua=mailto:dmarc@%s", domain, domain),
@@ -135,7 +134,7 @@ func Run(ctx context.Context, req Request) (Report, error) {
 	}
 
 	dkimHost := selector + "._domainkey." + domain
-	dkim, dkimFindings := checkTXTContains(ctx, resolver, dkimHost, "v=DKIM1", "DKIM1", "DKIM",
+	dkim, dkimFindings := checkTXTContains(ctx, dkimHost, "v=DKIM1", "DKIM1", "DKIM",
 		fmt.Sprintf("No DKIM TXT at %s", dkimHost),
 		fmt.Sprintf("DKIM record found at %s", dkimHost),
 		rep.Generators.DKIMHint,
@@ -144,7 +143,7 @@ func Run(ctx context.Context, req Request) (Report, error) {
 	rep.Findings = append(rep.Findings, dkimFindings...)
 
 	bimiHost := "default._bimi." + domain
-	bimiTxts, _ := lookupTXT(ctx, resolver, bimiHost)
+	bimiTxts, _ := lookupTXT(ctx, bimiHost)
 	for _, t := range bimiTxts {
 		if strings.Contains(strings.ToUpper(t), "V=BIMI1") {
 			rep.Records.BIMI = t
@@ -164,7 +163,7 @@ func Run(ctx context.Context, req Request) (Report, error) {
 
 	checkIP := strings.TrimSpace(req.IP)
 	if checkIP == "" && len(mxHosts) > 0 {
-		checkIP = resolveHostIP(ctx, resolver, mxHosts[0])
+		checkIP = resolveHostIP(ctx, mxHosts[0])
 	}
 	if checkIP != "" {
 		rep.Blacklist = dnsbl.Check(ctx, checkIP)
@@ -180,7 +179,7 @@ func Run(ctx context.Context, req Request) (Report, error) {
 				Detail: fmt.Sprintf("%s checked against %d lists.", checkIP, rep.Blacklist.Checked),
 			})
 		}
-		ptrs, _ := resolver.LookupAddr(ctx, checkIP)
+		ptrs, _ := dnsauth.LookupAddr(ctx, checkIP)
 		if len(ptrs) > 0 {
 			rep.PTR = strings.TrimSuffix(ptrs[0], ".")
 			rep.Findings = append(rep.Findings, Finding{
@@ -231,8 +230,8 @@ func Run(ctx context.Context, req Request) (Report, error) {
 	return rep, nil
 }
 
-func checkMX(ctx context.Context, resolver *net.Resolver, domain string) ([]string, []Finding) {
-	mxs, err := resolver.LookupMX(ctx, domain)
+func checkMX(ctx context.Context, domain string) ([]string, []Finding) {
+	mxs, err := dnsauth.LookupMX(ctx, domain)
 	if err != nil || len(mxs) == 0 {
 		return nil, []Finding{{
 			ID: "MX1", Severity: "critical", Title: "No MX records",
@@ -256,8 +255,8 @@ func checkMX(ctx context.Context, resolver *net.Resolver, domain string) ([]stri
 	}}
 }
 
-func checkTXTContains(ctx context.Context, resolver *net.Resolver, host, needle, id, label, missingTitle, okTitle, fix string) (string, []Finding) {
-	txts, err := lookupTXT(ctx, resolver, host)
+func checkTXTContains(ctx context.Context, host, needle, id, label, missingTitle, okTitle, fix string) (string, []Finding) {
+	txts, err := lookupTXT(ctx, host)
 	if err != nil || len(txts) == 0 {
 		return "", []Finding{{ID: id, Severity: "high", Title: missingTitle, Detail: host + " has no matching TXT.", Fix: fix}}
 	}
@@ -270,16 +269,16 @@ func checkTXTContains(ctx context.Context, resolver *net.Resolver, host, needle,
 	return "", []Finding{{ID: id, Severity: "high", Title: missingTitle, Detail: "TXT exists but no " + label + " policy matched.", Fix: fix}}
 }
 
-func lookupTXT(ctx context.Context, resolver *net.Resolver, host string) ([]string, error) {
+func lookupTXT(ctx context.Context, host string) ([]string, error) {
 	cctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
-	return resolver.LookupTXT(cctx, host)
+	return dnsauth.LookupTXT(cctx, host)
 }
 
-func resolveHostIP(ctx context.Context, resolver *net.Resolver, host string) string {
+func resolveHostIP(ctx context.Context, host string) string {
 	cctx, cancel := context.WithTimeout(ctx, 4*time.Second)
 	defer cancel()
-	ips, err := resolver.LookupIPAddr(cctx, host)
+	ips, err := dnsauth.LookupIPAddr(cctx, host)
 	if err != nil || len(ips) == 0 {
 		return ""
 	}

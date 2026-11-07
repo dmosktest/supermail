@@ -4,7 +4,7 @@ Spam-test your outbound email: one-time `@supermail.dmosk.net` inbox, send from 
 
 **Live (prod):** https://supermail.dmosk.net/  
 **Privacy:** https://supermail.dmosk.net/en/privacy/  
-**Version:** `1.0.7`
+**Version:** `1.0.8`
 
 ## Stack
 
@@ -23,6 +23,7 @@ Spam-test your outbound email: one-time `@supermail.dmosk.net` inbox, send from 
 Waiting inbox ~30 minutes; ready report + raw message retention ~7 days on disk (survives restarts). Repeat `POST /api/v1/inbox` from the same IP while status is still `waiting` returns the same address. Retest rate limit ~10s per IP. Report fields include `findings`, `headers`, scores and blacklist. On a DNSBL hit, `BL1_LISTED.fix` includes per-list delisting links (no separate DNSBL panel in the UI).
 
 Grade `/100`: start at 100; critical −25, high −12, medium −6, low −3. Missing DKIM is `low` (broken DKIM crypto stays `high`). SPF softfail is `low`. DMARC alignment fail is `medium` (`high` only with `p=reject`). DNSBL is `critical` only for major lists.
+Domain DNS checks (SPF/DMARC/DKIM/MX/HELO A/MTA-STS/…) query the zone’s **authoritative NS** (`internal/dnsauth`), not the host/Docker stub resolver; PTR and DNSBL use public resolvers `1.1.1.1`/`8.8.8.8`.
 
 ## Mirror note
 

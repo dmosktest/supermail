@@ -15,6 +15,7 @@ import (
 	"strings"
 	"time"
 
+	"supermail/internal/dnsauth"
 	"supermail/internal/dnsbl"
 )
 
@@ -166,7 +167,7 @@ func Run(ctx context.Context, raw []byte, remoteIP, helo, mailFrom string, inbou
 			findings = append(findings, f("BL1", "BL1_CLEAN", "ok", "Sending IP not listed on checked DNSBLs",
 				fmt.Sprintf("%s · %d", remoteIP, bl.Checked), "", -0.1))
 		}
-		ptrs, _ := net.DefaultResolver.LookupAddr(ctx, remoteIP)
+		ptrs, _ := dnsauth.LookupAddr(ctx, remoteIP)
 		if len(ptrs) > 0 {
 			ptr = strings.TrimSuffix(ptrs[0], ".")
 			findings = append(findings, f("PTR1", "PTR1_OK", "ok", "Reverse DNS present",
@@ -826,7 +827,7 @@ func checkMX(ctx context.Context, domain string) []Finding {
 	}
 	cctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
-	mxs, err := net.DefaultResolver.LookupMX(cctx, domain)
+	mxs, err := dnsauth.LookupMX(cctx, domain)
 	if err != nil || len(mxs) == 0 {
 		return []Finding{f("MX1", "MX1_MISSING", "medium", "No MX for From domain", domain,
 			"Publish MX (or rely on a valid A only if intentional).", 0.5)}
@@ -854,7 +855,7 @@ func checkHelo(ctx context.Context, helo, remoteIP string) []Finding {
 	host := strings.TrimSuffix(strings.ToLower(helo), ".")
 	cctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
-	addrs, err := net.DefaultResolver.LookupHost(cctx, host)
+	addrs, err := dnsauth.LookupHost(cctx, host)
 	if err != nil || len(addrs) == 0 {
 		out = append(out, f("HELO2", "HELO2_NOA", "medium", "HELO hostname has no A/AAAA record", host,
 			"Publish A/AAAA for the SMTP HELO name.", 0.4))
@@ -1031,7 +1032,7 @@ func headerValues(h mail.Header, name string) []string {
 func lookupTXT(ctx context.Context, host string) ([]string, error) {
 	cctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
-	return net.DefaultResolver.LookupTXT(cctx, host)
+	return dnsauth.LookupTXT(cctx, host)
 }
 
 // GradePenalty is the /100 grade cut for a finding severity.

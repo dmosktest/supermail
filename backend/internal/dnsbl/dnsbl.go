@@ -7,6 +7,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"supermail/internal/dnsauth"
 )
 
 var Lists = []string{
@@ -64,7 +66,7 @@ func Check(ctx context.Context, ip string) Result {
 		return out
 	}
 
-	resolver := &net.Resolver{}
+	resolver := dnsauth.BootstrapResolver()
 	var mu sync.Mutex
 	var wg sync.WaitGroup
 	for _, zone := range Lists {

@@ -7,6 +7,8 @@ import (
 	"net/netip"
 	"strings"
 	"time"
+
+	"supermail/internal/dnsauth"
 )
 
 type spfOutcome string
@@ -247,7 +249,7 @@ func spfMatchA(ctx context.Context, host string, ip netip.Addr) (bool, error) {
 	host = strings.TrimSuffix(strings.ToLower(host), ".")
 	cctx, cancel := context.WithTimeout(ctx, 4*time.Second)
 	defer cancel()
-	addrs, err := net.DefaultResolver.LookupIPAddr(cctx, host)
+	addrs, err := dnsauth.LookupIPAddr(cctx, host)
 	if err != nil {
 		if dnsIsNotFound(err) {
 			return false, nil
@@ -267,7 +269,7 @@ func spfMatchMX(ctx context.Context, host string, ip netip.Addr, lookups *int) (
 	host = strings.TrimSuffix(strings.ToLower(host), ".")
 	cctx, cancel := context.WithTimeout(ctx, 4*time.Second)
 	defer cancel()
-	mxs, err := net.DefaultResolver.LookupMX(cctx, host)
+	mxs, err := dnsauth.LookupMX(cctx, host)
 	if err != nil {
 		if dnsIsNotFound(err) {
 			return false, nil
@@ -294,7 +296,7 @@ func spfExists(ctx context.Context, name string) (bool, error) {
 	}
 	cctx, cancel := context.WithTimeout(ctx, 3*time.Second)
 	defer cancel()
-	_, err := net.DefaultResolver.LookupIPAddr(cctx, name)
+	_, err := dnsauth.LookupIPAddr(cctx, name)
 	if err != nil {
 		if dnsIsNotFound(err) {
 			return false, nil
