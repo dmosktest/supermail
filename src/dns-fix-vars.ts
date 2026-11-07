@@ -59,6 +59,20 @@ function heloHostFromDetail(detail: string): string {
   return detail.slice(0, cut).trim().replace(/\.$/, "");
 }
 
+/** Relative owner name for DNS panels (zone already = domain). Prefer over FQDN. */
+function relativeDnsName(fqdn: string, domain: string): string {
+  const h = (fqdn || "").trim().toLowerCase().replace(/\.$/, "");
+  const d = (domain || "").trim().toLowerCase().replace(/\.$/, "");
+  if (!h) return "@";
+  if (!d) return h;
+  if (h === d) return "@";
+  if (h.endsWith("." + d)) {
+    const rel = h.slice(0, -(d.length + 1));
+    return rel || "@";
+  }
+  return h;
+}
+
 export function dnsFixVars(
   rep: DnsFixReport | null | undefined,
   f: DnsFixFinding,
@@ -120,7 +134,11 @@ export function dnsFixVars(
   if (!dkimHost) dkimHost = `${selector}._domainkey.${domain}`;
 
   const mailhost = helo && !/^\d/.test(helo) && !helo.includes(":") ? helo : `mail.${domain}`;
+  const hostFqdn = host || mailhost;
   const rua = `dmarc@${domain}`;
+  const hostLabel = relativeDnsName(hostFqdn, domain);
+  const dkimLabel = `${selector}._domainkey`;
+  const mailhostLabel = relativeDnsName(mailhost, domain);
 
   return {
     ip: ip || "203.0.113.10",
@@ -128,10 +146,13 @@ export function dnsFixVars(
     name,
     helo: helo || name,
     ptr: ptr || "\u2014",
-    host: host || mailhost,
+    host: hostFqdn,
+    hostLabel,
     selector,
     dkimHost,
+    dkimLabel,
     mailhost,
+    mailhostLabel,
     rua,
   };
 }
@@ -141,7 +162,12 @@ export function applyDnsFixVars(
   rep: DnsFixReport | null | undefined,
   f: DnsFixFinding,
 ): string {
-  if (!fix || !/\{(ip|domain|name|helo|ptr|host|selector|dkimHost|mailhost|rua)\}/.test(fix)) {
+  if (
+    !fix ||
+    !/\{(ip|domain|name|helo|ptr|host|hostLabel|selector|dkimHost|dkimLabel|mailhost|mailhostLabel|rua)\}/.test(
+      fix,
+    )
+  ) {
     return fix;
   }
   const vars = dnsFixVars(rep, f);

@@ -814,11 +814,11 @@ async function onFindingRetestClick(btn: HTMLButtonElement): Promise<void> {
       await new Promise((r) => window.setTimeout(r, 1400));
       card.classList.add("finding-leaving");
       await new Promise((r) => window.setTimeout(r, 550));
-      showReport(data.report, { hasRaw: data.hasRaw });
+      showReport(data.report, { hasRaw: data.hasRaw, scroll: false });
       return;
     }
 
-    showReport(data.report, { hasRaw: data.hasRaw });
+    showReport(data.report, { hasRaw: data.hasRaw, scroll: false });
     const refreshed = byId("findings").querySelector<HTMLElement>(
       `.finding[data-id="${findingId.replace(/"/g, "")}"]`,
     );
@@ -870,7 +870,12 @@ function renderDelistLinks(zones: string[], ip: string): HTMLElement {
   return wrap;
 }
 
-function showReport(rep: Report, inboxMeta?: { hasRaw?: boolean }): void {
+function showReport(
+  rep: Report,
+  inboxMeta?: { hasRaw?: boolean; scroll?: boolean },
+): void {
+  const keepScroll = inboxMeta?.scroll === false;
+  const scrollY = keepScroll ? window.scrollY : 0;
   state.lastReport = rep;
   if (typeof inboxMeta?.hasRaw === "boolean") state.hasRaw = inboxMeta.hasRaw;
   const results = byId("results");
@@ -956,7 +961,12 @@ function showReport(rep: Report, inboxMeta?: { hasRaw?: boolean }): void {
 
   renderFindings(findings);
 
-  results.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (keepScroll) {
+    window.scrollTo(0, scrollY);
+    requestAnimationFrame(() => window.scrollTo(0, scrollY));
+  } else {
+    results.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
 }
 
 async function pollOnce(): Promise<void> {
