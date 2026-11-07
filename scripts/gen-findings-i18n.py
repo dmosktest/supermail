@@ -567,6 +567,14 @@ COPY: dict[str, dict[str, str]] = {
         "fix_en": "Replace +all with ~all or -all. Example of a finished record:\n\nName: {domain} (or @)\nType: TXT\nValue: v=spf1 ip4:{ip} ~all\n\nCheck:\nnslookup -type=TXT {domain}",
         "fix_ru": "Замените +all на ~all или -all. Пример итоговой записи:\n\nИмя: {domain} (или @)\nТип: TXT\nЗначение: v=spf1 ip4:{ip} ~all\n\nПроверка:\nnslookup -type=TXT {domain}",
     },
+    "SPF1_MULTI": {
+        "title_en": "Multiple SPF TXT records",
+        "title_ru": "Несколько SPF TXT-записей",
+        "detail_en": "{detail}",
+        "detail_ru": "{detail}",
+        "fix_en": "RFC 7208: more than one TXT starting with v=spf1 is a permanent error. Delete extras and keep a single record, e.g.:\n\nName: {domain} (or @)\nType: TXT\nValue: v=spf1 ip4:{ip} ~all\n\nCheck (must show one v=spf1):\nnslookup -type=TXT {domain}",
+        "fix_ru": "По RFC 7208 больше одной TXT с v=spf1 — постоянная ошибка SPF. Удалите лишние, оставьте одну, например:\n\nИмя: {domain} (или @)\nТип: TXT\nЗначение: v=spf1 ip4:{ip} ~all\n\nПроверка (должна быть одна v=spf1):\nnslookup -type=TXT {domain}",
+    },
     "SPF1_OK": {
         "title_en": "SPF record present",
         "title_ru": "SPF-запись есть",
@@ -580,6 +588,14 @@ COPY: dict[str, dict[str, str]] = {
         "detail_ru": "{detail}",
         "fix_en": "Publish a DMARC TXT record. Example:\n\nName: _dmarc.{domain}\nType: TXT\nValue: v=DMARC1; p=none; rua=mailto:{rua}\n\nCheck:\nnslookup -type=TXT _dmarc.{domain}",
         "fix_ru": "Опубликуйте TXT DMARC. Пример:\n\nИмя: _dmarc.{domain}\nТип: TXT\nЗначение: v=DMARC1; p=none; rua=mailto:{rua}\n\nПроверка:\nnslookup -type=TXT _dmarc.{domain}",
+    },
+    "DMARC1_MULTI": {
+        "title_en": "Multiple DMARC TXT records",
+        "title_ru": "Несколько DMARC TXT-записей",
+        "detail_en": "{detail}",
+        "detail_ru": "{detail}",
+        "fix_en": "RFC 7489: if several v=DMARC1 records exist at _dmarc, receivers abandon DMARC. Keep exactly one:\n\nName: _dmarc.{domain}\nType: TXT\nValue: v=DMARC1; p=none; rua=mailto:{rua}\n\nCheck:\nnslookup -type=TXT _dmarc.{domain}",
+        "fix_ru": "По RFC 7489 при нескольких v=DMARC1 на _dmarc получатели отбрасывают DMARC. Оставьте ровно одну:\n\nИмя: _dmarc.{domain}\nТип: TXT\nЗначение: v=DMARC1; p=none; rua=mailto:{rua}\n\nПроверка:\nnslookup -type=TXT _dmarc.{domain}",
     },
     "DMARC1_REJECT": {
         "title_en": "DMARC permit policy (reject)",
@@ -729,6 +745,22 @@ COPY: dict[str, dict[str, str]] = {
         "fix_en": "Fix SPF TXT syntax and republish. Working minimum:\n\nName: {domain} (or @)\nType: TXT\nValue: v=spf1 ip4:{ip} ~all\n\nOne SPF TXT only; no line breaks inside the value.\n\nCheck:\nnslookup -type=TXT {domain}",
         "fix_ru": "Исправьте синтаксис SPF TXT и опубликуйте заново. Рабочий минимум:\n\nИмя: {domain} (или @)\nТип: TXT\nЗначение: v=spf1 ip4:{ip} ~all\n\nОдна SPF TXT на домен; без переносов внутри значения.\n\nПроверка:\nnslookup -type=TXT {domain}",
     },
+    "SPF2_MULTI": {
+        "title_en": "Multiple SPF TXT records (SPF permerror)",
+        "title_ru": "Несколько SPF TXT (SPF permerror)",
+        "detail_en": "{detail}",
+        "detail_ru": "{detail}",
+        "fix_en": "Evaluation stops with permerror when more than one v=spf1 exists. Merge into one record:\n\nName: {domain} (or @)\nType: TXT\nValue: v=spf1 ip4:{ip} ~all\n\nCheck:\nnslookup -type=TXT {domain}",
+        "fix_ru": "При нескольких v=spf1 оценка даёт permerror. Слейте в одну запись:\n\nИмя: {domain} (или @)\nТип: TXT\nЗначение: v=spf1 ip4:{ip} ~all\n\nПроверка:\nnslookup -type=TXT {domain}",
+    },
+    "SPF2_MULTI_FREEMAIL": {
+        "title_en": "Multiple SPF TXT on freemail path (informational)",
+        "title_ru": "Несколько SPF TXT на пути freemail (информационно)",
+        "detail_en": "{detail}",
+        "detail_ru": "{detail}",
+        "fix_en": "Provider DNS — nothing to fix on personal freemail.",
+        "fix_ru": "DNS провайдера — в личной freemail-почте чинить нечего.",
+    },
     "SPF2_PERMERROR_FREEMAIL": {
         "title_en": "SPF parse issue on freemail path (informational)",
         "title_ru": "Разбор SPF freemail неполный (информационно)",
@@ -797,6 +829,14 @@ COPY: dict[str, dict[str, str]] = {
         "fix_en": "Optional. Example DNS record:\n\nName: _mta-sts.{domain}\nType: TXT\nValue: v=STSv1; id=20260101T000000\n\nAlso serve https://mta-sts.{domain}/.well-known/mta-sts.txt with the TLS policy.\n\nCheck:\nnslookup -type=TXT _mta-sts.{domain}",
         "fix_ru": "Опционально. Пример DNS-записи:\n\nИмя: _mta-sts.{domain}\nТип: TXT\nЗначение: v=STSv1; id=20260101T000000\n\nПлюс HTTPS-файл https://mta-sts.{domain}/.well-known/mta-sts.txt с политикой TLS.\n\nПроверка:\nnslookup -type=TXT _mta-sts.{domain}",
     },
+    "STS1_MULTI": {
+        "title_en": "Multiple MTA-STS TXT records",
+        "title_ru": "Несколько TXT MTA-STS",
+        "detail_en": "{detail}",
+        "detail_ru": "{detail}",
+        "fix_en": "Keep exactly one v=STSv1 TXT. Example:\n\nName: _mta-sts.{domain}\nType: TXT\nValue: v=STSv1; id=20260101T000000\n\nCheck:\nnslookup -type=TXT _mta-sts.{domain}",
+        "fix_ru": "Оставьте ровно одну TXT с v=STSv1. Пример:\n\nИмя: _mta-sts.{domain}\nТип: TXT\nЗначение: v=STSv1; id=20260101T000000\n\nПроверка:\nnslookup -type=TXT _mta-sts.{domain}",
+    },
     "TLSRPT1_OK": {
         "title_en": "TLS-RPT DNS record present",
         "title_ru": "DNS-запись TLS-RPT есть",
@@ -811,6 +851,14 @@ COPY: dict[str, dict[str, str]] = {
         "fix_en": "Optional. Example:\n\nName: _smtp._tls.{domain}\nType: TXT\nValue: v=TLSRPTv1; rua=mailto:tlsrpt@{domain}\n\nCheck:\nnslookup -type=TXT _smtp._tls.{domain}",
         "fix_ru": "Опционально. Пример:\n\nИмя: _smtp._tls.{domain}\nТип: TXT\nЗначение: v=TLSRPTv1; rua=mailto:tlsrpt@{domain}\n\nПроверка:\nnslookup -type=TXT _smtp._tls.{domain}",
     },
+    "TLSRPT1_MULTI": {
+        "title_en": "Multiple TLS-RPT TXT records",
+        "title_ru": "Несколько TXT TLS-RPT",
+        "detail_en": "{detail}",
+        "detail_ru": "{detail}",
+        "fix_en": "Keep exactly one v=TLSRPTv1 TXT. Example:\n\nName: _smtp._tls.{domain}\nType: TXT\nValue: v=TLSRPTv1; rua=mailto:tlsrpt@{domain}\n\nCheck:\nnslookup -type=TXT _smtp._tls.{domain}",
+        "fix_ru": "Оставьте ровно одну TXT с v=TLSRPTv1. Пример:\n\nИмя: _smtp._tls.{domain}\nТип: TXT\nЗначение: v=TLSRPTv1; rua=mailto:tlsrpt@{domain}\n\nПроверка:\nnslookup -type=TXT _smtp._tls.{domain}",
+    },
     "BIMI1_OK": {
         "title_en": "BIMI DNS record present",
         "title_ru": "DNS-запись BIMI есть",
@@ -824,6 +872,14 @@ COPY: dict[str, dict[str, str]] = {
         "detail_ru": "{detail}",
         "fix_en": "Optional brand logo (needs DMARC enforce). Example:\n\nName: default._bimi.{domain}\nType: TXT\nValue: v=BIMI1; l=https://{domain}/bimi/logo.svg;\n\nCheck:\nnslookup -type=TXT default._bimi.{domain}",
         "fix_ru": "Опциональный логотип BIMI (нужен жёсткий DMARC). Пример:\n\nИмя: default._bimi.{domain}\nТип: TXT\nЗначение: v=BIMI1; l=https://{domain}/bimi/logo.svg;\n\nПроверка:\nnslookup -type=TXT default._bimi.{domain}",
+    },
+    "BIMI1_MULTI": {
+        "title_en": "Multiple BIMI TXT records",
+        "title_ru": "Несколько TXT BIMI",
+        "detail_en": "{detail}",
+        "detail_ru": "{detail}",
+        "fix_en": "Keep exactly one BIMI TXT. Example:\n\nName: default._bimi.{domain}\nType: TXT\nValue: v=BIMI1; l=https://{domain}/bimi/logo.svg;\n\nCheck:\nnslookup -type=TXT default._bimi.{domain}",
+        "fix_ru": "Оставьте ровно одну BIMI TXT. Пример:\n\nИмя: default._bimi.{domain}\nТип: TXT\nЗначение: v=BIMI1; l=https://{domain}/bimi/logo.svg;\n\nПроверка:\nnslookup -type=TXT default._bimi.{domain}",
     },
     "MX1_MISSING": {
         "title_en": "No MX for From domain",
@@ -904,8 +960,8 @@ COPY: dict[str, dict[str, str]] = {
         "title_ru": "IP отправителя в чёрном списке DNSBL",
         "detail_en": "{detail}",
         "detail_ru": "{detail}",
-        "fix_en": "Stop the abuse source first, then open each list’s removal page (links are in the report).",
-        "fix_ru": "Сначала уберите причину, затем откройте страницу снятия у каждого списка (ссылки — в отчёте).",
+        "fix_en": "First fix the cause: spam/open relay/compromise, and check reverse DNS — a missing or wrong PTR often keeps an IP listed. Then open each list’s removal page (links are in the report).",
+        "fix_ru": "Сначала уберите причину: спам, open relay, заражение, а также проверьте обратный DNS — отсутствующий или неверный PTR часто держит IP в списках. Затем откройте страницу снятия у каждого списка (ссылки — в отчёте).",
     },
     "BL1_CLEAN": {
         "title_en": "Sending IP not listed on checked DNSBLs",

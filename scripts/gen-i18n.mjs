@@ -32,7 +32,7 @@ const ui = {
   gradeLabel: { en:"Grade", ru:"Оценка", zh:"评级", es:"Nota", hi:"ग्रेड", ar:"الدرجة", bn:"গ্রেড", pt:"Nota", fr:"Note", de:"Note", ja:"評価", id:"Nilai", pa:"ਗ੍ਰੇਡ", jv:"Nilai", te:"గ్రేడ్", tr:"Not", ko:"등급", mr:"ग्रेड", vi:"Điểm", ta:"தரம்", it:"Voto", fa:"نمره", tlh:"Doch" },
   reportShareLabel: { en:"Share this report", ru:"Ссылка на отчёт", zh:"分享报告", es:"Enlace al informe", fr:"Lien du rapport", de:"Link zum Bericht", ja:"レポートのリンク", pt:"Link do relatório" },
   reportRuleLabel: { en:"Summary", ru:"Итог", zh:"摘要", es:"Resumen", fr:"Synthèse", de:"Überblick", ja:"概要", pt:"Resumo" },
-  reportPillarsTitle: { en:"Core auth signals", ru:"Ключевые сигналы аутентификации", zh:"核心认证信号", es:"Señales de autenticación", fr:"Signaux d’authentification", de:"Kernsignale der Authentifizierung", ja:"認証の主要シグナル", pt:"Sinais de autenticação" },
+  reportPillarsTitle: { en:"Key checks", ru:"Ключевые проверки", zh:"关键检查", es:"Comprobaciones clave", fr:"Contrôles clés", de:"Wichtige Prüfungen", ja:"主要なチェック", pt:"Verificações principais", hi:"मुख्य जाँच", ar:"فحوصات رئيسية", bn:"মূল পরীক্ষা", id:"Pemeriksaan utama", pa:"ਮੁੱਖ ਜਾਂਚਾਂ", jv:"Pamariksaan utama", te:"ముఖ్య తనిఖీలు", tr:"Temel kontroller", ko:"핵심 검사", mr:"मुख्य तपासण्या", vi:"Kiểm tra chính", ta:"முக்கிய சோதனைகள்", it:"Controlli chiave", fa:"بررسی‌های کلیدی", tlh:"lo'laH Holqel" },
   pillarPass: { en:"Pass", ru:"Пройдено", zh:"通过", es:"Correcto", fr:"OK", de:"Bestanden", ja:"成功", pt:"OK" },
   pillarFail: { en:"Fail", ru:"Провал", zh:"失败", es:"Fallo", fr:"Échec", de:"Fehlgeschlagen", ja:"失敗", pt:"Falha" },
   pillarWarn: { en:"Bad", ru:"Плохо", zh:"差", es:"Mal", fr:"Mauvais", de:"Schlecht", ja:"不良", pt:"Ruim" },

@@ -125,11 +125,27 @@ function safeName(s: string): string {
   return (s || "mail").replace(/[^\w.-]+/g, "_").slice(0, 48) || "mail";
 }
 
+const SEV_RANK: Record<string, number> = {
+  ok: 0,
+  info: 1,
+  low: 2,
+  medium: 3,
+  high: 4,
+  critical: 5,
+};
+
+function sortBySeverity(list: BriefFinding[]): BriefFinding[] {
+  return list.slice().sort((a, b) => {
+    const ra = SEV_RANK[a.severity] ?? -1;
+    const rb = SEV_RANK[b.severity] ?? -1;
+    if (rb !== ra) return rb - ra;
+    return (b.score || 0) - (a.score || 0);
+  });
+}
+
 export function buildAiBrief(rep: BriefReport, locale: Locale, reportUrl: string): string {
-  const problems = (rep.findings || []).filter(isProblem);
+  const problems = sortBySeverity((rep.findings || []).filter(isProblem));
   const top = problems
-    .slice()
-    .sort((a, b) => (b.score || 0) - (a.score || 0))
     .slice(0, 5)
     .map((f) => {
       const p = localizedParts(locale, f, rep);
@@ -248,7 +264,7 @@ export function buildAiBrief(rep: BriefReport, locale: Locale, reportUrl: string
 }
 
 export function buildAdminBrief(rep: BriefReport, locale: Locale, reportUrl: string): string {
-  const problems = (rep.findings || []).filter(isProblem);
+  const problems = sortBySeverity((rep.findings || []).filter(isProblem));
   const from = rep.mail?.from || rep.mail?.mailFrom || "—";
   const subject = rep.mail?.subject || "—";
   const ip = rep.mail?.remoteIp || "—";

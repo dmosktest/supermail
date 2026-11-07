@@ -340,6 +340,10 @@ WHY: dict[str, tuple[str, str]] = {
         "+all authorizes the whole internet — filters treat that as “SPF is useless / suspicious”.",
         "+all разрешает весь интернет — для фильтров это «SPF бесполезен / подозрителен».",
     ),
+    "SPF1_MULTI": (
+        "Several v=spf1 TXT records are a permanent SPF error — careful receivers treat auth as broken.",
+        "Несколько TXT с v=spf1 — постоянная ошибка SPF; осторожные получатели считают auth сломанным.",
+    ),
     "SPF1_OK": (
         "An SPF record lets receivers check whether the connecting IP may use your domain.",
         "SPF-запись позволяет проверить, имеет ли IP право слать от вашего домена.",
@@ -347,6 +351,10 @@ WHY: dict[str, tuple[str, str]] = {
     "DMARC1_MISSING": (
         "No DMARC means receivers have no policy for spoofed From on your domain.",
         "Без DMARC у получателей нет политики на поддельный From вашего домена.",
+    ),
+    "DMARC1_MULTI": (
+        "Multiple DMARC records make receivers abandon the policy — spoofed From is not covered.",
+        "Несколько записей DMARC заставляют получателей отбросить политику — спуф From не закрыт.",
     ),
     "DMARC1_REJECT": (
         "p=reject tells receivers to drop spoofed mail — strong positive for domain trust.",
@@ -436,6 +444,14 @@ WHY: dict[str, tuple[str, str]] = {
         "We could not fully parse the freemail provider’s SPF — informational only for personal mail.",
         "Не удалось полностью разобрать SPF freemail-провайдера — для личной почты только информация.",
     ),
+    "SPF2_MULTI": (
+        "Duplicate SPF TXT yields permerror — the sending IP never gets a clean pass.",
+        "Дубли SPF TXT дают permerror — IP отправителя не получает чистый pass.",
+    ),
+    "SPF2_MULTI_FREEMAIL": (
+        "Provider published several SPF TXT — not something you fix on personal freemail.",
+        "Провайдер опубликовал несколько SPF TXT — в личной freemail-почте чинить нечего.",
+    ),
     "DMARC2_ALIGN_PASS": (
         "DMARC checks that SPF or DKIM covers the same domain as the visible From — the key anti-spoof check.",
         "DMARC проверяет, что SPF или DKIM относятся к тому же домену, что и видимый From — главный антиспуф-сигнал.",
@@ -472,6 +488,10 @@ WHY: dict[str, tuple[str, str]] = {
         "Without MTA-STS some paths may still downgrade to cleartext SMTP.",
         "Без MTA-STS часть путей всё ещё может уйти в SMTP без TLS.",
     ),
+    "STS1_MULTI": (
+        "Several MTA-STS TXT records break discovery — the TLS policy is ignored.",
+        "Несколько TXT MTA-STS ломают discovery — политика TLS игнорируется.",
+    ),
     "TLSRPT1_OK": (
         "TLS-RPT gives you reports when others fail TLS to your MX.",
         "TLS-RPT даёт отчёты, когда у других ломается TLS до вашего MX.",
@@ -480,6 +500,10 @@ WHY: dict[str, tuple[str, str]] = {
         "No TLS-RPT means you will not see aggregate TLS failure reports.",
         "Без TLS-RPT вы не увидите агрегатные отчёты о сбоях TLS.",
     ),
+    "TLSRPT1_MULTI": (
+        "Duplicate TLS-RPT TXT confuses report routing — keep a single record.",
+        "Дубли TXT TLS-RPT путают маршрутизацию отчётов — нужна одна запись.",
+    ),
     "BIMI1_OK": (
         "BIMI can show a brand mark in supporting clients when DMARC is enforced.",
         "BIMI может показать бренд в поддерживающих клиентах при жёстком DMARC.",
@@ -487,6 +511,10 @@ WHY: dict[str, tuple[str, str]] = {
     "BIMI1_MISSING": (
         "BIMI is optional cosmetics — not required for deliverability, but useful for brand trust.",
         "BIMI — опциональный бренд-знак, не обязателен для доставки, но полезен для доверия.",
+    ),
+    "BIMI1_MULTI": (
+        "Several BIMI TXT records are invalid — clients will not show a brand mark.",
+        "Несколько BIMI TXT недопустимы — клиенты не покажут бренд-знак.",
     ),
     "MX1_MISSING": (
         "A sending domain without MX looks incomplete; some checkers note it, but missing MX alone rarely decides spam vs inbox.",
@@ -533,8 +561,8 @@ WHY: dict[str, tuple[str, str]] = {
         "HELO указывает не на IP клиента — похоже на open proxy или рассинхрон личности.",
     ),
     "BL1_LISTED": (
-        "Inbox providers often reject or junk mail from listed IPs. Fix the cause, then delist on each list — links are in the report.",
-        "Провайдеры часто режут или кладут в спам письма с такого IP. Уберите причину и снимите IP с каждого списка — ссылки в отчёте.",
+        "Inbox providers often reject or junk mail from listed IPs. Besides spam/open relay, a missing or wrong PTR is a frequent listing reason — fix that, then delist on each list (links in the report).",
+        "Провайдеры часто режут или кладут в спам письма с такого IP. Кроме спама/open relay частая причина попадания — отсутствующий или неверный PTR; исправьте его, затем снимите IP с каждого списка (ссылки в отчёте).",
     ),
     "BL1_CLEAN": (
         "Not listed on major DNSBLs is a baseline requirement for good delivery.",

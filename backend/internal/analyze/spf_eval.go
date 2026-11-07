@@ -77,6 +77,14 @@ func spfEvalFindings(r spfEvalResult, domain string) []Finding {
 	case spfTempError:
 		return []Finding{f("SPF2", "SPF2_TEMPERROR", "info", "SPF temporary DNS error", r.Detail, "", 0)}
 	case spfPermError:
+		if strings.Contains(strings.ToLower(r.Detail), "multiple spf") {
+			if free {
+				return []Finding{f("SPF2", "SPF2_MULTI_FREEMAIL", "info", "Multiple SPF TXT on freemail path (informational)", r.Detail,
+					"Provider DNS — nothing to fix on personal freemail.", 0)}
+			}
+			return []Finding{f("SPF2", "SPF2_MULTI", "high", "Multiple SPF TXT records (SPF permerror)", r.Detail,
+				"Keep exactly one TXT starting with v=spf1; merge mechanisms into a single record.", 1.5)}
+		}
 		if free {
 			return []Finding{f("SPF2", "SPF2_PERMERROR_FREEMAIL", "info", "SPF parse issue on freemail path (informational)", r.Detail,
 				"Provider SPF can be too complex for a full local eval. Not a reason to change your personal freemail settings.", 0)}

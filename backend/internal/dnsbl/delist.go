@@ -110,7 +110,7 @@ func FormatDelistHints(ip string, listed []string) string {
 		return ""
 	}
 	var b strings.Builder
-	b.WriteString("Stop the abuse source, then request delisting on each list:")
+	b.WriteString("Stop the abuse source (spam, open relay, compromise; often also a missing or wrong PTR), then request delisting on each list:")
 	for _, zone := range listed {
 		info, ok := DelistByZone[zone]
 		if !ok {

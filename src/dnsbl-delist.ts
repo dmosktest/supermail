@@ -142,8 +142,8 @@ export function formatDelistFix(
   const ru = locale === "ru";
   const lines = [
     ru
-      ? "Сначала уберите причину (спам, open relay, заражение). Затем снимите IP с каждого списка:"
-      : "First stop the abuse source (spam, open relay, compromise). Then delist the IP on each list:",
+      ? "Сначала уберите причину (спам, open relay, заражение; часто также отсутствующий или неверный PTR). Затем снимите IP с каждого списка:"
+      : "First stop the abuse source (spam, open relay, compromise; often also a missing or wrong PTR). Then delist the IP on each list:",
   ];
   for (const zone of zones) {
     const info = DNSBL_DELIST[zone];

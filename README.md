@@ -4,7 +4,7 @@ Spam-test your outbound email: one-time `@supermail.dmosk.net` inbox, send from 
 
 **Live (prod):** https://supermail.dmosk.net/  
 **Privacy:** https://supermail.dmosk.net/en/privacy/  
-**Version:** `1.0.5`
+**Version:** `1.0.6`
 
 ## Stack
 

@@ -39,6 +39,15 @@ function stripPolicyHost(detail: string, prefix: string): string {
   return d;
 }
 
+/** Hostname/FQDN only — not a policy TXT body (v=spf1 / v=DMARC1; …). */
+function looksLikeDnsName(s: string): boolean {
+  const d = (s || "").trim().toLowerCase().replace(/\.$/, "");
+  if (!d || d.includes(" ") || d.includes(";") || d.includes("=") || d.includes("@")) {
+    return false;
+  }
+  return /^[a-z0-9](?:[a-z0-9._-]*[a-z0-9])?$/.test(d) && d.includes(".");
+}
+
 function heloHostFromDetail(detail: string): string {
   const arrow = "\u2192";
   const ne = "\u2260";
@@ -76,21 +85,21 @@ export function dnsFixVars(
     const p = parseDkimHost(detail);
     dkimHost = p.dkimHost;
     selector = p.selector || selector;
-    if (p.domain) domain = p.domain;
+    if (p.domain && looksLikeDnsName(p.domain)) domain = p.domain;
   } else if (code.startsWith("DMARC")) {
     const d = stripDmarcHost(detail);
-    if (d && !d.includes(" ")) domain = d;
+    if (looksLikeDnsName(d)) domain = d;
   } else if (code.startsWith("SPF1") || code.startsWith("MX1")) {
-    if (detail && !detail.includes(" ") && detail.includes(".")) domain = detail.toLowerCase();
+    if (looksLikeDnsName(detail)) domain = detail.toLowerCase().replace(/\.$/, "");
   } else if (code.startsWith("STS1")) {
     const d = stripPolicyHost(detail, "_mta-sts.");
-    if (d) domain = d;
+    if (looksLikeDnsName(d)) domain = d;
   } else if (code.startsWith("TLSRPT1")) {
     const d = stripPolicyHost(detail, "_smtp._tls.");
-    if (d) domain = d;
+    if (looksLikeDnsName(d)) domain = d;
   } else if (code.startsWith("BIMI1")) {
     const d = stripPolicyHost(detail, "default._bimi.");
-    if (d) domain = d;
+    if (looksLikeDnsName(d)) domain = d;
   }
 
   if (!domain) domain = "example.com";

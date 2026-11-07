@@ -10,6 +10,7 @@ import (
 	"net"
 	"net/mail"
 	"regexp"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -182,6 +183,7 @@ func Run(ctx context.Context, raw []byte, remoteIP, helo, mailFrom string, inbou
 }
 
 func finalize(meta MailMeta, findings []Finding, ptr string, bl dnsbl.Result, headers []HeaderField) Report {
+	sortFindingsBySeverity(findings)
 	score, grade := scoreOf(findings)
 	pass, fail := 0, 0
 	spam := 0.0
@@ -200,6 +202,42 @@ func finalize(meta MailMeta, findings []Finding, ptr string, bl dnsbl.Result, he
 		TestsTotal: len(findings), TestsPass: pass, TestsFail: fail,
 		Mail: meta, Headers: headers, Findings: findings, PTR: ptr, Blacklist: bl,
 	}
+}
+
+func severityRank(sev string) int {
+	switch sev {
+	case "critical":
+		return 5
+	case "high":
+		return 4
+	case "medium":
+		return 3
+	case "low":
+		return 2
+	case "info":
+		return 1
+	case "ok":
+		return 0
+	default:
+		return -1
+	}
+}
+
+func sortFindingsBySeverity(findings []Finding) {
+	sort.SliceStable(findings, func(i, j int) bool {
+		ri, rj := severityRank(findings[i].Severity), severityRank(findings[j].Severity)
+		if ri != rj {
+			return ri > rj
+		}
+		si, sj := 0.0, 0.0
+		if findings[i].Score != nil {
+			si = *findings[i].Score
+		}
+		if findings[j].Score != nil {
+			sj = *findings[j].Score
+		}
+		return si > sj
+	})
 }
 
 func extractHeaders(raw []byte) []HeaderField {
@@ -677,6 +715,16 @@ func checkAuthHeaders(h mail.Header) []Finding {
 	return out
 }
 
+func txtMatch(txts []string, ok func(string) bool) []string {
+	out := make([]string, 0, len(txts))
+	for _, t := range txts {
+		if ok(t) {
+			out = append(out, t)
+		}
+	}
+	return out
+}
+
 func checkSPFRecord(ctx context.Context, domain string) []Finding {
 	if domain == "" {
 		return []Finding{f("SPF1", "SPF1_NO_DOMAIN", "high", "Cannot determine From domain for SPF", "Missing From / MAIL FROM domain.", "", 1.0)}
@@ -686,13 +734,20 @@ func checkSPFRecord(ctx context.Context, domain string) []Finding {
 		return []Finding{f("SPF1", "SPF1_MISSING", "high", "No SPF record for From domain", domain,
 			fmt.Sprintf("Add TXT on %s: v=spf1 mx a ~all", domain), 1.2)}
 	}
-	for _, t := range txts {
-		if strings.HasPrefix(strings.ToLower(strings.TrimSpace(t)), "v=spf1") {
-			if strings.Contains(strings.ToLower(t), "+all") {
-				return []Finding{f("SPF1", "SPF1_PLUSALL", "high", "SPF uses +all", t, "Replace +all with ~all or -all.", 1.5)}
-			}
-			return []Finding{f("SPF1", "SPF1_OK", "ok", "SPF record present", t, "", -0.2)}
+	spfRecs := txtMatch(txts, func(t string) bool {
+		return strings.HasPrefix(strings.ToLower(strings.TrimSpace(t)), "v=spf1")
+	})
+	if len(spfRecs) > 1 {
+		return []Finding{f("SPF1", "SPF1_MULTI", "high", "Multiple SPF TXT records",
+			fmt.Sprintf("%d × v=spf1 on %s", len(spfRecs), domain),
+			"Keep exactly one TXT starting with v=spf1; merge mechanisms into a single record.", 1.5)}
+	}
+	if len(spfRecs) == 1 {
+		t := spfRecs[0]
+		if strings.Contains(strings.ToLower(t), "+all") {
+			return []Finding{f("SPF1", "SPF1_PLUSALL", "high", "SPF uses +all", t, "Replace +all with ~all or -all.", 1.5)}
 		}
+		return []Finding{f("SPF1", "SPF1_OK", "ok", "SPF record present", t, "", -0.2)}
 	}
 	return []Finding{f("SPF1", "SPF1_MISSING", "high", "No SPF record for From domain", domain, "", 1.2)}
 }
@@ -707,11 +762,18 @@ func checkDMARC(ctx context.Context, domain string) (dmarcPolicy, []Finding) {
 		return dmarcPolicy{}, []Finding{f("DMARC1", "DMARC1_MISSING", "medium", "No DMARC record", host,
 			fmt.Sprintf("Add TXT on %s: v=DMARC1; p=none; rua=mailto:dmarc@%s", host, domain), 0.6)}
 	}
-	for _, t := range txts {
-		if strings.Contains(strings.ToUpper(t), "V=DMARC1") {
-			pol := parseDMARC(t)
-			return pol, dmarcRecordFindings(host, t, pol)
-		}
+	dmarcRecs := txtMatch(txts, func(t string) bool {
+		return strings.Contains(strings.ToUpper(t), "V=DMARC1")
+	})
+	if len(dmarcRecs) > 1 {
+		return dmarcPolicy{}, []Finding{f("DMARC1", "DMARC1_MULTI", "high", "Multiple DMARC TXT records",
+			fmt.Sprintf("%d × v=DMARC1 on %s", len(dmarcRecs), host),
+			"Keep exactly one TXT on _dmarc; receivers abandon DMARC when several records exist.", 1.2)}
+	}
+	if len(dmarcRecs) == 1 {
+		t := dmarcRecs[0]
+		pol := parseDMARC(t)
+		return pol, dmarcRecordFindings(host, t, pol)
 	}
 	return dmarcPolicy{}, []Finding{f("DMARC1", "DMARC1_MISSING", "medium", "No DMARC record", host, "", 0.6)}
 }

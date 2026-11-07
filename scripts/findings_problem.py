@@ -96,6 +96,10 @@ PROBLEM: dict[str, tuple[str, str]] = {
         'No BIMI DNS record.',
         'Нет DNS-записи BIMI.',
     ),
+    'BIMI1_MULTI': (
+        'More than one BIMI TXT is published at default._bimi.',
+        'На default._bimi опубликовано больше одной BIMI TXT.',
+    ),
     'BIMI1_OK': (
         'Check result: bIMI DNS record present.',
         'Результат проверки: dNS-запись BIMI есть.',
@@ -105,8 +109,8 @@ PROBLEM: dict[str, tuple[str, str]] = {
         'Результат проверки: iP отправителя нет в проверенных DNSBL.',
     ),
     'BL1_LISTED': (
-        'This sending IP is on one or more public DNS blacklists that many mail filters consult.',
-        'Этот IP отправителя есть в одном или нескольких публичных DNS-чёрных списках, на которые смотрят фильтры.',
+        'This sending IP is on one or more public DNS blacklists that many mail filters consult. A common cause is abuse — or a missing/wrong PTR (reverse DNS).',
+        'Этот IP отправителя есть в одном или нескольких публичных DNS-чёрных списках, на которые смотрят фильтры. Частая причина — злоупотребления или отсутствующий/неверный PTR (обратный DNS).',
     ),
     'CNT1_HTML': (
         'HTML-only body.',
@@ -223,6 +227,10 @@ PROBLEM: dict[str, tuple[str, str]] = {
     'DMARC1_MISSING': (
         'There is no DMARC record for the From domain.',
         'У домена From нет записи DMARC.',
+    ),
+    'DMARC1_MULTI': (
+        'More than one DMARC TXT (v=DMARC1) is published at _dmarc.',
+        'На _dmarc опубликовано больше одной DMARC TXT (v=DMARC1).',
     ),
     'DMARC1_NONE': (
         'DMARC policy is monitoring-only (p=none).',
@@ -456,6 +464,10 @@ PROBLEM: dict[str, tuple[str, str]] = {
         'The SPF record ends with +all — that allows anyone to send as this domain.',
         'В SPF стоит +all — так слать «от имени» домена может кто угодно.',
     ),
+    'SPF1_MULTI': (
+        'More than one SPF TXT (v=spf1) is published for the From domain.',
+        'У домена From опубликовано больше одной SPF TXT (v=spf1).',
+    ),
     'SPF2_FAIL': (
         'The sending IP is not authorized in SPF for this domain — the check returned fail, not softfail.',
         'IP отправителя не разрешён в SPF для этого домена — проверка вернула fail, а не softfail.',
@@ -488,6 +500,14 @@ PROBLEM: dict[str, tuple[str, str]] = {
         'SPF parse issue on freemail path (informational).',
         'Разбор SPF freemail неполный (информационно).',
     ),
+    'SPF2_MULTI': (
+        'SPF evaluation hit permerror because several v=spf1 TXT records exist.',
+        'Оценка SPF дала permerror: в DNS несколько TXT с v=spf1.',
+    ),
+    'SPF2_MULTI_FREEMAIL': (
+        'Multiple SPF TXT on freemail path (informational).',
+        'Несколько SPF TXT на пути freemail (информационно).',
+    ),
     'SPF2_SOFTFAIL': (
         'The domain’s SPF TXT does not list the outbound IP (or include) that sent this message — the check did not pass and ended in softfail.',
         'В SPF TXT домена нет исходящего IP (или include), с которого ушло письмо — проверка не дала pass и закончилась softfail.',
@@ -503,6 +523,10 @@ PROBLEM: dict[str, tuple[str, str]] = {
     'STS1_MISSING': (
         'No MTA-STS DNS record.',
         'Нет DNS-записи MTA-STS.',
+    ),
+    'STS1_MULTI': (
+        'More than one MTA-STS TXT (v=STSv1) is published.',
+        'Опубликовано больше одной MTA-STS TXT (v=STSv1).',
     ),
     'STS1_OK': (
         'Check result: mTA-STS DNS record present.',
@@ -539,6 +563,10 @@ PROBLEM: dict[str, tuple[str, str]] = {
     'TLSRPT1_MISSING': (
         'No TLS-RPT DNS record.',
         'Нет DNS-записи TLS-RPT.',
+    ),
+    'TLSRPT1_MULTI': (
+        'More than one TLS-RPT TXT (v=TLSRPTv1) is published.',
+        'Опубликовано больше одной TLS-RPT TXT (v=TLSRPTv1).',
     ),
     'TLSRPT1_OK': (
         'Check result: tLS-RPT DNS record present.',

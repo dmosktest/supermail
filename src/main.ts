@@ -335,6 +335,15 @@ const SEV_RANK: Record<string, number> = {
   critical: 5,
 };
 
+function sortFindingsBySeverity(list: Finding[]): Finding[] {
+  return [...list].sort((a, b) => {
+    const ra = SEV_RANK[a.severity] ?? -1;
+    const rb = SEV_RANK[b.severity] ?? -1;
+    if (rb !== ra) return rb - ra;
+    return (b.score ?? 0) - (a.score ?? 0);
+  });
+}
+
 function worstFinding(list: Finding[]): Finding | undefined {
   let best: Finding | undefined;
   let rank = -1;
@@ -397,7 +406,12 @@ function pillarDmarcState(
   dkim: Finding[],
 ): PillarState {
   if (!dmarc.length) return "unknown";
-  if (hasFindingCode(dmarc, "DMARC1_MISSING")) return "warn";
+  if (
+    hasFindingCode(dmarc, "DMARC1_MISSING") ||
+    hasFindingCode(dmarc, "DMARC1_MULTI")
+  ) {
+    return "warn";
+  }
 
   // Record present: DMARC needs an SPF-aligned pass or a DKIM-aligned pass.
   // If alignment failed, whichever path had to carry DMARC (SPF and/or DKIM) failed → Fail.
@@ -752,7 +766,7 @@ function renderFindings(list: Finding[]): void {
     root.append(p);
     return;
   }
-  for (const f of list) {
+  for (const f of sortFindingsBySeverity(list)) {
     root.append(buildFindingCard(f));
   }
   applyFindingsFilter(state.findingsFilter);
