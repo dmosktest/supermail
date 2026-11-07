@@ -4,11 +4,10 @@ import (
 	"context"
 	"fmt"
 	"net"
+	"net/netip"
 	"strings"
 	"sync"
 	"time"
-
-	"supermail/internal/dnsauth"
 )
 
 var Lists = []string{
@@ -57,6 +56,24 @@ func ReverseIP(ip string) (string, error) {
 	return parts[3] + "." + parts[2] + "." + parts[1] + "." + parts[0], nil
 }
 
+func listedA(addrs []string) bool {
+	for _, s := range addrs {
+		ip, err := netip.ParseAddr(s)
+		if err != nil || !ip.Is4() {
+			continue
+		}
+		a := ip.As4()
+		if a[0] != 127 {
+			continue
+		}
+		if a[1] == 255 && a[2] == 255 {
+			continue
+		}
+		return true
+	}
+	return false
+}
+
 func Check(ctx context.Context, ip string) Result {
 	out := Result{IP: ip, Listed: []string{}, Checked: len(Lists)}
 	rev, err := ReverseIP(ip)
@@ -66,7 +83,7 @@ func Check(ctx context.Context, ip string) Result {
 		return out
 	}
 
-	resolver := dnsauth.BootstrapResolver()
+	resolver := net.DefaultResolver
 	var mu sync.Mutex
 	var wg sync.WaitGroup
 	for _, zone := range Lists {
@@ -80,12 +97,9 @@ func Check(ctx context.Context, ip string) Result {
 			mu.Lock()
 			defer mu.Unlock()
 			if err != nil {
-				if dnsErr, ok := err.(*net.DNSError); ok && dnsErr.IsNotFound {
-					return
-				}
 				return
 			}
-			if len(addrs) > 0 {
+			if listedA(addrs) {
 				out.Listed = append(out.Listed, z)
 			}
 		}(zone)
