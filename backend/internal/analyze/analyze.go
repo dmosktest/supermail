@@ -801,21 +801,27 @@ func checkDKIMHeader(ctx context.Context, h mail.Header) []Finding {
 	if d != "" && s != "" {
 		host := s + "._domainkey." + d
 		txts, err := lookupTXT(ctx, host)
-		found := false
-		if err == nil {
-			for _, t := range txts {
-				low := strings.ToLower(t)
-				if strings.Contains(low, "v=dkim1") || strings.Contains(low, "p=") {
-					found = true
-					break
+		if err == nil && len(txts) > 1 {
+			out = append(out, f("DKIM3", "DKIM3_DNS_MULTI", "high", "Multiple DKIM TXT records for selector",
+				fmt.Sprintf("%d TXT on %s", len(txts), host),
+				"Keep exactly one TXT at the selector._domainkey name. Example record:\n\nName: {dkimLabel}\nType: TXT\nValue: v=DKIM1; k=rsa; p=<your_public_key_base64>\n\nExample check:\nnslookup -type=TXT {dkimHost}", 1.5))
+		} else {
+			found := false
+			if err == nil {
+				for _, t := range txts {
+					low := strings.ToLower(t)
+					if strings.Contains(low, "v=dkim1") || strings.Contains(low, "p=") {
+						found = true
+						break
+					}
 				}
 			}
-		}
-		if found {
-			out = append(out, f("DKIM3", "DKIM3_DNS_OK", "ok", "DKIM public key published in DNS", host, "", -0.2))
-		} else {
-			out = append(out, f("DKIM3", "DKIM3_DNS_MISSING", "high", "DKIM public key not found in DNS", host,
-				fmt.Sprintf("Publish TXT on %s with v=DKIM1; k=rsa; p=…", host), 1.2))
+			if found {
+				out = append(out, f("DKIM3", "DKIM3_DNS_OK", "ok", "DKIM public key published in DNS", host, "", -0.2))
+			} else {
+				out = append(out, f("DKIM3", "DKIM3_DNS_MISSING", "high", "DKIM public key not found in DNS", host,
+					fmt.Sprintf("Publish TXT on %s with v=DKIM1; k=rsa; p=…", host), 1.2))
+			}
 		}
 	}
 	return out

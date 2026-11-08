@@ -382,12 +382,19 @@ function pillarSpfState(list: Finding[]): PillarState {
   return "fail";
 }
 
-/** DKIM: no DNS key → fail; message without signature → warn (Плохо). */
+/** DKIM: no/ambiguous DNS key or crypto/policy verify fail → Fail; no signature → warn (Плохо). */
 function pillarDkimState(list: Finding[]): PillarState {
   if (!list.length) return "unknown";
   if (
     hasFindingCode(list, "DKIM3_DNS_MISSING") ||
-    hasFindingCode(list, "DKIM4_FAIL")
+    hasFindingCode(list, "DKIM3_DNS_MULTI") ||
+    hasFindingCode(list, "DKIM4_FAIL") ||
+    hasFindingCode(list, "DKIM4_MULTI") ||
+    hasFindingCode(list, "DKIM4_NOKEY") ||
+    hasFindingCode(list, "DKIM4_REVOKED") ||
+    hasFindingCode(list, "DKIM4_BADKEY") ||
+    hasFindingCode(list, "DKIM4_PERM") ||
+    hasFindingCode(list, "DKIM4_EXPIRED")
   ) {
     return "fail";
   }
@@ -420,7 +427,14 @@ function pillarDmarcState(
     const dkimFailed =
       hasFindingCode(dkim, "DKIM1_MISSING") ||
       hasFindingCode(dkim, "DKIM4_FAIL") ||
+      hasFindingCode(dkim, "DKIM4_MULTI") ||
+      hasFindingCode(dkim, "DKIM4_NOKEY") ||
+      hasFindingCode(dkim, "DKIM4_REVOKED") ||
+      hasFindingCode(dkim, "DKIM4_BADKEY") ||
+      hasFindingCode(dkim, "DKIM4_PERM") ||
+      hasFindingCode(dkim, "DKIM4_EXPIRED") ||
       hasFindingCode(dkim, "DKIM3_DNS_MISSING") ||
+      hasFindingCode(dkim, "DKIM3_DNS_MULTI") ||
       findingIssue(worstFinding(dkim));
     if (spfFailed || dkimFailed) return "fail";
   }

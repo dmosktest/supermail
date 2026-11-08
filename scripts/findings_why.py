@@ -388,6 +388,10 @@ WHY: dict[str, tuple[str, str]] = {
         "Signature without a DNS key is worthless — filters see broken authentication.",
         "Подпись без ключа в DNS бесполезна — фильтры видят сломанную аутентификацию.",
     ),
+    "DKIM3_DNS_MULTI": (
+        "Several TXT at the selector make the key ambiguous — careful receivers treat DKIM as broken.",
+        "Несколько TXT на селекторе делают ключ неоднозначным — осторожные получатели считают DKIM сломанным.",
+    ),
     "DKIM4_PASS": (
         "Crypto-verified DKIM proves the signed parts were not altered in transit.",
         "Криптопроверка DKIM доказывает, что подписанные части не меняли в пути.",
@@ -395,6 +399,30 @@ WHY: dict[str, tuple[str, str]] = {
     "DKIM4_FAIL": (
         "A broken DKIM signature looks like tampering or a misconfigured signer.",
         "Сломанная DKIM-подпись выглядит как подмена или кривой сайнер.",
+    ),
+    "DKIM4_MULTI": (
+        "Ambiguous DKIM DNS looks like a broken auth setup — filters will not trust the signature.",
+        "Неоднозначный DKIM в DNS выглядит как сломанный auth — фильтры подписи не доверяют.",
+    ),
+    "DKIM4_NOKEY": (
+        "A signature without a reachable public key is useless authentication to filters.",
+        "Подпись без доступного публичного ключа для фильтров — бесполезная аутентификация.",
+    ),
+    "DKIM4_REVOKED": (
+        "A revoked DKIM key tells receivers the signature must not be trusted.",
+        "Отозванный ключ DKIM говорит получателям: этой подписи доверять нельзя.",
+    ),
+    "DKIM4_BADKEY": (
+        "An unusable DKIM key still breaks authentication — same spam signal as a missing key.",
+        "Непригодный ключ DKIM тоже ломает auth — тот же спам-сигнал, что и при отсутствии ключа.",
+    ),
+    "DKIM4_EXPIRED": (
+        "An expired DKIM signature fails auth even if the body was not altered.",
+        "Просроченная подпись DKIM валит auth, даже если тело письма не меняли.",
+    ),
+    "DKIM4_PERM": (
+        "Invalid DKIM tags make receivers reject the signature before they check the crypto.",
+        "Кривые теги DKIM заставляют получателей отбросить подпись ещё до криптопроверки.",
     ),
     "DKIM4_ERROR": (
         "Verifier could not finish the crypto check — treat as inconclusive, not a green light.",

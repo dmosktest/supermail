@@ -27,6 +27,16 @@ function parseDkimHost(detail: string): { dkimHost: string; selector: string; do
   return { dkimHost: host, selector: "mail", domain: "" };
 }
 
+/** Host from "N TXT on sel._domainkey.dom" or "sel._domainkey.dom: dkim: …". */
+function extractDkimHost(detail: string): string {
+  const d = (detail || "").trim();
+  const on = d.match(/\bon\s+([^\s:]+)/i);
+  if (on) return on[1];
+  const bare = d.match(/^([^\s:]+._domainkey\.[^\s:]+)/i);
+  if (bare) return bare[1];
+  return "";
+}
+
 function stripDmarcHost(detail: string): string {
   const d = (detail || "").trim().toLowerCase().replace(/\.$/, "");
   if (d.startsWith("_dmarc.")) return d.slice("_dmarc.".length);
@@ -95,11 +105,19 @@ export function dnsFixVars(
   let selector = "mail";
   let dkimHost = "";
 
-  if (code.startsWith("DKIM3") || code === "DKIM3_DNS_MISSING") {
-    const p = parseDkimHost(detail);
-    dkimHost = p.dkimHost;
-    selector = p.selector || selector;
-    if (p.domain && looksLikeDnsName(p.domain)) domain = p.domain;
+  if (code.startsWith("DKIM3") || code.startsWith("DKIM4")) {
+    const hostFromDetail = extractDkimHost(detail);
+    if (hostFromDetail) {
+      const p = parseDkimHost(hostFromDetail);
+      dkimHost = p.dkimHost;
+      selector = p.selector || selector;
+      if (p.domain && looksLikeDnsName(p.domain)) domain = p.domain;
+    } else {
+      const dTag = detail.match(/\bd=([^\s:;]+)/i);
+      if (dTag && looksLikeDnsName(dTag[1])) {
+        domain = dTag[1].toLowerCase().replace(/\.$/, "");
+      }
+    }
   } else if (code.startsWith("DMARC")) {
     const d = stripDmarcHost(detail);
     if (looksLikeDnsName(d)) domain = d;

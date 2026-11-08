@@ -208,6 +208,10 @@ PROBLEM: dict[str, tuple[str, str]] = {
         'DKIM public key not found in DNS.',
         'Публичный ключ DKIM не найден в DNS.',
     ),
+    'DKIM3_DNS_MULTI': (
+        'More than one TXT is published at the DKIM selector name.',
+        'На имени селектора DKIM опубликовано больше одной TXT.',
+    ),
     'DKIM3_DNS_OK': (
         'Check result: dKIM public key published in DNS.',
         'Результат проверки: публичный ключ DKIM есть в DNS.',
@@ -219,6 +223,30 @@ PROBLEM: dict[str, tuple[str, str]] = {
     'DKIM4_FAIL': (
         'A DKIM signature is present, but cryptographic verification failed.',
         'Подпись DKIM есть, но криптопроверка не прошла.',
+    ),
+    'DKIM4_MULTI': (
+        'Verifier could not pick a DKIM public key because several TXT records exist at the selector.',
+        'Верификатор не смог выбрать публичный ключ DKIM: на селекторе несколько TXT.',
+    ),
+    'DKIM4_NOKEY': (
+        'The DKIM public key for this signature was not found or not reachable in DNS.',
+        'Публичный ключ DKIM для этой подписи не найден или недоступен в DNS.',
+    ),
+    'DKIM4_REVOKED': (
+        'The DKIM DNS key is revoked (empty p=), so the signature cannot verify.',
+        'Ключ DKIM в DNS отозван (пустой p=), подпись проверить нельзя.',
+    ),
+    'DKIM4_BADKEY': (
+        'The DKIM DNS key exists but is unusable (syntax, size, or algorithm mismatch).',
+        'Ключ DKIM в DNS есть, но непригоден (синтаксис, длина или несовпадение алгоритма).',
+    ),
+    'DKIM4_EXPIRED': (
+        'The DKIM signature expiration (x=) is in the past.',
+        'Срок действия подписи DKIM (x=) уже истёк.',
+    ),
+    'DKIM4_PERM': (
+        'The DKIM-Signature failed a format or policy check before crypto verify.',
+        'DKIM-Signature не прошёл проверку формата или политики до криптопроверки.',
     ),
     'DKIM4_PASS': (
         'At least one DKIM signature verified cryptographically.',
