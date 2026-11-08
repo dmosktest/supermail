@@ -491,9 +491,9 @@ func checkAddresses(fromHeader, fromAddr, mailFrom, fromDomain, envDomain string
 		if strings.EqualFold(fromAddr, envAddr) {
 			out = append(out, f("ADDR3", "ADDR3_MATCH", "ok", "From matches envelope", fromAddr, "", 0))
 		} else {
-			out = append(out, f("ADDR3", "ADDR3_DIFF", "medium", "From differs from envelope",
+			out = append(out, f("ADDR3", "ADDR3_DIFF", "low", "From differs from envelope",
 				fmt.Sprintf("%s ≠ %s", fromAddr, envAddr),
-				"When possible, use the same address in header From and in SMTP MAIL FROM.", 0.5))
+				"When possible, use the same address in header From and in SMTP MAIL FROM.", 0.2))
 		}
 	}
 
